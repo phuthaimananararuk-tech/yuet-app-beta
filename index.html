@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YUETิ BETA (v1.15 Clean) - Optimized Architecture</title>
+  <title>YUET BETA (v1.15 Clean) - Optimized Architecture</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -352,13 +352,13 @@
 
   <script>
     const firebaseConfig = {
-  apiKey: "AIzaSyA48HmY24BkrtIZ0StsecGPlnubCt7W20w",
-  authDomain: "yuet-app-beta.firebaseapp.com",
-  projectId: "yuet-app-beta",
-  storageBucket: "yuet-app-beta.firebasestorage.app",
-  messagingSenderId: "694848274852",
-  appId: "1:694848274852:web:cc6410f8c3a14df2614131"
-};
+      apiKey: "AIzaSyA48HmY24BkrtIZ0StsecGPlnubCt7W20w",
+      authDomain: "yuet-app-beta.firebaseapp.com",
+      projectId: "yuet-app-beta",
+      storageBucket: "yuet-app-beta.firebasestorage.app",
+      messagingSenderId: "694848274852",
+      appId: "1:694848274852:web:cc6410f8c3a14df2614131"
+    };
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth(), db = firebase.firestore();
@@ -396,29 +396,27 @@
     function keypadBackspace() { if (!activeKeypadFieldId) return; const el = document.getElementById(activeKeypadFieldId); el.value = el.value.slice(0, -1); document.getElementById('keypad-live-display').innerText = el.value || '0'; triggerFieldInputEvent(el); }
     function keypadDone() { closeCustomKeypad(); }
     function evaluateActiveFieldMath() {
-  if (!activeKeypadFieldId) return;
-  const el = document.getElementById(activeKeypadFieldId);
-  let val = el.value.trim();
-  if (!val) return;
-  
-  // ตัดเครื่องหมายคำนวณที่อาจตกค้างอยู่ท้ายข้อความออกก่อนประเมินผล
-  val = val.replace(/[+\-*/.]+$|\s+$/g, '');
-  
-  try {
-    if (/^[0-9+\-*/().\s]+$/.test(val)) {
-      let res = Function('"use strict";return (' + val + ')')();
-      if (!isNaN(res) && isFinite(res)) {
-        // ทศนิยมไม่เกิน 2 ตำแหน่ง
-        res = Math.round(res * 100) / 100;
-        el.value = res;
-        document.getElementById('keypad-live-display').innerText = res;
-        triggerFieldInputEvent(el);
+      if (!activeKeypadFieldId) return;
+      const el = document.getElementById(activeKeypadFieldId);
+      let val = el.value.trim();
+      if (!val) return;
+      
+      val = val.replace(/[+\-*/.]+$|\s+$/g, '');
+      
+      try {
+        if (/^[0-9+\-*/().\s]+$/.test(val)) {
+          let res = Function('"use strict";return (' + val + ')')();
+          if (!isNaN(res) && isFinite(res)) {
+            res = Math.round(res * 100) / 100;
+            el.value = res;
+            document.getElementById('keypad-live-display').innerText = res;
+            triggerFieldInputEvent(el);
+          }
+        }
+      } catch (e) {
+        console.warn("Math evaluation error:", e);
       }
     }
-  } catch (e) {
-    console.warn("Math evaluation error:", e);
-  }
-}
     function triggerFieldInputEvent(el) { el.dispatchEvent(new Event('input', { bubbles: true })); }
 
     // Navigation
@@ -444,24 +442,46 @@
     document.getElementById('back-to-login-btn').addEventListener('click', () => goToView('login'));
     document.getElementById('login-btn').addEventListener('click', async () => { const e = document.getElementById('login-email').value.trim(), p = document.getElementById('login-password').value; if (!e || !p) return alert("กรุณากรอกให้ครบ"); try { const res = await auth.signInWithEmailAndPassword(e, p); if (!res.user.emailVerified) { alert("กรุณายืนยันอีเมล"); await auth.signOut(); } } catch (err) { alert(err.message); } });
     document.getElementById('google-login-btn').addEventListener('click', async () => { try { await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); } catch (err) { alert(err.message); } });
-    document.getElementById('register-btn').addEventListener('click', async () => { const e = document.getElementById('reg-email').value.trim(), p = document.getElementById('reg-password').value; if (p !== document.getElementById('reg-confirm-password').value) return alert("รหัสไม่ตรงกัน"); try { const res = await auth.createUserWithEmailAndPassword(e, p); await res.user.sendEmailVerification(); const batch = db.batch(); batch.set(db.collection('users').doc(res.user.uid).collection('accounts').doc(), { name: 'เงินสด', balance: 0, isDefault: true, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() }); batch.set(db.collection('users').doc(res.user.uid).collection('categories').doc(), { name: 'ทั่วไป', type: 'expense', createdAt: firebase.firestore.FieldValue.serverTimestamp() }); batch.set(db.collection('users').doc(res.user.uid).collection('categories').doc(), { name: 'ทั่วไป', type: 'income', createdAt: firebase.firestore.FieldValue.serverTimestamp() }); await batch.commit(); alert(`ส่งลิงก์ไปที่ ${e} แล้ว`); await auth.signOut(); goToView('login'); } catch (err) { alert(err.message); } });
+    document.getElementById('register-btn').addEventListener('click', async () => {
+      const e = document.getElementById('reg-email').value.trim(), p = document.getElementById('reg-password').value;
+      if (p !== document.getElementById('reg-confirm-password').value) return alert("รหัสไม่ตรงกัน");
+      try {
+        const res = await auth.createUserWithEmailAndPassword(e, p);
+        await res.user.sendEmailVerification();
+        
+        const batch = db.batch();
+        // 1. บัญชี เงินสด (เปลี่ยนชื่อได้ แต่ลบไม่ได้: isDefault: true)
+        batch.set(db.collection('users').doc(res.user.uid).collection('accounts').doc(), { name: 'เงินสด', balance: 0, isDefault: true, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        // 2. บัญชี ธนาคาร (เปลี่ยนชื่อได้ และลบได้: isDefault: false)
+        batch.set(db.collection('users').doc(res.user.uid).collection('accounts').doc(), { name: 'บัญชีธนาคาร', balance: 0, isDefault: false, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        // 3. บัญชี บัตรเครดิต (เปลี่ยนชื่อได้ และลบได้: isDefault: false)
+        batch.set(db.collection('users').doc(res.user.uid).collection('accounts').doc(), { name: 'บัตรเครดิต', balance: 0, isDefault: false, isPinned: false, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        
+        batch.set(db.collection('users').doc(res.user.uid).collection('categories').doc(), { name: 'ทั่วไป', type: 'expense', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        batch.set(db.collection('users').doc(res.user.uid).collection('categories').doc(), { name: 'ทั่วไป', type: 'income', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        await batch.commit();
+        
+        alert(`ส่งลิงก์ยืนยันตัวตนไปที่ ${e} แล้ว`);
+        await auth.signOut();
+        goToView('login');
+      } catch (err) { alert(err.message); }
+    });
+
     logoutBtn.addEventListener('click', async () => { [unsubscribeTx, unsubscribeAcc, unsubscribeCat, unsubscribeInst].forEach(u => u && u()); await auth.signOut(); });
     openSettingsBtn.addEventListener('click', () => goToView('setting'));
     auth.onAuthStateChanged(user => { if (user && (user.providerData.some(p => p.providerId !== 'password') || user.emailVerified)) { currentUser = user; initUserData(user.uid); } else { currentUser = null; goToView('login'); } });
 
     // Initial Data Fetch
     async function initUserData(uid) {
-  // เคลียร์ Listener เก่าออกก่อนเสมอเพื่อป้องกันการดึงข้อมูลซ้ำซ้อน
-  [unsubscribeAcc, unsubscribeCat, unsubscribeTx, unsubscribeInst].forEach(u => u && u());
+      [unsubscribeAcc, unsubscribeCat, unsubscribeTx, unsubscribeInst].forEach(u => u && u());
 
-  // แก้วันที่ให้ตรงกับเวลาท้องถิ่น (Local Timezone UTC+7)
-  const now = new Date();
-  const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-  
-  ['tx-date', 'tr-date', 'settle-date', 'split-date', 'inst-date', 'reimb-date', 'team-pay-date'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = todayStr;
-  });
+      const now = new Date();
+      const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+      
+      ['tx-date', 'tr-date', 'settle-date', 'split-date', 'inst-date', 'reimb-date', 'team-pay-date'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = todayStr;
+      });
 
       const doc = await db.collection('users').doc(uid).collection('settings').doc('config').get();
       if (doc.exists) userSettings = { currency: '฿', enableAdvanced: false, ...doc.data() }; 
@@ -1090,10 +1110,18 @@
 
     // Settings Functions
     function renderSettingsAccounts() { 
-      document.getElementById('accounts-settings-list').innerHTML = accountsList.map(a=>`
+      document.getElementById('accounts-settings-list').innerHTML = accountsList.map(a => `
         <div class="flex justify-between items-center p-2 bg-gray-50 border rounded-xl text-xs">
-          <div class="flex items-center space-x-1.5"><button onclick="toggleAccountPin('${a.id}', ${!a.isPinned})" class="px-2 py-0.5 rounded text-[10px] font-bold ${a.isPinned ? 'bg-amber-100 text-amber-800 border border-amber-200' : 'bg-gray-200 text-gray-600'}">${a.isPinned ? 'ปักหมุดอยู่' : 'ปักหมุด'}</button><span class="font-semibold">${escapeHtml(a.name)}</span> <span class="text-gray-500">(${a.balance.toLocaleString()})</span></div>
-          <div class="flex items-center"><input type="text" id="edit-acc-${a.id}" readonly onclick="openCustomKeypad('edit-acc-${a.id}')" value="${a.balance}" class="w-14 px-1 py-1 border rounded bg-white cursor-pointer text-right font-bold"><button onclick="updateAccountBalance('${a.id}')" class="bg-blue-50 text-blue-600 px-1.5 py-0.5 mx-1 rounded font-medium">แก้</button>${!a.isDefault ? `<button onclick="deleteAccount('${a.id}')" class="text-rose-500 font-bold px-1">✕</button>` : ''}</div>
+          <div class="flex items-center space-x-1.5">
+            <button onclick="toggleAccountPin('${a.id}', ${!a.isPinned})" class="px-2 py-0.5 rounded text-[10px] font-bold ${a.isPinned ? 'bg-amber-100 text-amber-800 border border-amber-200' : 'bg-gray-200 text-gray-600'}">${a.isPinned ? 'ปักหมุดอยู่' : 'ปักหมุด'}</button>
+            <input id="edit-acc-name-${a.id}" value="${escapeHtml(a.name)}" class="w-24 px-1 py-0.5 border rounded bg-white text-xs font-semibold">
+            <button onclick="updateAccountName('${a.id}')" class="text-blue-600 px-1 font-bold" title="บันทึกชื่อ">✓</button>
+          </div>
+          <div class="flex items-center">
+            <input type="text" id="edit-acc-${a.id}" readonly onclick="openCustomKeypad('edit-acc-${a.id}')" value="${a.balance}" class="w-14 px-1 py-1 border rounded bg-white cursor-pointer text-right font-bold">
+            <button onclick="updateAccountBalance('${a.id}')" class="bg-blue-50 text-blue-600 px-1.5 py-0.5 mx-1 rounded font-medium">แก้</button>
+            ${!a.isDefault ? `<button onclick="deleteAccount('${a.id}')" class="text-rose-500 font-bold px-1">✕</button>` : ''}
+          </div>
         </div>
       `).join(''); 
     }
@@ -1111,6 +1139,7 @@
 
     async function toggleAccountPin(id, isPinned) { try { await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).update({ isPinned: isPinned }); } catch (err) { alert(err.message); } }
     async function addNewAccount() { const n=document.getElementById('new-acc-name').value, b=parseFloat(document.getElementById('new-acc-balance').value)||0; if(!n)return; await db.collection('users').doc(currentUser.uid).collection('accounts').add({name:n, balance:b, isDefault:false, isPinned: false, createdAt: firebase.firestore.FieldValue.serverTimestamp()}); document.getElementById('new-acc-name').value=''; document.getElementById('new-acc-balance').value=''; }
+    async function updateAccountName(id) { const newName = document.getElementById(`edit-acc-name-${id}`).value.trim(); if (!newName) return alert("กรุณาระบุชื่อบัญชี"); try { await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).update({ name: newName }); triggerSuccessToast(); } catch (err) { alert(err.message); } }
     async function updateAccountBalance(id) { await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).update({balance: parseFloat(document.getElementById(`edit-acc-${id}`).value)||0}); }
     async function deleteAccount(id) { if(confirm('ลบ?')) await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).delete(); }
     async function addNewCategory(t) { const i=t==='expense'?'new-exp-cat-name':'new-inc-cat-name', n=document.getElementById(i).value; if(!n)return; await db.collection('users').doc(currentUser.uid).collection('categories').add({name:n, type:t, createdAt: firebase.firestore.FieldValue.serverTimestamp()}); document.getElementById(i).value=''; }

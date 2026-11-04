@@ -448,19 +448,7 @@
       try {
         const res = await auth.createUserWithEmailAndPassword(e, p);
         await res.user.sendEmailVerification();
-        
-        const batch = db.batch();
-        // 1. บัญชี เงินสด (เปลี่ยนชื่อได้ แต่ลบไม่ได้: isDefault: true)
-        batch.set(db.collection('users').doc(res.user.uid).collection('accounts').doc(), { name: 'เงินสด', balance: 0, isDefault: true, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-        // 2. บัญชี ธนาคาร (เปลี่ยนชื่อได้ และลบได้: isDefault: false)
-        batch.set(db.collection('users').doc(res.user.uid).collection('accounts').doc(), { name: 'บัญชีธนาคาร', balance: 0, isDefault: false, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-        // 3. บัญชี บัตรเครดิต (เปลี่ยนชื่อได้ และลบได้: isDefault: false)
-        batch.set(db.collection('users').doc(res.user.uid).collection('accounts').doc(), { name: 'บัตรเครดิต', balance: 0, isDefault: false, isPinned: false, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-        
-        batch.set(db.collection('users').doc(res.user.uid).collection('categories').doc(), { name: 'ทั่วไป', type: 'expense', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-        batch.set(db.collection('users').doc(res.user.uid).collection('categories').doc(), { name: 'ทั่วไป', type: 'income', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-        await batch.commit();
-        
+        await initUserAccountsAndCategories(res.user.uid);
         alert(`ส่งลิงก์ยืนยันตัวตนไปที่ ${e} แล้ว`);
         await auth.signOut();
         goToView('login');
@@ -469,7 +457,37 @@
 
     logoutBtn.addEventListener('click', async () => { [unsubscribeTx, unsubscribeAcc, unsubscribeCat, unsubscribeInst].forEach(u => u && u()); await auth.signOut(); });
     openSettingsBtn.addEventListener('click', () => goToView('setting'));
-    auth.onAuthStateChanged(user => { if (user && (user.providerData.some(p => p.providerId !== 'password') || user.emailVerified)) { currentUser = user; initUserData(user.uid); } else { currentUser = null; goToView('login'); } });
+    auth.onAuthStateChanged(async user => { 
+      if (user && (user.providerData.some(p => p.providerId !== 'password') || user.emailVerified)) { 
+        currentUser = user; 
+        await initUserAccountsAndCategories(user.uid);
+        initUserData(user.uid); 
+      } else { 
+        currentUser = null; 
+        goToView('login'); 
+      } 
+    });
+
+    // Auto-create 3 default accounts & categories if missing
+    async function initUserAccountsAndCategories(uid) {
+      const accSnap = await db.collection('users').doc(uid).collection('accounts').limit(1).get();
+      if (accSnap.empty) {
+        const batch = db.batch();
+        // 1. บัญชี เงินสด (เปลี่ยนชื่อได้ แต่ลบไม่ได้: isDefault: true)
+        batch.set(db.collection('users').doc(uid).collection('accounts').doc(), { name: 'เงินสด', balance: 0, isDefault: true, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        // 2. บัญชี ธนาคาร (เปลี่ยนชื่อได้ และลบได้: isDefault: false)
+        batch.set(db.collection('users').doc(uid).collection('accounts').doc(), { name: 'บัญชีธนาคาร', balance: 0, isDefault: false, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        // 3. บัญชี บัตรเครดิต (เปลี่ยนชื่อได้ และลบได้: isDefault: false)
+        batch.set(db.collection('users').doc(uid).collection('accounts').doc(), { name: 'บัตรเครดิต', balance: 0, isDefault: false, isPinned: false, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+
+        const catSnap = await db.collection('users').doc(uid).collection('categories').limit(1).get();
+        if (catSnap.empty) {
+          batch.set(db.collection('users').doc(uid).collection('categories').doc(), { name: 'ทั่วไป', type: 'expense', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+          batch.set(db.collection('users').doc(uid).collection('categories').doc(), { name: 'ทั่วไป', type: 'income', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        }
+        await batch.commit();
+      }
+    }
 
     // Initial Data Fetch
     async function initUserData(uid) {

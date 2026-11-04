@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YUET BETA (v1.17) - Dynamic Offset Architecture</title>
+  <title>YUET BETA (v1.18) - Dynamic UI Refinements</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -39,7 +39,7 @@
       <div class="flex flex-col items-center">
         <div class="flex items-baseline space-x-1">
           <h1 class="text-xl font-black tracking-wider uppercase drop-shadow-sm">YUET BETA</h1>
-          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.17)</span>
+          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.18)</span>
         </div>
         <p class="text-[8px] text-emerald-100/80 tracking-tight font-light">by Phuthai Mananararuk & Gemini</p>
       </div>
@@ -470,7 +470,7 @@
       } 
     });
 
-    // Auto-create 3 default accounts & categories if missing (ตั้งค่า initialBalance)
+    // Auto-create 3 default accounts & categories if missing
     async function initUserAccountsAndCategories(uid) {
       const accSnap = await db.collection('users').doc(uid).collection('accounts').limit(1).get();
       if (accSnap.empty) {
@@ -488,7 +488,7 @@
       }
     }
 
-    // Dynamic Balance Calculation (คำนวณยอดคงเหลือจาก Offset + Transactions)
+    // Dynamic Balance Calculation
     function recalculateAccountBalances() {
       accountsList.forEach(acc => {
         let netTx = 0;
@@ -1130,14 +1130,29 @@
       } catch (err) { alert(err.message); } 
     }
 
-    // Settings Functions (ปรับแก้ยอดเงินเริ่มต้น Offset)
+    // Settings Functions (ซ่อน/แสดง ปุ่ม ✓ อัตโนมัติเมื่อมีการเปลี่ยนชื่อ)
+    function checkAccountNameChange(id) {
+      const inputEl = document.getElementById(`edit-acc-name-${id}`);
+      const btnEl = document.getElementById(`save-acc-btn-${id}`);
+      if (!inputEl || !btnEl) return;
+
+      const currentVal = inputEl.value.trim();
+      const originalVal = inputEl.getAttribute('data-original-name') || '';
+
+      if (currentVal !== originalVal && currentVal !== '') {
+        btnEl.classList.remove('hidden');
+      } else {
+        btnEl.classList.add('hidden');
+      }
+    }
+
     function renderSettingsAccounts() { 
       document.getElementById('accounts-settings-list').innerHTML = accountsList.map(a => `
         <div class="flex justify-between items-center p-2 bg-gray-50 border rounded-xl text-xs">
           <div class="flex items-center space-x-1.5">
             <button onclick="toggleAccountPin('${a.id}', ${!a.isPinned})" class="px-2 py-0.5 rounded text-[10px] font-bold ${a.isPinned ? 'bg-amber-100 text-amber-800 border border-amber-200' : 'bg-gray-200 text-gray-600'}">${a.isPinned ? 'ปักหมุดอยู่' : 'ปักหมุด'}</button>
-            <input id="edit-acc-name-${a.id}" value="${escapeHtml(a.name)}" class="w-24 px-1 py-0.5 border rounded bg-white text-xs font-semibold">
-            <button onclick="updateAccountName('${a.id}')" class="text-blue-600 px-1 font-bold" title="บันทึกชื่อ">✓</button>
+            <input id="edit-acc-name-${a.id}" data-original-name="${escapeHtml(a.name)}" value="${escapeHtml(a.name)}" oninput="checkAccountNameChange('${a.id}')" class="w-24 px-1 py-0.5 border rounded bg-white text-xs font-semibold">
+            <button id="save-acc-btn-${a.id}" onclick="updateAccountName('${a.id}')" class="text-blue-600 px-1 font-bold hidden" title="บันทึกชื่อ">✓</button>
           </div>
           <div class="flex items-center">
             <input type="text" id="edit-acc-${a.id}" readonly onclick="openCustomKeypad('edit-acc-${a.id}')" value="${a.initialBalance || 0}" class="w-14 px-1 py-1 border rounded bg-white cursor-pointer text-right font-bold">

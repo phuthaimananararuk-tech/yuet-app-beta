@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YUET BETA (v1.16)</title>
+  <title>YUET BETA (v1.17) - Dynamic Offset Architecture</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -39,7 +39,7 @@
       <div class="flex flex-col items-center">
         <div class="flex items-baseline space-x-1">
           <h1 class="text-xl font-black tracking-wider uppercase drop-shadow-sm">YUET BETA</h1>
-          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.16)</span>
+          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.17)</span>
         </div>
         <p class="text-[8px] text-emerald-100/80 tracking-tight font-light">by Phuthai Mananararuk & Gemini</p>
       </div>
@@ -80,9 +80,9 @@
       <section id="entry-view" class="hidden space-y-3 flex-1 flex flex-col justify-between">
         <div class="space-y-3">
           <div id="mode-buttons-container" class="grid grid-cols-3 gap-1 bg-gray-200 p-1 rounded-xl text-center">
-            <button type="button" id="btn-mode-expense" onclick="handleModeClick('expense')" class="py-1.5 text-[10px] sm:text-[11px] font-semibold rounded-lg transition bg-rose-600 text-white shadow-xs">Expense</button>
-            <button type="button" id="btn-mode-income" onclick="handleModeClick('income')" class="py-1.5 text-[10px] sm:text-[11px] font-semibold rounded-lg transition text-gray-700">Income</button>
-            <button type="button" id="btn-mode-transfer" onclick="handleModeClick('transfer')" class="py-1.5 text-[10px] sm:text-[11px] font-semibold rounded-lg transition text-gray-700">Transfer</button>
+            <button type="button" id="btn-mode-expense" onclick="handleModeClick('expense')" class="py-1.5 text-[10px] sm:text-[11px] font-semibold rounded-lg transition bg-rose-600 text-white shadow-xs">Expense...</button>
+            <button type="button" id="btn-mode-income" onclick="handleModeClick('income')" class="py-1.5 text-[10px] sm:text-[11px] font-semibold rounded-lg transition text-gray-700">Income...</button>
+            <button type="button" id="btn-mode-transfer" onclick="handleModeClick('transfer')" class="py-1.5 text-[10px] sm:text-[11px] font-semibold rounded-lg transition text-gray-700">Transfer...</button>
           </div>
 
           <!-- Normal Form -->
@@ -224,8 +224,8 @@
           <div class="bg-gray-50 p-3 rounded-2xl border border-gray-200 shadow-xs space-y-1 flex flex-col items-center"><h4 class="text-[10px] font-bold text-rose-700 text-center">หมวดหมู่รายจ่าย</h4><div class="h-36 w-36 relative flex items-center justify-center"><canvas id="expensePieChart"></canvas></div></div>
         </div>
         <div class="grid grid-cols-2 gap-2">
-          <div id="card-pending-friend" class="bg-amber-50 p-2.5 rounded-2xl border border-amber-100 shadow-xs hidden text-center"><p class="text-[9px] font-bold text-amber-600">เงินรอคืน (เพื่อน)</p><p id="total-pending-friend" class="text-xs font-bold text-amber-700">฿0.00</p></div>
-          <div id="card-pending-team" class="bg-purple-50 p-2.5 rounded-2xl border border-purple-100 shadow-xs hidden text-center"><p class="text-[9px] font-bold text-purple-600">เงินรอจ่าย (ทีมงาน)</p><p id="total-pending-team" class="text-xs font-bold text-purple-700">฿0.00</p></div>
+          <div id="card-pending-friend" class="bg-amber-50 p-2.5 rounded-2xl border border-amber-100 shadow-xs text-center"><p class="text-[9px] font-bold text-amber-600">เงินรอคืน (เพื่อน)</p><p id="total-pending-friend" class="text-xs font-bold text-amber-700">฿0.00</p></div>
+          <div id="card-pending-team" class="bg-purple-50 p-2.5 rounded-2xl border border-purple-100 shadow-xs text-center"><p class="text-[9px] font-bold text-purple-600">เงินรอจ่าย (ทีมงาน)</p><p id="total-pending-team" class="text-xs font-bold text-purple-700">฿0.00</p></div>
         </div>
         <div class="space-y-2 border-t pt-2.5">
           <div class="flex justify-between items-center"><h3 class="text-xs font-bold text-indigo-900 uppercase">สัญญาผ่อนชำระ</h3><span id="lbl-total-active-inst" class="text-[10px] font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full border">0 รายการ</span></div>
@@ -243,9 +243,11 @@
       <section id="setting-view" class="hidden space-y-4 max-h-[620px] overflow-y-auto pr-1">
         <div class="border-b pb-2"><h2 class="text-xs font-bold text-gray-700 uppercase">Setting - ตั้งค่าระบบ</h2></div>
         <div class="space-y-1"><label class="block text-xs font-bold text-gray-700">สกุลเงินทั่วแอป</label><select id="setting-currency" onchange="autoSaveSettings()" class="w-full px-3 py-2 text-xs border rounded-xl bg-white"><option value="฿">บาท (฿)</option><option value="$">ดอลลาร์ ($)</option><option value="€">ยูโร (€)</option><option value="¥">เยน (¥)</option></select></div>
-        <div class="bg-indigo-50 p-3 rounded-2xl border border-indigo-100 space-y-1.5"><label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" id="setting-enable-advanced" onchange="toggleAdvancedFeaturesSetting()" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4"><span class="text-xs font-bold text-indigo-900">เปิดใช้งานฟังก์ชันพิเศษ </span></label><p class="text-[10px] text-indigo-600/80 leading-relaxed">กดปุ่มโหมด (Expense / Income / Transfer) ซ้ำเพื่อเปิดเมนูซ่อน: <u>ผ่อนชำระ, หารค่าใช้จ่าย, รับเงินคืน, รับเงินแทน, โอนให้ทีม</u></p></div>
         <div class="space-y-2 border-t pt-3">
-          <h3 class="text-xs font-bold text-gray-700 uppercase">จัดการบัญชีเงิน (📌 ปักหมุดให้อยู่บรรทัดแรกหน้า Entry)</h3>
+          <div class="flex justify-between items-center">
+            <h3 class="text-xs font-bold text-gray-700 uppercase">จัดการบัญชีเงิน</h3>
+            <span class="text-[9px] text-gray-400 font-light">*ยอดเงิน = ตั้งค่ายอดเริ่มต้นตั้งต้น (Offset)</span>
+          </div>
           <div id="accounts-settings-list" class="space-y-1"></div>
           <div class="bg-gray-50 p-2 rounded-xl border space-y-1.5">
             <p class="text-[11px] font-semibold text-gray-600">เพิ่มบัญชีใหม่</p>
@@ -365,7 +367,7 @@
     db.enablePersistence().catch(err => console.warn(err.code));
 
     let currentUser = null, unsubscribeTx = null, unsubscribeAcc = null, unsubscribeCat = null, unsubscribeInst = null;
-    let userSettings = { currency: '฿', enableAdvanced: false };
+    let userSettings = { currency: '฿' };
     let accountsList = [], categoriesList = [], allTransactions = [], activeInstallmentPlans = [];
     
     // Persistent Selection States
@@ -468,17 +470,14 @@
       } 
     });
 
-    // Auto-create 3 default accounts & categories if missing
+    // Auto-create 3 default accounts & categories if missing (ตั้งค่า initialBalance)
     async function initUserAccountsAndCategories(uid) {
       const accSnap = await db.collection('users').doc(uid).collection('accounts').limit(1).get();
       if (accSnap.empty) {
         const batch = db.batch();
-        // 1. บัญชี เงินสด (เปลี่ยนชื่อได้ แต่ลบไม่ได้: isDefault: true)
-        batch.set(db.collection('users').doc(uid).collection('accounts').doc(), { name: 'เงินสด', balance: 0, isDefault: true, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-        // 2. บัญชี ธนาคาร (เปลี่ยนชื่อได้ และลบได้: isDefault: false)
-        batch.set(db.collection('users').doc(uid).collection('accounts').doc(), { name: 'บัญชีธนาคาร', balance: 0, isDefault: false, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-        // 3. บัญชี บัตรเครดิต (เปลี่ยนชื่อได้ และลบได้: isDefault: false)
-        batch.set(db.collection('users').doc(uid).collection('accounts').doc(), { name: 'บัตรเครดิต', balance: 0, isDefault: false, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        batch.set(db.collection('users').doc(uid).collection('accounts').doc(), { name: 'เงินสด', initialBalance: 0, isDefault: true, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        batch.set(db.collection('users').doc(uid).collection('accounts').doc(), { name: 'บัญชีธนาคาร', initialBalance: 0, isDefault: false, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        batch.set(db.collection('users').doc(uid).collection('accounts').doc(), { name: 'บัตรเครดิต', initialBalance: 0, isDefault: false, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
 
         const catSnap = await db.collection('users').doc(uid).collection('categories').limit(1).get();
         if (catSnap.empty) {
@@ -487,6 +486,33 @@
         }
         await batch.commit();
       }
+    }
+
+    // Dynamic Balance Calculation (คำนวณยอดคงเหลือจาก Offset + Transactions)
+    function recalculateAccountBalances() {
+      accountsList.forEach(acc => {
+        let netTx = 0;
+        allTransactions.forEach(t => {
+          if (t.kind === 'transaction') {
+            if (t.accountId === acc.id) {
+              netTx += (t.type === 'income' ? t.amount : -t.amount);
+            }
+          } else if (t.kind === 'split' || t.kind === 'settlement') {
+            if (t.accountId === acc.id) {
+              netTx += (t.kind === 'split' ? t.totalAmount : t.amount);
+            }
+          } else if (t.kind === 'team-pay') {
+            if (t.accountId === acc.id) {
+              netTx -= t.amount;
+            }
+          } else if (t.kind === 'transfer') {
+            if (t.fromAccountId === acc.id) netTx -= t.amount;
+            if (t.toAccountId === acc.id) netTx += t.amount;
+          }
+        });
+        const base = typeof acc.initialBalance === 'number' ? acc.initialBalance : (acc.balance || 0);
+        acc.balance = base + netTx;
+      });
     }
 
     // Initial Data Fetch
@@ -502,16 +528,23 @@
       });
 
       const doc = await db.collection('users').doc(uid).collection('settings').doc('config').get();
-      if (doc.exists) userSettings = { currency: '฿', enableAdvanced: false, ...doc.data() }; 
-      else await db.collection('users').doc(uid).collection('settings').doc('config').set({ currency: '฿', enableAdvanced: false });
+      if (doc.exists) userSettings = { currency: '฿', ...doc.data() }; 
+      else await db.collection('users').doc(uid).collection('settings').doc('config').set({ currency: '฿' });
       
       document.getElementById('setting-currency').value = userSettings.currency || '฿';
-      document.getElementById('setting-enable-advanced').checked = userSettings.enableAdvanced === true;
-      updateCurrencyUI(); applyAdvancedFeaturesVisibility();
+      updateCurrencyUI();
 
       unsubscribeAcc = db.collection('users').doc(uid).collection('accounts').orderBy('createdAt','asc').onSnapshot(snap => {
-        accountsList = []; snap.forEach(d => accountsList.push({ id: d.id, ...d.data() })); if (!accountsList.length) return;
+        accountsList = []; 
+        snap.forEach(d => {
+          const data = d.data();
+          const initBal = typeof data.initialBalance === 'number' ? data.initialBalance : (data.balance || 0);
+          accountsList.push({ id: d.id, ...data, initialBalance: initBal }); 
+        }); 
+        if (!accountsList.length) return;
         
+        recalculateAccountBalances();
+
         const fallbackId = accountsList[0].id;
         const ensureValid = (val) => (!val || !accountsList.some(a => a.id === val)) ? fallbackId : val;
 
@@ -537,22 +570,15 @@
     }
 
     function updateCurrencyUI() { document.querySelectorAll('.currency-symbol').forEach(el => el.innerText = userSettings.currency); }
-    function applyAdvancedFeaturesVisibility() {
-      const en = userSettings.enableAdvanced === true;
-      ['card-pending-friend','card-pending-team'].forEach(id=>document.getElementById(id).classList.toggle('hidden',!en));
-      if (!en && ['settle','split','installment','reimburse','team-pay'].includes(currentEntryMode)) switchEntryMode('expense');
-      renderModeButtonsState();
-    }
 
     // Re-tap Mode Switching
     function handleModeClick(mode) {
-      const en = userSettings.enableAdvanced === true;
       const isBaseMode = (
         (mode === 'expense' && ['expense', 'installment', 'reimburse'].includes(currentEntryMode)) ||
         (mode === 'income' && ['income', 'settle', 'split'].includes(currentEntryMode)) ||
         (mode === 'transfer' && ['transfer', 'team-pay'].includes(currentEntryMode))
       );
-      if (en && isBaseMode) openSpecialModal(mode);
+      if (isBaseMode) openSpecialModal(mode);
       else switchEntryMode(mode);
     }
 
@@ -566,24 +592,22 @@
     function activateSubMode(mode) { closeSpecialModal(); switchEntryMode(mode); }
 
     function renderModeButtonsState() {
-      const en = userSettings.enableAdvanced === true;
-      const dots = en ? '...' : '';
       const btns = { expense: document.getElementById('btn-mode-expense'), income: document.getElementById('btn-mode-income'), transfer: document.getElementById('btn-mode-transfer') };
       
       Object.keys(btns).forEach(m => {
         btns[m].className = "py-1.5 text-[10px] sm:text-[11px] font-semibold rounded-lg transition text-gray-700";
-        btns[m].innerText = m.charAt(0).toUpperCase() + m.slice(1);
+        btns[m].innerText = `${m.charAt(0).toUpperCase() + m.slice(1)}...`;
       });
 
       if (['expense', 'installment', 'reimburse'].includes(currentEntryMode)) {
         btns.expense.className = "py-1.5 text-[10px] sm:text-[11px] font-semibold rounded-lg transition text-white shadow-xs bg-rose-600";
-        btns.expense.innerText = `Expense${dots}`;
+        btns.expense.innerText = "Expense...";
       } else if (['income', 'settle', 'split'].includes(currentEntryMode)) {
         btns.income.className = "py-1.5 text-[10px] sm:text-[11px] font-semibold rounded-lg transition text-white shadow-xs bg-emerald-600";
-        btns.income.innerText = `Income${dots}`;
+        btns.income.innerText = "Income...";
       } else if (['transfer', 'team-pay'].includes(currentEntryMode)) {
         btns.transfer.className = "py-1.5 text-[10px] sm:text-[11px] font-semibold rounded-lg transition text-white shadow-xs bg-blue-600";
-        btns.transfer.innerText = `Transfer${dots}`;
+        btns.transfer.innerText = "Transfer...";
       }
     }
 
@@ -795,8 +819,6 @@
 
     async function saveTransactionToDB(payload) {
       await db.collection('users').doc(currentUser.uid).collection('transactions').add({ ...payload, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-      const ar = db.collection('users').doc(currentUser.uid).collection('accounts').doc(payload.accountId);
-      await db.runTransaction(async t => { const a = await t.get(ar); if (a.exists) t.update(ar, { balance: a.data().balance + (payload.type === 'income' ? payload.amount : -payload.amount) }); });
     }
 
     // Submit Handlers
@@ -839,7 +861,6 @@
         let tm=new Date(d).getMonth()+1, ty=new Date(d).getFullYear(); if(tm>11){tm=0;ty++;}
         b.set(ref, {title:n||cat?.name||'ผ่อนชำระ',totalAmount:amt,totalCount:c,currentCount:1,normalAmount:nAmt,finalAmount:(Math.round((amt-(nAmt*(c-1)))*100)/100),payDay:p,status:'active',accountId:selectedInstAccountId,categoryId:selectedInstCategoryId,categoryName:cat?.name||'',startDate:d,nextDueDate:new Date(ty,tm,Math.min(p,new Date(ty,tm+1,0).getDate())).toISOString().split('T')[0],createdAt:firebase.firestore.FieldValue.serverTimestamp()});
         b.set(db.collection('users').doc(currentUser.uid).collection('transactions').doc(), {kind:'transaction',type:'expense',amount:fAmt,myShare:fAmt,friendShare:0,remainingPending:0,isReimburse:false,isInstallment:true,installmentPlanId:ref.id,installmentCurrentCount:1,installmentTotalCount:c,note:`${n||'ผ่อนชำระ'} (1/${c})`,date:d,accountId:selectedInstAccountId,categoryId:selectedInstCategoryId,categoryName:cat?.name||'',categoriesBreakdown:[{categoryId:cat?.id||'',categoryName:cat?.name||'',amount:fAmt}],createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-        const a=await db.collection('users').doc(currentUser.uid).collection('accounts').doc(selectedInstAccountId).get(); if(a.exists) b.update(a.ref,{balance:a.data().balance-fAmt});
         await b.commit(); triggerSuccessToast(); document.getElementById('inst-total-amount').value=''; document.getElementById('inst-note').value=''; switchEntryMode('expense');
       } catch(err){alert(err.message);}
     });
@@ -852,8 +873,6 @@
       const frS=Math.max(0, tot-myS);
       try {
         await db.collection('users').doc(currentUser.uid).collection('transactions').add({kind:'transaction',type:'expense',amount:tot,myShare:myS,friendShare:frS,remainingPending:frS,isReimburse:true,isDeposit:false,note:n,date:d,accountId:selectedReimbAccountId,categoryId:selectedReimbCategoryId,categoryName:cat?.name||'',categoriesBreakdown:[{categoryId:cat?.id||'',categoryName:cat?.name||'',amount:myS}],createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-        const ar=db.collection('users').doc(currentUser.uid).collection('accounts').doc(selectedReimbAccountId);
-        await db.runTransaction(async t=>{const a=await t.get(ar);if(a.exists)t.update(ar,{balance:a.data().balance-tot});});
         triggerSuccessToast(); document.getElementById('reimb-total-amount').value=''; document.getElementById('reimb-my-share').value=''; document.getElementById('reimb-note').value=''; switchEntryMode('expense');
       } catch(err){alert(err.message);}
     });
@@ -861,8 +880,6 @@
     document.getElementById('transfer-form').addEventListener('submit', async (e) => {
       e.preventDefault(); if(transferFromId===transferToId)return alert("ไม่สามารถเลือกบัญชีต้นทางและปลายทางเป็นบัญชีเดียวกันได้"); const amt=parseFloat(document.getElementById('tr-amount').value); if(isNaN(amt)||amt<=0)return alert("จำนวนเงินไม่ถูกต้อง");
       try{
-        const fr=db.collection('users').doc(currentUser.uid).collection('accounts').doc(transferFromId), tr=db.collection('users').doc(currentUser.uid).collection('accounts').doc(transferToId);
-        await db.runTransaction(async t=>{const f=await t.get(fr), to=await t.get(tr); t.update(fr,{balance:f.data().balance-amt}); t.update(tr,{balance:to.data().balance+amt});});
         await db.collection('users').doc(currentUser.uid).collection('transactions').add({kind:'transfer',amount:amt,fromAccountId:transferFromId,fromAccountName:accountsList.find(a=>a.id===transferFromId)?.name||'',toAccountId:transferToId,toAccountName:accountsList.find(a=>a.id===transferToId)?.name||'',note:document.getElementById('tr-note').value,date:document.getElementById('tr-date').value,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
         triggerSuccessToast(); document.getElementById('tr-amount').value=''; document.getElementById('tr-note').value=''; switchEntryMode('expense');
       }catch(err){alert(err.message);}
@@ -892,7 +909,6 @@
         let r=amt; const b=db.batch();
         for(const cb of cbs){ if(r<=0)break; const d=Math.min(r,parseFloat(cb.getAttribute('data-max'))); b.update(db.collection('users').doc(currentUser.uid).collection('transactions').doc(cb.value),{remainingPending:allTransactions.find(t=>t.id===cb.value).remainingPending-d}); r-=d; }
         b.set(db.collection('users').doc(currentUser.uid).collection('transactions').doc(), {kind:'settlement',amount:amt,accountId:selectedSettleAccountId,note:document.getElementById('settle-note').value,date:document.getElementById('settle-date').value,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-        const a=await db.collection('users').doc(currentUser.uid).collection('accounts').doc(selectedSettleAccountId).get(); if(a.exists)b.update(a.ref,{balance:a.data().balance+amt});
         await b.commit(); triggerSuccessToast(); switchEntryMode('income');
       }catch(err){alert(err.message);}
     });
@@ -902,7 +918,6 @@
       if(isNaN(tot)||tot<=0||isNaN(my)||my<0||my>tot)return alert("เลขผิด");
       try{
         await db.collection('users').doc(currentUser.uid).collection('transactions').add({kind:'split',totalAmount:tot,myShare:my,teamShare:tot-my,remainingTeamPending:tot-my,accountId:selectedSplitAccountId,categoryId:selectedSplitCategoryId,categoryName:categoriesList.find(c=>c.id===selectedSplitCategoryId)?.name||'',note:document.getElementById('split-note').value,date:document.getElementById('split-date').value,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-        const a=await db.collection('users').doc(currentUser.uid).collection('accounts').doc(selectedSplitAccountId).get(); if(a.exists)await a.ref.update({balance:a.data().balance+tot});
         triggerSuccessToast(); document.getElementById('split-total-amount').value=''; document.getElementById('split-my-share').value=''; updateSplitMath(); switchEntryMode('income');
       }catch(err){alert(err.message);}
     });
@@ -920,7 +935,6 @@
           linkedSplitItems.push({ splitId: cb.value, deductedAmount: d }); r-=d; 
         }
         b.set(db.collection('users').doc(currentUser.uid).collection('transactions').doc(), {kind:'team-pay',amount:amt,accountId:selectedTeamPayAccountId,linkedSplitItems:linkedSplitItems,note:document.getElementById('team-pay-note').value,date:document.getElementById('team-pay-date').value,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-        const a=await db.collection('users').doc(currentUser.uid).collection('accounts').doc(selectedTeamPayAccountId).get(); if(a.exists)b.update(a.ref,{balance:a.data().balance-amt});
         await b.commit(); triggerSuccessToast(); document.getElementById('team-pay-note').value=''; switchEntryMode('transfer');
       }catch(err){alert(err.message);}
     });
@@ -940,7 +954,7 @@
     }
 
     function renderSummaryAnalyticsUI() {
-      const totBal = accountsList.reduce((s, a) => s + a.balance, 0);
+      const totBal = accountsList.reduce((s, a) => s + (a.balance || 0), 0);
       document.getElementById('summary-current-balance').innerText = `คงเหลือรวม: ${userSettings.currency}${totBal.toLocaleString()}`;
 
       let totInc = 0, totExp = 0, catIncMap = {}, catExpMap = {};
@@ -1032,6 +1046,10 @@
           if(t.kind==='transaction'&&t.isReimburse&&t.remainingPending>0) pFr+=t.remainingPending;
           else if(t.kind==='split'&&t.remainingTeamPending>0) pTm+=t.remainingTeamPending;
         });
+        
+        recalculateAccountBalances();
+        renderAllAccountButtons(); renderSettingsAccounts();
+
         updateEntryCurrentMonthCashFlowUI(); if(!document.getElementById('cashflow-modal').classList.contains('hidden')) updatePopupCashflowUI();
         if (!views.summary.classList.contains('hidden')) renderSummaryAnalyticsUI();
 
@@ -1081,21 +1099,14 @@
       const id = document.getElementById('edit-tx-id').value, kind = document.getElementById('edit-tx-kind').value, d = document.getElementById('edit-date').value, n = document.getElementById('edit-note').value, t = allTransactions.find(x => x.id === id); 
       if (!t) return;
       try {
-        const r = db.collection('users').doc(currentUser.uid).collection('accounts').doc(t.accountId);
         if (kind === 'split') {
           const newTotal = parseFloat(document.getElementById('edit-split-total').value), newMy = parseFloat(document.getElementById('edit-split-my').value);
           if (isNaN(newTotal) || newTotal <= 0 || isNaN(newMy) || newMy < 0 || newMy > newTotal) return alert("กรอกยอดเงินไม่ถูกต้อง");
           const newTeamShare = newTotal - newMy, newRemainingTeam = Math.max(0, newTeamShare - (t.teamShare - t.remainingTeamPending));
-          await db.runTransaction(async tr => {
-            const a = await tr.get(r); if (a.exists) tr.update(r, { balance: a.data().balance + (newTotal - t.totalAmount) });
-            tr.update(db.collection('users').doc(currentUser.uid).collection('transactions').doc(id), { totalAmount: newTotal, myShare: newMy, teamShare: newTeamShare, remainingTeamPending: newRemainingTeam, date: d, note: n });
-          });
+          await db.collection('users').doc(currentUser.uid).collection('transactions').doc(id).update({ totalAmount: newTotal, myShare: newMy, teamShare: newTeamShare, remainingTeamPending: newRemainingTeam, date: d, note: n });
         } else {
           const amt = parseFloat(document.getElementById('edit-amount').value); if (isNaN(amt) || amt <= 0) return alert("กรอกจำนวนเงินให้ถูกต้อง");
-          await db.runTransaction(async tr => { 
-            const a = await tr.get(r); if (a.exists) tr.update(r, { balance: a.data().balance + (t.type === 'income' ? (amt - t.amount) : -(amt - t.amount)) }); 
-            tr.update(db.collection('users').doc(currentUser.uid).collection('transactions').doc(id), { amount: amt, date: d, note: n }); 
-          });
+          await db.collection('users').doc(currentUser.uid).collection('transactions').doc(id).update({ amount: amt, date: d, note: n });
         }
         closeEditModal(); triggerSuccessToast();
       } catch (err) { alert(err.message); } 
@@ -1105,12 +1116,8 @@
       if(!confirm("ลบรายการ?")) return; 
       const t=allTransactions.find(x=>x.id===id); 
       try { 
-        if(t.kind==='transaction'||t.kind==='settlement'||t.kind==='split') { 
-          const r=db.collection('users').doc(currentUser.uid).collection('accounts').doc(t.accountId); 
-          await db.runTransaction(async tr=>{ const a=await tr.get(r); if(a.exists) tr.update(r,{balance: a.data().balance + (t.type==='income'||t.kind==='settlement'||t.kind==='split'?- (t.totalAmount||t.amount):t.amount)}); }); 
-        } else if(t.kind==='team-pay') {
-          const b = db.batch(), r = db.collection('users').doc(currentUser.uid).collection('accounts').doc(t.accountId), a = await r.get();
-          if(a.exists) b.update(r, { balance: a.data().balance + t.amount });
+        if(t.kind==='team-pay') {
+          const b = db.batch();
           if (t.linkedSplitItems?.length > 0) {
             for (const item of t.linkedSplitItems) {
               const splitRef = db.collection('users').doc(currentUser.uid).collection('transactions').doc(item.splitId), splitDoc = await splitRef.get();
@@ -1118,15 +1125,12 @@
             }
           }
           await b.commit();
-        } else if(t.kind==='transfer') { 
-          const f=db.collection('users').doc(currentUser.uid).collection('accounts').doc(t.fromAccountId), to=db.collection('users').doc(currentUser.uid).collection('accounts').doc(t.toAccountId); 
-          await db.runTransaction(async tr=>{ const aF=await tr.get(f), aT=await tr.get(to); if(aF.exists)tr.update(f,{balance:aF.data().balance+t.amount}); if(aT.exists)tr.update(to,{balance:aT.data().balance-t.amount}); }); 
         } 
         await db.collection('users').doc(currentUser.uid).collection('transactions').doc(id).delete(); 
       } catch (err) { alert(err.message); } 
     }
 
-    // Settings Functions
+    // Settings Functions (ปรับแก้ยอดเงินเริ่มต้น Offset)
     function renderSettingsAccounts() { 
       document.getElementById('accounts-settings-list').innerHTML = accountsList.map(a => `
         <div class="flex justify-between items-center p-2 bg-gray-50 border rounded-xl text-xs">
@@ -1136,8 +1140,8 @@
             <button onclick="updateAccountName('${a.id}')" class="text-blue-600 px-1 font-bold" title="บันทึกชื่อ">✓</button>
           </div>
           <div class="flex items-center">
-            <input type="text" id="edit-acc-${a.id}" readonly onclick="openCustomKeypad('edit-acc-${a.id}')" value="${a.balance}" class="w-14 px-1 py-1 border rounded bg-white cursor-pointer text-right font-bold">
-            <button onclick="updateAccountBalance('${a.id}')" class="bg-blue-50 text-blue-600 px-1.5 py-0.5 mx-1 rounded font-medium">แก้</button>
+            <input type="text" id="edit-acc-${a.id}" readonly onclick="openCustomKeypad('edit-acc-${a.id}')" value="${a.initialBalance || 0}" class="w-14 px-1 py-1 border rounded bg-white cursor-pointer text-right font-bold">
+            <button onclick="updateAccountInitialBalance('${a.id}')" class="bg-blue-50 text-blue-600 px-1.5 py-0.5 mx-1 rounded font-medium">แก้</button>
             ${!a.isDefault ? `<button onclick="deleteAccount('${a.id}')" class="text-rose-500 font-bold px-1">✕</button>` : ''}
           </div>
         </div>
@@ -1156,15 +1160,18 @@
     }
 
     async function toggleAccountPin(id, isPinned) { try { await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).update({ isPinned: isPinned }); } catch (err) { alert(err.message); } }
-    async function addNewAccount() { const n=document.getElementById('new-acc-name').value, b=parseFloat(document.getElementById('new-acc-balance').value)||0; if(!n)return; await db.collection('users').doc(currentUser.uid).collection('accounts').add({name:n, balance:b, isDefault:false, isPinned: false, createdAt: firebase.firestore.FieldValue.serverTimestamp()}); document.getElementById('new-acc-name').value=''; document.getElementById('new-acc-balance').value=''; }
+    async function addNewAccount() { const n=document.getElementById('new-acc-name').value, b=parseFloat(document.getElementById('new-acc-balance').value)||0; if(!n)return; await db.collection('users').doc(currentUser.uid).collection('accounts').add({name:n, initialBalance:b, isDefault:false, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp()}); document.getElementById('new-acc-name').value=''; document.getElementById('new-acc-balance').value=''; }
     async function updateAccountName(id) { const newName = document.getElementById(`edit-acc-name-${id}`).value.trim(); if (!newName) return alert("กรุณาระบุชื่อบัญชี"); try { await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).update({ name: newName }); triggerSuccessToast(); } catch (err) { alert(err.message); } }
-    async function updateAccountBalance(id) { await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).update({balance: parseFloat(document.getElementById(`edit-acc-${id}`).value)||0}); }
+    async function updateAccountInitialBalance(id) { 
+      const newInit = parseFloat(document.getElementById(`edit-acc-${id}`).value) || 0;
+      await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).update({ initialBalance: newInit });
+      triggerSuccessToast();
+    }
     async function deleteAccount(id) { if(confirm('ลบ?')) await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).delete(); }
     async function addNewCategory(t) { const i=t==='expense'?'new-exp-cat-name':'new-inc-cat-name', n=document.getElementById(i).value; if(!n)return; await db.collection('users').doc(currentUser.uid).collection('categories').add({name:n, type:t, createdAt: firebase.firestore.FieldValue.serverTimestamp()}); document.getElementById(i).value=''; }
     async function updateCategoryName(id) { await db.collection('users').doc(currentUser.uid).collection('categories').doc(id).update({name: document.getElementById(`edit-cat-${id}`).value}); }
     async function deleteCategory(id) { if(confirm('ลบ?')) await db.collection('users').doc(currentUser.uid).collection('categories').doc(id).delete(); }
-    async function toggleAdvancedFeaturesSetting() { userSettings.enableAdvanced = document.getElementById('setting-enable-advanced').checked; applyAdvancedFeaturesVisibility(); await autoSaveSettings(); }
-    async function autoSaveSettings() { userSettings.currency = document.getElementById('setting-currency').value; updateCurrencyUI(); await db.collection('users').doc(currentUser.uid).collection('settings').doc('config').set({currency: userSettings.currency, enableAdvanced: userSettings.enableAdvanced}); }
+    async function autoSaveSettings() { userSettings.currency = document.getElementById('setting-currency').value; updateCurrencyUI(); await db.collection('users').doc(currentUser.uid).collection('settings').doc('config').set({currency: userSettings.currency}); }
     function escapeHtml(text) { return text ? text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : ''; }
   </script>
 </body>

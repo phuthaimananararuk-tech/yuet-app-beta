@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>จดตังค์ BETA (v1.22)</title>
+  <title>จดตังค์ BETA (v1.23) - Full Dynamic Form Edit</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -39,7 +39,7 @@
       <div class="flex flex-col items-center">
         <div class="flex items-baseline space-x-1">
           <h1 class="text-xl font-black tracking-wider uppercase drop-shadow-sm">จดตังค์ BETA</h1>
-          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.22)</span>
+          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.23)</span>
         </div>
         <p class="text-[8px] text-emerald-100/80 tracking-tight font-light">by Phuthai Mananararuk & Gemini</p>
       </div>
@@ -79,6 +79,13 @@
       <!-- 1. ENTRY VIEW -->
       <section id="entry-view" class="hidden space-y-3 flex-1 flex flex-col justify-between">
         <div class="space-y-3">
+          
+          <!-- Banner เตือนเมื่ออยู่ในโหมดแก้ไข -->
+          <div id="editing-mode-banner" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-2.5 flex justify-between items-center text-xs">
+            <span class="font-bold text-amber-800">กำลังแก้ไขรายการเดิม</span>
+            <button type="button" onclick="cancelEditingMode()" class="text-rose-500 font-bold hover:underline">ยกเลิกแก้ไข</button>
+          </div>
+
           <div id="mode-buttons-container" class="grid grid-cols-3 gap-1 bg-gray-200 p-1 rounded-xl text-center">
             <button type="button" id="btn-mode-expense" onclick="handleModeClick('expense')" class="py-1.5 text-[10px] sm:text-[11px] font-semibold rounded-lg transition bg-rose-600 text-white shadow-xs">Expense...</button>
             <button type="button" id="btn-mode-income" onclick="handleModeClick('income')" class="py-1.5 text-[10px] sm:text-[11px] font-semibold rounded-lg transition text-gray-700">Income...</button>
@@ -105,7 +112,7 @@
               <div><label class="block text-[11px] text-gray-500 mb-1">วันที่</label><input type="date" id="tx-date" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
             </div>
             <div><label class="block text-[11px] text-gray-500 mb-1">บันทึกช่วยจำ (ไม่บังคับ)</label><input type="text" id="tx-note" placeholder="เช่น ค่าอาหาร, ซื้อของ" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
-            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-xl text-xs shadow-xs transition mt-1">+ บันทึกรายการ</button>
+            <button type="submit" id="btn-submit-tx-form" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-xl text-xs shadow-xs transition mt-1">+ บันทึกรายการ</button>
           </form>
 
           <!-- Transfer Form -->
@@ -119,7 +126,7 @@
               <div><label class="block text-[11px] text-gray-500 mb-1">วันที่</label><input type="date" id="tr-date" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
             </div>
             <div><label class="block text-[11px] text-gray-500 mb-1">บันทึกช่วยจำ</label><input type="text" id="tr-note" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
-            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-xl text-xs shadow-xs transition">บันทึกการโอนเงิน</button>
+            <button type="submit" id="btn-submit-transfer-form" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-xl text-xs shadow-xs transition">บันทึกการโอนเงิน</button>
           </form>
 
           <!-- Settle Form -->
@@ -132,7 +139,7 @@
             </div>
             <div><label class="block text-[11px] text-gray-600 mb-1">รายการที่รอคืน (ติ๊กเลือก)</label><div id="pending-items-container" class="space-y-1 max-h-32 overflow-y-auto pr-1 border bg-white p-2 rounded-xl"></div></div>
             <div><label class="block text-[11px] text-gray-600 mb-1">บันทึกช่วยจำ</label><input type="text" id="settle-note" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
-            <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-2 rounded-xl text-xs shadow-xs transition">ยืนยันรับเงินคืน</button>
+            <button type="submit" id="btn-submit-settle-form" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-2 rounded-xl text-xs shadow-xs transition">ยืนยันรับเงินคืน</button>
           </form>
 
           <!-- Split Form -->
@@ -149,7 +156,7 @@
               <div><label class="block text-[11px] text-purple-900 mb-1">วันที่</label><input type="date" id="split-date" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
             </div>
             <div><label class="block text-[11px] text-purple-900 mb-1">บันทึกช่วยจำ</label><input type="text" id="split-note" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
-            <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 rounded-xl text-xs shadow-xs transition">บันทึกรับเงินแทน</button>
+            <button type="submit" id="btn-submit-split-form" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 rounded-xl text-xs shadow-xs transition">บันทึกรับเงินแทน</button>
           </form>
 
           <!-- Installment Form -->
@@ -170,7 +177,7 @@
               <div class="flex justify-between font-medium text-indigo-950"><span>งวดสุดท้าย:</span><b id="lbl-ded-inst-final">฿0.00</b></div>
             </div>
             <div><label class="block text-[11px] text-indigo-900 mb-1">ชื่อสัญญา / บันทึกช่วยจำ</label><input type="text" id="inst-note" placeholder="เช่น ผ่อนโทรศัพท์" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
-            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded-xl text-xs shadow-xs transition">สร้างสัญญาผ่อนชำระ</button>
+            <button type="submit" id="btn-submit-installment-form" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded-xl text-xs shadow-xs transition">สร้างสัญญาผ่อนชำระ</button>
           </form>
 
           <!-- Reimburse Form -->
@@ -185,7 +192,7 @@
             <div class="bg-white p-2 rounded-xl border border-amber-200 flex justify-between items-center text-xs"><span class="text-amber-800">ส่วนของเพื่อน (รอคืน):</span><b id="lbl-ded-reimb-friend" class="text-amber-950 text-sm">฿0.00</b></div>
             <div><label class="block text-[11px] text-amber-900 mb-1">วันที่</label><input type="date" id="reimb-date" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
             <div><label class="block text-[11px] text-amber-900 mb-1">บันทึกช่วยจำ</label><input type="text" id="reimb-note" placeholder="เช่น ค่าอาหารมื้อเย็นสำรองจ่ายไปก่อน" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
-            <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-2 rounded-xl text-xs shadow-xs transition">บันทึกสำรองจ่าย</button>
+            <button type="submit" id="btn-submit-reimburse-form" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-2 rounded-xl text-xs shadow-xs transition">บันทึกสำรองจ่าย</button>
           </form>
 
           <!-- Team Pay Form -->
@@ -198,7 +205,7 @@
             </div>
             <div><label class="block text-[11px] text-teal-900 mb-1">รายการค้างจ่ายทีมงาน (ติ๊กเลือก)</label><div id="pending-team-items-container" class="space-y-1 max-h-32 overflow-y-auto pr-1 border bg-white p-2 rounded-xl"></div></div>
             <div><label class="block text-[11px] text-teal-900 mb-1">บันทึกช่วยจำ</label><input type="text" id="team-pay-note" placeholder="เช่น โอนจ่ายค่าตัดต่อโปรเจกต์คุณบี" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
-            <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 rounded-xl text-xs shadow-xs transition">ยืนยันการโอนให้ทีม</button>
+            <button type="submit" id="btn-submit-team-pay-form" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 rounded-xl text-xs shadow-xs transition">ยืนยันการโอนให้ทีม</button>
           </form>
         </div>
 
@@ -447,23 +454,6 @@
     <div class="bg-white rounded-3xl w-full max-w-xs p-4 space-y-4 shadow-2xl relative"><button onclick="closeCashflowPopUpModal()" class="absolute top-3 right-4 text-gray-400 font-bold text-base">✕</button><div class="border-b pb-2"><h3 class="text-xs font-bold text-gray-700 uppercase">Cash Flow</h3></div><div class="flex items-center justify-between bg-gray-50 p-2 rounded-2xl border border-gray-200"><button onclick="changePopupCashflowMonth(-1)" class="p-1.5 hover:bg-gray-200 rounded-xl text-gray-700 font-bold">←</button><span id="popup-cashflow-month-label" class="text-xs font-bold text-gray-800"></span><button onclick="changePopupCashflowMonth(1)" class="p-1.5 hover:bg-gray-200 rounded-xl text-gray-700 font-bold">→</button></div><div class="space-y-1.5 bg-gray-50 p-3 rounded-2xl border border-gray-100"><div class="relative w-full h-4 bg-gray-200 rounded-full overflow-hidden flex items-center border"><div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gray-500 z-10"></div><div id="popup-cashflow-bar-fill" class="h-full transition-all duration-500 ease-out"></div></div><div class="flex justify-between items-center text-xs pt-1"><span class="text-rose-500 font-medium">จ่าย</span><span id="popup-cashflow-net-text" class="font-bold">฿0.00</span><span class="text-emerald-500 font-medium">รับ</span></div></div></div>
   </div>
 
-  <!-- Edit Modal -->
-  <div id="edit-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-40">
-    <div class="bg-white rounded-3xl w-full max-w-sm p-4 space-y-3 shadow-2xl">
-      <h3 id="edit-modal-title" class="text-xs font-bold text-gray-700 uppercase border-b pb-2">แก้ไขรายการ</h3>
-      <input type="hidden" id="edit-tx-id"><input type="hidden" id="edit-tx-kind">
-      <div id="edit-fields-normal" class="space-y-3"><div><label class="block text-[11px] text-gray-500 mb-1">จำนวนเงิน</label><input type="text" id="edit-amount" readonly onclick="openCustomKeypad('edit-amount')" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer"></div></div>
-      <div id="edit-fields-split" class="space-y-3 hidden">
-        <div><label class="block text-[11px] text-purple-900 mb-1">ยอดเต็มลูกค้า (<span class="currency-symbol">฿</span>)</label><input type="text" id="edit-split-total" readonly onclick="openCustomKeypad('edit-split-total')" oninput="updateEditSplitMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold"></div>
-        <div><label class="block text-[11px] text-purple-900 mb-1">ส่วนของเรา (<span class="currency-symbol">฿</span>)</label><input type="text" id="edit-split-my" readonly onclick="openCustomKeypad('edit-split-my')" oninput="updateEditSplitMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold"></div>
-        <div class="bg-purple-50 p-2 rounded-xl border border-purple-100 flex justify-between items-center text-xs"><span class="text-purple-700">รอจ่ายทีมงาน:</span><b id="lbl-edit-split-team" class="text-purple-900 font-bold">฿0.00</b></div>
-      </div>
-      <div><label class="block text-[11px] text-gray-500 mb-1">วันที่</label><input type="date" id="edit-date" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
-      <div><label class="block text-[11px] text-gray-500 mb-1">บันทึกช่วยจำ</label><input type="text" id="edit-note" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
-      <div class="flex space-x-2 pt-2"><button type="button" onclick="closeEditModal()" class="w-1/2 bg-gray-200 text-gray-700 py-2 rounded-xl text-xs font-medium">ยกเลิก</button><button type="button" onclick="saveEditedTransaction()" class="w-1/2 bg-emerald-600 text-white py-2 rounded-xl text-xs font-medium">บันทึก</button></div>
-    </div>
-  </div>
-
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyA48HmY24BkrtIZ0StsecGPlnubCt7W20w",
@@ -482,6 +472,9 @@
     let userSettings = { currency: '฿' };
     let accountsList = [], categoriesList = [], allTransactions = [], activeInstallmentPlans = [];
     
+    // Edit Target Tracking State
+    let editingTxId = null;
+
     // Persistent Selection States
     let selectedAccountId = null, selectedCategoryIds = [], selectedCategoryId = null;  
     let selectedSettleAccountId = null, selectedSplitAccountId = null, selectedSplitCategoryId = null;
@@ -764,7 +757,6 @@
       document.getElementById('lbl-ded-reimb-friend').innerText = `${userSettings.currency}${Math.max(0, tot - my).toLocaleString()}`;
     }
     function updateSplitMath() { const t=parseFloat(document.getElementById('split-total-amount').value)||0, m=parseFloat(document.getElementById('split-my-share').value)||0; document.getElementById('split-team-share-lbl').innerText=`${userSettings.currency}${Math.max(0,t-m).toLocaleString()}`; }
-    function updateEditSplitMath() { const t=parseFloat(document.getElementById('edit-split-total').value)||0, m=parseFloat(document.getElementById('edit-split-my').value)||0; document.getElementById('lbl-edit-split-team').innerText=`${userSettings.currency}${Math.max(0,t-m).toLocaleString()}`; }
 
     // Multi-Category Select Modal Operations
     function openMultiCatSelectModal() {
@@ -948,14 +940,32 @@
       if (!pendingMultiCatTxPayload) return;
       pendingMultiCatTxPayload.categoriesBreakdown.forEach((item, idx) => { item.amount = parseFloat(document.getElementById(`multi-cat-amt-${idx}`).value) || 0; });
       try {
-        await saveTransactionToDB(pendingMultiCatTxPayload);
-        closeMultiCatModal(); triggerSuccessToast();
+        if (editingTxId) {
+          await db.collection('users').doc(currentUser.uid).collection('transactions').doc(editingTxId).update(pendingMultiCatTxPayload);
+        } else {
+          await saveTransactionToDB(pendingMultiCatTxPayload);
+        }
+        closeMultiCatModal(); triggerSuccessToast(); cancelEditingMode();
         document.getElementById('tx-amount').value = ''; document.getElementById('tx-note').value = ''; renderCategoryButtons();
       } catch (err) { alert(err.message); }
     }
 
     async function saveTransactionToDB(payload) {
       await db.collection('users').doc(currentUser.uid).collection('transactions').add({ ...payload, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+    }
+
+    function cancelEditingMode() {
+      editingTxId = null;
+      document.getElementById('editing-mode-banner').classList.add('hidden');
+      
+      // Restore submit button labels
+      document.getElementById('btn-submit-tx-form').innerText = "+ บันทึกรายการ";
+      document.getElementById('btn-submit-transfer-form').innerText = "บันทึกการโอนเงิน";
+      document.getElementById('btn-submit-settle-form').innerText = "ยืนยันรับเงินคืน";
+      document.getElementById('btn-submit-split-form').innerText = "บันทึกรับเงินแทน";
+      document.getElementById('btn-submit-installment-form').innerText = "สร้างสัญญาผ่อนชำระ";
+      document.getElementById('btn-submit-reimburse-form').innerText = "บันทึกสำรองจ่าย";
+      document.getElementById('btn-submit-team-pay-form').innerText = "ยืนยันการโอนให้ทีม";
     }
 
     // Submit Handlers
@@ -972,16 +982,22 @@
         } else {
           const cat = selectedCats[0];
           try {
-            await saveTransactionToDB({ kind: 'transaction', type: 'expense', amount: amt, myShare: amt, friendShare: 0, remainingPending: 0, isReimburse: false, isDeposit: false, isMultiCategory: false, note: n, date: d, accountId: selectedAccountId, categoryId: cat.id, categoryName: cat.name, categoriesBreakdown: [{ categoryId: cat.id, categoryName: cat.name, amount: amt }] });
-            triggerSuccessToast(); document.getElementById('tx-amount').value = ''; document.getElementById('tx-note').value = ''; renderCategoryButtons();
+            const payload = { kind: 'transaction', type: 'expense', amount: amt, myShare: amt, friendShare: 0, remainingPending: 0, isReimburse: false, isDeposit: false, isMultiCategory: false, note: n, date: d, accountId: selectedAccountId, categoryId: cat.id, categoryName: cat.name, categoriesBreakdown: [{ categoryId: cat.id, categoryName: cat.name, amount: amt }] };
+            if (editingTxId) await db.collection('users').doc(currentUser.uid).collection('transactions').doc(editingTxId).update(payload);
+            else await saveTransactionToDB(payload);
+            
+            triggerSuccessToast(); cancelEditingMode(); document.getElementById('tx-amount').value = ''; document.getElementById('tx-note').value = ''; renderCategoryButtons();
           } catch(err){ alert(err.message); }
         }
       } else {
         if (!selectedCategoryId) return alert("เลือกหมวดหมู่");
         const cat = categoriesList.find(c => c.id === selectedCategoryId);
         try {
-          await saveTransactionToDB({ kind: 'transaction', type: 'income', amount: amt, myShare: amt, friendShare: 0, remainingPending: 0, isReimburse: false, isDeposit: false, isMultiCategory: false, note: n, date: d, accountId: selectedAccountId, categoryId: cat.id, categoryName: cat.name, categoriesBreakdown: [{ categoryId: cat.id, categoryName: cat.name, amount: amt }] });
-          triggerSuccessToast(); document.getElementById('tx-amount').value = ''; document.getElementById('tx-note').value = ''; renderCategoryButtons();
+          const payload = { kind: 'transaction', type: 'income', amount: amt, myShare: amt, friendShare: 0, remainingPending: 0, isReimburse: false, isDeposit: false, isMultiCategory: false, note: n, date: d, accountId: selectedAccountId, categoryId: cat.id, categoryName: cat.name, categoriesBreakdown: [{ categoryId: cat.id, categoryName: cat.name, amount: amt }] };
+          if (editingTxId) await db.collection('users').doc(currentUser.uid).collection('transactions').doc(editingTxId).update(payload);
+          else await saveTransactionToDB(payload);
+
+          triggerSuccessToast(); cancelEditingMode(); document.getElementById('tx-amount').value = ''; document.getElementById('tx-note').value = ''; renderCategoryButtons();
         } catch(err){ alert(err.message); }
       }
     });
@@ -994,11 +1010,16 @@
       
       const nAmt=Math.floor((amt/c)*100)/100, fAmt=(c===1)?amt:nAmt;
       try {
-        const b=db.batch(), ref=db.collection('users').doc(currentUser.uid).collection('installment_plans').doc();
-        let tm=new Date(d).getMonth()+1, ty=new Date(d).getFullYear(); if(tm>11){tm=0;ty++;}
-        b.set(ref, {title:n||cat?.name||'ผ่อนชำระ',totalAmount:amt,totalCount:c,currentCount:1,normalAmount:nAmt,finalAmount:(Math.round((amt-(nAmt*(c-1)))*100)/100),payDay:p,status:'active',accountId:selectedInstAccountId,categoryId:selectedInstCategoryId,categoryName:cat?.name||'',startDate:d,nextDueDate:new Date(ty,tm,Math.min(p,new Date(ty,tm+1,0).getDate())).toISOString().split('T')[0],createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-        b.set(db.collection('users').doc(currentUser.uid).collection('transactions').doc(), {kind:'transaction',type:'expense',amount:fAmt,myShare:fAmt,friendShare:0,remainingPending:0,isReimburse:false,isInstallment:true,installmentPlanId:ref.id,installmentCurrentCount:1,installmentTotalCount:c,note:`${n||'ผ่อนชำระ'} (1/${c})`,date:d,accountId:selectedInstAccountId,categoryId:selectedInstCategoryId,categoryName:cat?.name||'',categoriesBreakdown:[{categoryId:cat?.id||'',categoryName:cat?.name||'',amount:fAmt}],createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-        await b.commit(); triggerSuccessToast(); document.getElementById('inst-total-amount').value=''; document.getElementById('inst-note').value=''; switchEntryMode('expense');
+        if (editingTxId) {
+          await db.collection('users').doc(currentUser.uid).collection('transactions').doc(editingTxId).update({ amount: fAmt, myShare: fAmt, note: `${n||'ผ่อนชำระ'}`, date: d, accountId: selectedInstAccountId, categoryId: selectedInstCategoryId, categoryName: cat?.name||'' });
+        } else {
+          const b=db.batch(), ref=db.collection('users').doc(currentUser.uid).collection('installment_plans').doc();
+          let tm=new Date(d).getMonth()+1, ty=new Date(d).getFullYear(); if(tm>11){tm=0;ty++;}
+          b.set(ref, {title:n||cat?.name||'ผ่อนชำระ',totalAmount:amt,totalCount:c,currentCount:1,normalAmount:nAmt,finalAmount:(Math.round((amt-(nAmt*(c-1)))*100)/100),payDay:p,status:'active',accountId:selectedInstAccountId,categoryId:selectedInstCategoryId,categoryName:cat?.name||'',startDate:d,nextDueDate:new Date(ty,tm,Math.min(p,new Date(ty,tm+1,0).getDate())).toISOString().split('T')[0],createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+          b.set(db.collection('users').doc(currentUser.uid).collection('transactions').doc(), {kind:'transaction',type:'expense',amount:fAmt,myShare:fAmt,friendShare:0,remainingPending:0,isReimburse:false,isInstallment:true,installmentPlanId:ref.id,installmentCurrentCount:1,installmentTotalCount:c,note:`${n||'ผ่อนชำระ'} (1/${c})`,date:d,accountId:selectedInstAccountId,categoryId:selectedInstCategoryId,categoryName:cat?.name||'',categoriesBreakdown:[{categoryId:cat?.id||'',categoryName:cat?.name||'',amount:fAmt}],createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+          await b.commit();
+        }
+        triggerSuccessToast(); cancelEditingMode(); document.getElementById('inst-total-amount').value=''; document.getElementById('inst-note').value=''; switchEntryMode('expense');
       } catch(err){alert(err.message);}
     });
 
@@ -1009,16 +1030,22 @@
       if(isNaN(tot)||tot<=0||myS>tot)return alert("ยอดเงินไม่ถูกต้อง");
       const frS=Math.max(0, tot-myS);
       try {
-        await db.collection('users').doc(currentUser.uid).collection('transactions').add({kind:'transaction',type:'expense',amount:tot,myShare:myS,friendShare:frS,remainingPending:frS,isReimburse:true,isDeposit:false,note:n,date:d,accountId:selectedReimbAccountId,categoryId:selectedReimbCategoryId,categoryName:cat?.name||'',categoriesBreakdown:[{categoryId:cat?.id||'',categoryName:cat?.name||'',amount:myS}],createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-        triggerSuccessToast(); document.getElementById('reimb-total-amount').value=''; document.getElementById('reimb-my-share').value=''; document.getElementById('reimb-note').value=''; switchEntryMode('expense');
+        const payload = {kind:'transaction',type:'expense',amount:tot,myShare:myS,friendShare:frS,remainingPending:frS,isReimburse:true,isDeposit:false,note:n,date:d,accountId:selectedReimbAccountId,categoryId:selectedReimbCategoryId,categoryName:cat?.name||'',categoriesBreakdown:[{categoryId:cat?.id||'',categoryName:cat?.name||'',amount:myS}]};
+        if (editingTxId) await db.collection('users').doc(currentUser.uid).collection('transactions').doc(editingTxId).update(payload);
+        else await db.collection('users').doc(currentUser.uid).collection('transactions').add({ ...payload, createdAt:firebase.firestore.FieldValue.serverTimestamp() });
+        
+        triggerSuccessToast(); cancelEditingMode(); document.getElementById('reimb-total-amount').value=''; document.getElementById('reimb-my-share').value=''; document.getElementById('reimb-note').value=''; switchEntryMode('expense');
       } catch(err){alert(err.message);}
     });
 
     document.getElementById('transfer-form').addEventListener('submit', async (e) => {
       e.preventDefault(); if(transferFromId===transferToId)return alert("ไม่สามารถเลือกบัญชีต้นทางและปลายทางเป็นบัญชีเดียวกันได้"); const amt=parseFloat(document.getElementById('tr-amount').value); if(isNaN(amt)||amt<=0)return alert("จำนวนเงินไม่ถูกต้อง");
       try{
-        await db.collection('users').doc(currentUser.uid).collection('transactions').add({kind:'transfer',amount:amt,fromAccountId:transferFromId,fromAccountName:accountsList.find(a=>a.id===transferFromId)?.name||'',toAccountId:transferToId,toAccountName:accountsList.find(a=>a.id===transferToId)?.name||'',note:document.getElementById('tr-note').value,date:document.getElementById('tr-date').value,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-        triggerSuccessToast(); document.getElementById('tr-amount').value=''; document.getElementById('tr-note').value=''; switchEntryMode('expense');
+        const payload = {kind:'transfer',amount:amt,fromAccountId:transferFromId,fromAccountName:accountsList.find(a=>a.id===transferFromId)?.name||'',toAccountId:transferToId,toAccountName:accountsList.find(a=>a.id===transferToId)?.name||'',note:document.getElementById('tr-note').value,date:document.getElementById('tr-date').value};
+        if (editingTxId) await db.collection('users').doc(currentUser.uid).collection('transactions').doc(editingTxId).update(payload);
+        else await db.collection('users').doc(currentUser.uid).collection('transactions').add({ ...payload, createdAt:firebase.firestore.FieldValue.serverTimestamp() });
+
+        triggerSuccessToast(); cancelEditingMode(); document.getElementById('tr-amount').value=''; document.getElementById('tr-note').value=''; switchEntryMode('expense');
       }catch(err){alert(err.message);}
     });
 
@@ -1041,12 +1068,22 @@
     
     document.getElementById('settle-form').addEventListener('submit', async (e) => {
       e.preventDefault(); const amt=parseFloat(document.getElementById('settle-received-amount').value), cbs=document.querySelectorAll('input[name="settle-item"]:checked');
-      if(isNaN(amt)||amt<=0)return alert("เลขผิด"); if(!cbs.length)return alert("เลือกอย่างน้อย 1"); document.getElementById('settle-received-amount').value='';
+      if(isNaN(amt)||amt<=0)return alert("เลขผิด");
+      
+      if (editingTxId) {
+        try {
+          await db.collection('users').doc(currentUser.uid).collection('transactions').doc(editingTxId).update({ amount: amt, accountId: selectedSettleAccountId, note: document.getElementById('settle-note').value, date: document.getElementById('settle-date').value });
+          triggerSuccessToast(); cancelEditingMode(); switchEntryMode('income');
+        } catch(err){alert(err.message);}
+        return;
+      }
+
+      if(!cbs.length)return alert("เลือกอย่างน้อย 1"); document.getElementById('settle-received-amount').value='';
       try{
         let r=amt; const b=db.batch();
         for(const cb of cbs){ if(r<=0)break; const d=Math.min(r,parseFloat(cb.getAttribute('data-max'))); b.update(db.collection('users').doc(currentUser.uid).collection('transactions').doc(cb.value),{remainingPending:allTransactions.find(t=>t.id===cb.value).remainingPending-d}); r-=d; }
         b.set(db.collection('users').doc(currentUser.uid).collection('transactions').doc(), {kind:'settlement',amount:amt,accountId:selectedSettleAccountId,note:document.getElementById('settle-note').value,date:document.getElementById('settle-date').value,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-        await b.commit(); triggerSuccessToast(); switchEntryMode('income');
+        await b.commit(); triggerSuccessToast(); cancelEditingMode(); switchEntryMode('income');
       }catch(err){alert(err.message);}
     });
 
@@ -1054,14 +1091,31 @@
       e.preventDefault(); const tot=parseFloat(document.getElementById('split-total-amount').value), my=parseFloat(document.getElementById('split-my-share').value);
       if(isNaN(tot)||tot<=0||isNaN(my)||my<0||my>tot)return alert("เลขผิด");
       try{
-        await db.collection('users').doc(currentUser.uid).collection('transactions').add({kind:'split',totalAmount:tot,myShare:my,teamShare:tot-my,remainingTeamPending:tot-my,accountId:selectedSplitAccountId,categoryId:selectedSplitCategoryId,categoryName:categoriesList.find(c=>c.id===selectedSplitCategoryId)?.name||'',note:document.getElementById('split-note').value,date:document.getElementById('split-date').value,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-        triggerSuccessToast(); document.getElementById('split-total-amount').value=''; document.getElementById('split-my-share').value=''; updateSplitMath(); switchEntryMode('income');
+        if (editingTxId) {
+          const t = allTransactions.find(x=>x.id===editingTxId);
+          const newTeamShare = tot - my, newRemainingTeam = Math.max(0, newTeamShare - (t.teamShare - t.remainingTeamPending));
+          await db.collection('users').doc(currentUser.uid).collection('transactions').doc(editingTxId).update({ totalAmount: tot, myShare: my, teamShare: newTeamShare, remainingTeamPending: newRemainingTeam, accountId: selectedSplitAccountId, categoryId: selectedSplitCategoryId, categoryName: categoriesList.find(c=>c.id===selectedSplitCategoryId)?.name||'', note: document.getElementById('split-note').value, date: document.getElementById('split-date').value });
+        } else {
+          await db.collection('users').doc(currentUser.uid).collection('transactions').add({kind:'split',totalAmount:tot,myShare:my,teamShare:tot-my,remainingTeamPending:tot-my,accountId:selectedSplitAccountId,categoryId:selectedSplitCategoryId,categoryName:categoriesList.find(c=>c.id===selectedSplitCategoryId)?.name||'',note:document.getElementById('split-note').value,date:document.getElementById('split-date').value,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+        }
+        triggerSuccessToast(); cancelEditingMode(); document.getElementById('split-total-amount').value=''; document.getElementById('split-my-share').value=''; updateSplitMath(); switchEntryMode('income');
       }catch(err){alert(err.message);}
     });
 
     document.getElementById('team-pay-form').addEventListener('submit', async (e) => {
-      e.preventDefault(); const amt=parseFloat(document.getElementById('team-pay-amount').value), cbs=document.querySelectorAll('input[name="team-pay-item"]:checked');
-      if(isNaN(amt)||amt<=0)return alert("กรอกจำนวนเงินให้ถูกต้อง"); if(!cbs.length)return alert("เลือกรายการค้างจ่ายทีมงานอย่างน้อย 1 รายการ"); 
+      e.preventDefault(); const amt=parseFloat(document.getElementById('team-pay-amount').value);
+      if(isNaN(amt)||amt<=0)return alert("กรอกจำนวนเงินให้ถูกต้อง"); 
+
+      if (editingTxId) {
+        try {
+          await db.collection('users').doc(currentUser.uid).collection('transactions').doc(editingTxId).update({ amount: amt, accountId: selectedTeamPayAccountId, note: document.getElementById('team-pay-note').value, date: document.getElementById('team-pay-date').value });
+          triggerSuccessToast(); cancelEditingMode(); switchEntryMode('transfer');
+        } catch(err){alert(err.message);}
+        return;
+      }
+
+      const cbs=document.querySelectorAll('input[name="team-pay-item"]:checked');
+      if(!cbs.length)return alert("เลือกรายการค้างจ่ายทีมงานอย่างน้อย 1 รายการ"); 
       document.getElementById('team-pay-amount').value='';
       try{
         let r=amt; const b=db.batch(); const linkedSplitItems = [];
@@ -1072,7 +1126,7 @@
           linkedSplitItems.push({ splitId: cb.value, deductedAmount: d }); r-=d; 
         }
         b.set(db.collection('users').doc(currentUser.uid).collection('transactions').doc(), {kind:'team-pay',amount:amt,accountId:selectedTeamPayAccountId,linkedSplitItems:linkedSplitItems,note:document.getElementById('team-pay-note').value,date:document.getElementById('team-pay-date').value,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-        await b.commit(); triggerSuccessToast(); document.getElementById('team-pay-note').value=''; switchEntryMode('transfer');
+        await b.commit(); triggerSuccessToast(); cancelEditingMode(); document.getElementById('team-pay-note').value=''; switchEntryMode('transfer');
       }catch(err){alert(err.message);}
     });
 
@@ -1325,13 +1379,13 @@
         if(t.kind==='transaction'){
           let b=t.isReimburse ? (t.remainingPending>0?`<span class="text-[9px] bg-amber-100 text-amber-800 px-1 py-0.5 rounded ml-1">รอ ${t.remainingPending}</span>`:`<span class="text-[9px] bg-emerald-100 text-emerald-800 px-1 py-0.5 rounded ml-1">คืนครบ</span>`) : (t.isInstallment?`<span class="text-[9px] bg-indigo-100 text-indigo-800 px-1 py-0.5 rounded ml-1">ผ่อน</span>`:''); 
           let breakdownText = t.categoriesBreakdown?.length > 1 ? `<div class="text-[9px] text-gray-400 mt-0.5 font-light">${t.categoriesBreakdown.map(sub => `${sub.categoryName}: ฿${sub.amount.toLocaleString()}`).join(' • ')}</div>` : '';
-          return `<div onclick="openEditModal('${t.id}')" class="flex justify-between items-center p-2.5 bg-gray-50 border rounded-xl text-xs hover:bg-gray-100 cursor-pointer mb-1"><div class="flex flex-col"><span class="font-medium">${escapeHtml(t.note||'-')} ${b}</span><span class="text-[10px] text-gray-400">${accountsList.find(a=>a.id===t.accountId)?.name||''} • [${t.categoryName}]</span>${breakdownText}</div><div class="flex items-center space-x-2"><span class="font-bold ${t.type==='income'?'text-emerald-600':'text-rose-600'}">${t.type==='income'?'+':'-'}${t.amount.toLocaleString()}</span><button onclick="event.stopPropagation(); deleteTx('${t.id}')" class="text-gray-300 hover:text-rose-500 font-bold px-1">×</button></div></div>`;
+          return `<div onclick="startEditingTransaction('${t.id}')" class="flex justify-between items-center p-2.5 bg-gray-50 border rounded-xl text-xs hover:bg-gray-100 cursor-pointer mb-1"><div class="flex flex-col"><span class="font-medium">${escapeHtml(t.note||'-')} ${b}</span><span class="text-[10px] text-gray-400">${accountsList.find(a=>a.id===t.accountId)?.name||''} • [${t.categoryName}]</span>${breakdownText}</div><div class="flex items-center space-x-2"><span class="font-bold ${t.type==='income'?'text-emerald-600':'text-rose-600'}">${t.type==='income'?'+':'-'}${t.amount.toLocaleString()}</span><button onclick="event.stopPropagation(); deleteTx('${t.id}')" class="text-gray-300 hover:text-rose-500 font-bold px-1">×</button></div></div>`;
         }
         if(t.kind==='split') {
           const pendingText = t.remainingTeamPending > 0 ? `<span class="text-[9px] bg-purple-100 text-purple-800 px-1 py-0.5 rounded ml-1">ค้างทีม ฿${t.remainingTeamPending.toLocaleString()}</span>` : `<span class="text-[9px] bg-emerald-100 text-emerald-800 px-1 py-0.5 rounded ml-1">จ่ายทีมครบ</span>`;
-          return `<div onclick="openEditModal('${t.id}')" class="flex justify-between items-center p-2.5 bg-purple-50/50 border border-purple-100 rounded-xl text-xs hover:bg-purple-100/60 cursor-pointer mb-1"><div class="flex flex-col"><span class="font-medium">รับแทนทีม (${accountsList.find(a=>a.id===t.accountId)?.name}) ${pendingText}</span><span class="text-[10px] text-gray-400">${escapeHtml(t.note||'-')} (ส่วนเรา ฿${t.myShare.toLocaleString()})</span></div><div class="flex items-center space-x-2"><span class="font-bold text-purple-900">+${t.totalAmount.toLocaleString()}</span><button onclick="event.stopPropagation(); deleteTx('${t.id}')" class="text-gray-300 hover:text-rose-500 font-bold px-1">×</button></div></div>`;
+          return `<div onclick="startEditingTransaction('${t.id}')" class="flex justify-between items-center p-2.5 bg-purple-50/50 border border-purple-100 rounded-xl text-xs hover:bg-purple-100/60 cursor-pointer mb-1"><div class="flex flex-col"><span class="font-medium">รับแทนทีม (${accountsList.find(a=>a.id===t.accountId)?.name}) ${pendingText}</span><span class="text-[10px] text-gray-400">${escapeHtml(t.note||'-')} (ส่วนเรา ฿${t.myShare.toLocaleString()})</span></div><div class="flex items-center space-x-2"><span class="font-bold text-purple-900">+${t.totalAmount.toLocaleString()}</span><button onclick="event.stopPropagation(); deleteTx('${t.id}')" class="text-gray-300 hover:text-rose-500 font-bold px-1">×</button></div></div>`;
         }
-        return `<div class="flex justify-between items-center p-2.5 border rounded-xl text-xs mb-1 ${t.kind==='transfer'?'bg-blue-50/50 border-blue-100':t.kind==='team-pay'?'bg-teal-50/50 border-teal-100':'bg-amber-50/50 border-amber-100'}"><div class="flex flex-col"><span class="font-medium">${t.kind==='transfer'?`โอน: ${t.fromAccountName} ➔ ${t.toAccountName}`:t.kind==='team-pay'?`โอนให้ทีม (${accountsList.find(a=>a.id===t.accountId)?.name})`:'รับเงินคืน'}</span><span class="text-[10px] text-gray-400">${escapeHtml(t.note||'-')}</span></div><div class="flex items-center space-x-2"><span class="font-bold">${t.kind==='transfer'||t.kind==='team-pay'?'-'+t.amount.toLocaleString():'+'+t.amount.toLocaleString()}</span><button onclick="deleteTx('${t.id}')" class="text-gray-300 hover:text-rose-500 font-bold px-1">×</button></div></div>`;
+        return `<div onclick="startEditingTransaction('${t.id}')" class="flex justify-between items-center p-2.5 border rounded-xl text-xs hover:bg-gray-100 cursor-pointer mb-1 ${t.kind==='transfer'?'bg-blue-50/50 border-blue-100':t.kind==='team-pay'?'bg-teal-50/50 border-teal-100':'bg-amber-50/50 border-amber-100'}"><div class="flex flex-col"><span class="font-medium">${t.kind==='transfer'?`โอน: ${t.fromAccountName} ➔ ${t.toAccountName}`:t.kind==='team-pay'?`โอนให้ทีม (${accountsList.find(a=>a.id===t.accountId)?.name})`:'รับเงินคืน'}</span><span class="text-[10px] text-gray-400">${escapeHtml(t.note||'-')}</span></div><div class="flex items-center space-x-2"><span class="font-bold">${t.kind==='transfer'||t.kind==='team-pay'?'-'+t.amount.toLocaleString():'+'+t.amount.toLocaleString()}</span><button onclick="event.stopPropagation(); deleteTx('${t.id}')" class="text-gray-300 hover:text-rose-500 font-bold px-1">×</button></div></div>`;
       }).join('')).join('');
     }
 
@@ -1361,40 +1415,93 @@
       });
     }
 
-    // Edit / Delete Operations
-    function openEditModal(id) { 
-      const t=allTransactions.find(x=>x.id===id); 
-      if(!t || (t.kind !== 'transaction' && t.kind !== 'split')) return; 
-      document.getElementById('edit-tx-id').value = t.id; document.getElementById('edit-tx-kind').value = t.kind;
-      document.getElementById('edit-date').value = t.date; document.getElementById('edit-note').value = t.note || ''; 
-
-      const titleEl = document.getElementById('edit-modal-title'), normBox = document.getElementById('edit-fields-normal'), splitBox = document.getElementById('edit-fields-split');
-      if (t.kind === 'split') {
-        titleEl.innerText = "แก้ไขรายการรับเงินแทน"; normBox.classList.add('hidden'); splitBox.classList.remove('hidden');
-        document.getElementById('edit-split-total').value = t.totalAmount; document.getElementById('edit-split-my').value = t.myShare; updateEditSplitMath();
-      } else {
-        titleEl.innerText = "แก้ไขรายการ"; splitBox.classList.add('hidden'); normBox.classList.remove('hidden');
-        document.getElementById('edit-amount').value = t.amount;
-      }
-      document.getElementById('edit-modal').classList.remove('hidden'); 
-    }
-    function closeEditModal() { document.getElementById('edit-modal').classList.add('hidden'); }
-
-    async function saveEditedTransaction() { 
-      const id = document.getElementById('edit-tx-id').value, kind = document.getElementById('edit-tx-kind').value, d = document.getElementById('edit-date').value, n = document.getElementById('edit-note').value, t = allTransactions.find(x => x.id === id); 
+    // Full Dynamic Form Edit Dispatcher
+    function startEditingTransaction(id) {
+      const t = allTransactions.find(x => x.id === id);
       if (!t) return;
-      try {
-        if (kind === 'split') {
-          const newTotal = parseFloat(document.getElementById('edit-split-total').value), newMy = parseFloat(document.getElementById('edit-split-my').value);
-          if (isNaN(newTotal) || newTotal <= 0 || isNaN(newMy) || newMy < 0 || newMy > newTotal) return alert("กรอกยอดเงินไม่ถูกต้อง");
-          const newTeamShare = newTotal - newMy, newRemainingTeam = Math.max(0, newTeamShare - (t.teamShare - t.remainingTeamPending));
-          await db.collection('users').doc(currentUser.uid).collection('transactions').doc(id).update({ totalAmount: newTotal, myShare: newMy, teamShare: newTeamShare, remainingTeamPending: newRemainingTeam, date: d, note: n });
+      
+      editingTxId = id;
+      document.getElementById('editing-mode-banner').classList.remove('hidden');
+
+      if (t.kind === 'transaction') {
+        if (t.isReimburse) {
+          switchEntryMode('reimburse');
+          selectedReimbAccountId = t.accountId;
+          selectedReimbCategoryId = t.categoryId;
+          document.getElementById('reimb-total-amount').value = t.amount;
+          document.getElementById('reimb-my-share').value = t.myShare;
+          document.getElementById('reimb-date').value = t.date;
+          document.getElementById('reimb-note').value = t.note || '';
+          updateDedicatedReimbMath();
+          document.getElementById('btn-submit-reimburse-form').innerText = "บันทึกการแก้ไขสำรองจ่าย";
+        } else if (t.isInstallment) {
+          switchEntryMode('installment');
+          selectedInstAccountId = t.accountId;
+          selectedInstCategoryId = t.categoryId;
+          document.getElementById('inst-total-amount').value = t.amount;
+          document.getElementById('inst-date').value = t.date;
+          document.getElementById('inst-note').value = t.note || '';
+          updateDedicatedInstMath();
+          document.getElementById('btn-submit-installment-form').innerText = "บันทึกการแก้ไขสัญญา";
         } else {
-          const amt = parseFloat(document.getElementById('edit-amount').value); if (isNaN(amt) || amt <= 0) return alert("กรอกจำนวนเงินให้ถูกต้อง");
-          await db.collection('users').doc(currentUser.uid).collection('transactions').doc(id).update({ amount: amt, date: d, note: n });
+          switchEntryMode(t.type);
+          selectedAccountId = t.accountId;
+          if (t.type === 'expense') {
+            if (t.categoriesBreakdown?.length > 1) {
+              selectedCategoryIds = t.categoriesBreakdown.map(b => b.categoryId);
+            } else {
+              selectedCategoryIds = [t.categoryId];
+            }
+          } else {
+            selectedCategoryId = t.categoryId;
+          }
+          document.getElementById('tx-amount').value = t.amount;
+          document.getElementById('tx-date').value = t.date;
+          document.getElementById('tx-note').value = t.note || '';
+          renderAllAccountButtons();
+          renderCategoryButtons();
+          document.getElementById('btn-submit-tx-form').innerText = "บันทึกการแก้ไขรายการ";
         }
-        closeEditModal(); triggerSuccessToast();
-      } catch (err) { alert(err.message); } 
+      } else if (t.kind === 'transfer') {
+        switchEntryMode('transfer');
+        transferFromId = t.fromAccountId;
+        transferToId = t.toAccountId;
+        document.getElementById('tr-amount').value = t.amount;
+        document.getElementById('tr-date').value = t.date;
+        document.getElementById('tr-note').value = t.note || '';
+        renderTransferButtons();
+        document.getElementById('btn-submit-transfer-form').innerText = "บันทึกการแก้ไขการโอน";
+      } else if (t.kind === 'split') {
+        switchEntryMode('split');
+        selectedSplitAccountId = t.accountId;
+        selectedSplitCategoryId = t.categoryId;
+        document.getElementById('split-total-amount').value = t.totalAmount;
+        document.getElementById('split-my-share').value = t.myShare;
+        document.getElementById('split-date').value = t.date;
+        document.getElementById('split-note').value = t.note || '';
+        renderAllAccountButtons();
+        renderSplitCategoryButtons();
+        updateSplitMath();
+        document.getElementById('btn-submit-split-form').innerText = "บันทึกการแก้ไขรับเงินแทน";
+      } else if (t.kind === 'settlement') {
+        switchEntryMode('settle');
+        selectedSettleAccountId = t.accountId;
+        document.getElementById('settle-received-amount').value = t.amount;
+        document.getElementById('settle-date').value = t.date;
+        document.getElementById('settle-note').value = t.note || '';
+        renderAllAccountButtons();
+        document.getElementById('btn-submit-settle-form').innerText = "บันทึกการแก้ไขรับเงินคืน";
+      } else if (t.kind === 'team-pay') {
+        switchEntryMode('team-pay');
+        selectedTeamPayAccountId = t.accountId;
+        document.getElementById('team-pay-amount').value = t.amount;
+        document.getElementById('team-pay-date').value = t.date;
+        document.getElementById('team-pay-note').value = t.note || '';
+        renderAllAccountButtons();
+        document.getElementById('btn-submit-team-pay-form').innerText = "บันทึกการแก้ไขโอนให้ทีม";
+      }
+
+      goToView('entry');
     }
     
     async function deleteTx(id) { 

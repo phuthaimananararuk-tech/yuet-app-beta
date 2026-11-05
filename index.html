@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YUET BETA (v1.18) - Dynamic UI Refinements</title>
+  <title>YUET BETA (v1.19) - Search & Advanced Filter</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -39,7 +39,7 @@
       <div class="flex flex-col items-center">
         <div class="flex items-baseline space-x-1">
           <h1 class="text-xl font-black tracking-wider uppercase drop-shadow-sm">YUET BETA</h1>
-          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.18)</span>
+          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.19)</span>
         </div>
         <p class="text-[8px] text-emerald-100/80 tracking-tight font-light">by Phuthai Mananararuk & Gemini</p>
       </div>
@@ -234,8 +234,25 @@
       </section>
 
       <!-- 3. HISTORY VIEW -->
-      <section id="history-view" class="hidden space-y-3 flex flex-col h-[500px]">
-        <div class="border-b pb-2 flex-shrink-0"><h2 class="text-xs font-bold text-gray-700 uppercase">History - ประวัติรายการ</h2></div>
+      <section id="history-view" class="hidden space-y-2.5 flex flex-col h-[520px]">
+        <div class="border-b pb-2 flex justify-between items-center flex-shrink-0">
+          <h2 class="text-xs font-bold text-gray-700 uppercase">History - ประวัติรายการ</h2>
+          <span id="history-count-badge" class="text-[10px] text-gray-400 font-medium">0 รายการ</span>
+        </div>
+
+        <!-- Instant Search & Filter Bar -->
+        <div class="flex items-center space-x-1.5 flex-shrink-0">
+          <div class="relative flex-1">
+            <input type="text" id="history-search-input" oninput="applyHistoryFilters()" placeholder="ค้นหาบันทึกช่วยจำ หรือ ยอดเงิน..." class="w-full pl-8 pr-7 py-1.5 text-xs border border-gray-300 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none transition">
+            <svg class="w-4 h-4 text-gray-400 absolute left-2.5 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <button id="history-search-clear-btn" onclick="clearHistorySearchText()" class="hidden absolute right-2.5 top-1.5 text-gray-400 hover:text-gray-600 font-bold text-xs">✕</button>
+          </div>
+          <button id="open-filter-modal-btn" onclick="openHistoryFilterModal()" class="relative bg-gray-100 hover:bg-gray-200 text-gray-700 p-2 rounded-xl border border-gray-300 transition flex items-center justify-center" title="ตัวกรองเชิงลึก">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+            <span id="filter-active-indicator" class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-500 rounded-full border-2 border-white"></span>
+          </button>
+        </div>
+
         <div id="full-tx-list" class="space-y-2 overflow-y-auto pr-1 flex-1"><p class="text-center text-xs text-gray-400 py-6">กำลังโหลดประวัติ...</p></div>
       </section>
 
@@ -266,6 +283,77 @@
 
     </main>
     <footer id="auth-status-bar" class="bg-gray-100 p-2 text-center text-[10px] text-gray-400 border-t border-gray-100">สถานะ: ยังไม่ได้เข้าสู่ระบบ</footer>
+  </div>
+
+  <!-- History Advanced Filter Modal -->
+  <div id="history-filter-modal" class="hidden fixed inset-0 bg-black/60 flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-sm p-4 space-y-3.5 shadow-2xl relative max-h-[85vh] flex flex-col">
+      <div class="flex justify-between items-center border-b pb-2 flex-shrink-0">
+        <h3 class="text-xs font-bold text-gray-700 uppercase">ตัวกรองรายการเชิงลึก</h3>
+        <button type="button" onclick="closeHistoryFilterModal()" class="text-gray-400 font-bold text-lg px-2">✕</button>
+      </div>
+      
+      <div class="space-y-3 overflow-y-auto pr-1 flex-1 text-xs">
+        <!-- 1. Transaction Kind / Type -->
+        <div class="space-y-1">
+          <label class="block font-semibold text-gray-600">ประเภทรายการ</label>
+          <select id="filter-kind" onchange="toggleFilterAccountOptions()" class="w-full px-2.5 py-1.5 border rounded-xl bg-gray-50 focus:bg-white">
+            <option value="all">ทั้งหมด</option>
+            <option value="expense">รายจ่าย (Expense)</option>
+            <option value="income">รายรับ (Income)</option>
+            <option value="transfer">โอนเงิน (Transfer)</option>
+            <option value="split">รับเงินแทน (Split)</option>
+            <option value="reimburse">หารค่าใช้จ่าย (Reimburse)</option>
+            <option value="installment">ผ่อนชำระ (Installment)</option>
+          </select>
+        </div>
+
+        <!-- 2. Category -->
+        <div class="space-y-1">
+          <label class="block font-semibold text-gray-600">หมวดหมู่</label>
+          <select id="filter-category" class="w-full px-2.5 py-1.5 border rounded-xl bg-gray-50 focus:bg-white">
+            <option value="all">ทุกหมวดหมู่</option>
+          </select>
+        </div>
+
+        <!-- 3. Account Filter (Dynamic based on Kind) -->
+        <div id="filter-account-single-box" class="space-y-1">
+          <label class="block font-semibold text-gray-600">บัญชีที่เกี่ยวข้อง</label>
+          <select id="filter-account" class="w-full px-2.5 py-1.5 border rounded-xl bg-gray-50 focus:bg-white">
+            <option value="all">ทุกบัญชี</option>
+          </select>
+        </div>
+
+        <div id="filter-account-transfer-box" class="grid grid-cols-2 gap-2 hidden">
+          <div class="space-y-1">
+            <label class="block font-semibold text-gray-600">บัญชีต้นทาง</label>
+            <select id="filter-from-account" class="w-full px-2 py-1.5 border rounded-xl bg-gray-50 focus:bg-white">
+              <option value="all">ทุกบัญชี</option>
+            </select>
+          </div>
+          <div class="space-y-1">
+            <label class="block font-semibold text-gray-600">บัญชีปลายทาง</label>
+            <select id="filter-to-account" class="w-full px-2 py-1.5 border rounded-xl bg-gray-50 focus:bg-white">
+              <option value="all">ทุกบัญชี</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 4. Date Range -->
+        <div class="space-y-1.5 border-t pt-2">
+          <label class="block font-semibold text-gray-600">ช่วงวันที่</label>
+          <div class="grid grid-cols-2 gap-2">
+            <div><span class="text-[10px] text-gray-400">จากวันที่</span><input type="date" id="filter-start-date" class="w-full px-2 py-1 border rounded-xl bg-gray-50 text-xs"></div>
+            <div><span class="text-[10px] text-gray-400">ถึงวันที่</span><input type="date" id="filter-end-date" class="w-full px-2 py-1 border rounded-xl bg-gray-50 text-xs"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-2 flex space-x-2 border-t flex-shrink-0">
+        <button type="button" onclick="resetHistoryFilters()" class="w-1/3 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-xl text-xs font-semibold">ล้างค่า</button>
+        <button type="button" onclick="confirmHistoryFilters()" class="w-2/3 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-xl text-xs font-semibold">ตกลง</button>
+      </div>
+    </div>
   </div>
 
   <!-- Toast Checkmark -->
@@ -382,6 +470,17 @@
     let categoryTapTracker = { catId: null, timer: null };
     let balanceChartInstance = null, incomePieInstance = null, expensePieInstance = null;
 
+    // History Filter State
+    let historyFilterState = {
+      kind: 'all',
+      category: 'all',
+      account: 'all',
+      fromAccount: 'all',
+      toAccount: 'all',
+      startDate: '',
+      endDate: ''
+    };
+
     const views = { login: document.getElementById('login-view'), register: document.getElementById('register-view'), entry: document.getElementById('entry-view'), summary: document.getElementById('summary-view'), history: document.getElementById('history-view'), setting: document.getElementById('setting-view') };
     const topNavTabs = document.getElementById('top-nav-tabs'), logoutBtn = document.getElementById('logout-btn'), openSettingsBtn = document.getElementById('open-settings-btn'), authStatusBar = document.getElementById('auth-status-bar');
 
@@ -435,7 +534,7 @@
         views[vName].classList.remove('hidden');
         if (vName === 'entry') document.getElementById('nav-tab-entry').className = "py-2 text-xs font-bold rounded-xl transition text-center shadow-xs bg-white text-emerald-700";
         else if (vName === 'summary') { document.getElementById('nav-tab-summary').className = "py-2 text-xs font-bold rounded-xl transition text-center shadow-xs bg-white text-blue-700"; renderSummaryAnalyticsUI(); }
-        else if (vName === 'history') document.getElementById('nav-tab-history').className = "py-2 text-xs font-bold rounded-xl transition text-center shadow-xs bg-white text-emerald-700";
+        else if (vName === 'history') { document.getElementById('nav-tab-history').className = "py-2 text-xs font-bold rounded-xl transition text-center shadow-xs bg-white text-emerald-700"; applyHistoryFilters(); }
       }
     }
 
@@ -470,7 +569,7 @@
       } 
     });
 
-    // Auto-create 3 default accounts & categories if missing
+    // Auto-create default accounts & categories if missing
     async function initUserAccountsAndCategories(uid) {
       const accSnap = await db.collection('users').doc(uid).collection('accounts').limit(1).get();
       if (accSnap.empty) {
@@ -557,13 +656,13 @@
         transferFromId = ensureValid(transferFromId);
         transferToId = (!transferToId || !accountsList.some(a => a.id === transferToId)) ? (accountsList.length > 1 ? accountsList[1].id : fallbackId) : transferToId;
 
-        renderAllAccountButtons(); renderSettingsAccounts();
+        renderAllAccountButtons(); renderSettingsAccounts(); populateHistoryFilterDropdowns();
         if (!views.summary.classList.contains('hidden')) renderSummaryAnalyticsUI();
       });
 
       unsubscribeCat = db.collection('users').doc(uid).collection('categories').orderBy('createdAt','asc').onSnapshot(snap => { 
         categoriesList = []; snap.forEach(d => categoriesList.push({ id: d.id, ...d.data() })); 
-        renderCategoryButtons(); renderSplitCategoryButtons(); renderInstCategoryButtons(); renderReimbCategoryButtons(); renderSettingsCategories(); 
+        renderCategoryButtons(); renderSplitCategoryButtons(); renderInstCategoryButtons(); renderReimbCategoryButtons(); renderSettingsCategories(); populateHistoryFilterDropdowns();
         if (!views.summary.classList.contains('hidden')) renderSummaryAnalyticsUI();
       });
       loadTransactionsRealtime(uid); loadInstallmentPlansRealtime(uid); goToView('entry');
@@ -1038,6 +1137,166 @@
     function changePopupCashflowMonth(off) { popupMonth+=off; if(popupMonth>12){popupMonth=1; popupYear++;} else if(popupMonth<1){popupMonth=12; popupYear--;} updatePopupCashflowUI(); }
     function updatePopupCashflowUI() { document.getElementById('popup-cashflow-month-label').innerText = `${["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."][popupMonth-1]} ${popupYear}`; const {netFlow, inc, exp} = calculateCashflowForMonth(popupYear, popupMonth); renderCashflowBar(netFlow, Math.max(inc,exp,1), 'popup-cashflow-bar-fill', 'popup-cashflow-net-text'); }
 
+    // History Search & Advanced Filter Logic
+    function populateHistoryFilterDropdowns() {
+      const catSelect = document.getElementById('filter-category');
+      catSelect.innerHTML = `<option value="all">ทุกหมวดหมู่</option>` + categoriesList.map(c => `<option value="${c.id}">${escapeHtml(c.name)} (${c.type === 'expense' ? 'จ่าย' : 'รับ'})</option>`).join('');
+
+      const accOptions = `<option value="all">ทุกบัญชี</option>` + accountsList.map(a => `<option value="${a.id}">${escapeHtml(a.name)}</option>`).join('');
+      document.getElementById('filter-account').innerHTML = accOptions;
+      document.getElementById('filter-from-account').innerHTML = accOptions;
+      document.getElementById('filter-to-account').innerHTML = accOptions;
+    }
+
+    function toggleFilterAccountOptions() {
+      const kind = document.getElementById('filter-kind').value;
+      const singleBox = document.getElementById('filter-account-single-box');
+      const transferBox = document.getElementById('filter-account-transfer-box');
+      if (kind === 'transfer') {
+        singleBox.classList.add('hidden'); transferBox.classList.remove('hidden');
+      } else {
+        singleBox.classList.remove('hidden'); transferBox.classList.add('hidden');
+      }
+    }
+
+    function openHistoryFilterModal() {
+      document.getElementById('filter-kind').value = historyFilterState.kind;
+      document.getElementById('filter-category').value = historyFilterState.category;
+      document.getElementById('filter-account').value = historyFilterState.account;
+      document.getElementById('filter-from-account').value = historyFilterState.fromAccount;
+      document.getElementById('filter-to-account').value = historyFilterState.toAccount;
+      document.getElementById('filter-start-date').value = historyFilterState.startDate;
+      document.getElementById('filter-end-date').value = historyFilterState.endDate;
+      toggleFilterAccountOptions();
+      document.getElementById('history-filter-modal').classList.remove('hidden');
+    }
+
+    function closeHistoryFilterModal() {
+      document.getElementById('history-filter-modal').classList.add('hidden');
+    }
+
+    function resetHistoryFilters() {
+      historyFilterState = { kind: 'all', category: 'all', account: 'all', fromAccount: 'all', toAccount: 'all', startDate: '', endDate: '' };
+      document.getElementById('filter-kind').value = 'all';
+      document.getElementById('filter-category').value = 'all';
+      document.getElementById('filter-account').value = 'all';
+      document.getElementById('filter-from-account').value = 'all';
+      document.getElementById('filter-to-account').value = 'all';
+      document.getElementById('filter-start-date').value = '';
+      document.getElementById('filter-end-date').value = '';
+      toggleFilterAccountOptions();
+      closeHistoryFilterModal();
+      applyHistoryFilters();
+    }
+
+    function confirmHistoryFilters() {
+      historyFilterState.kind = document.getElementById('filter-kind').value;
+      historyFilterState.category = document.getElementById('filter-category').value;
+      historyFilterState.account = document.getElementById('filter-account').value;
+      historyFilterState.fromAccount = document.getElementById('filter-from-account').value;
+      historyFilterState.toAccount = document.getElementById('filter-to-account').value;
+      historyFilterState.startDate = document.getElementById('filter-start-date').value;
+      historyFilterState.endDate = document.getElementById('filter-end-date').value;
+      closeHistoryFilterModal();
+      applyHistoryFilters();
+    }
+
+    function clearHistorySearchText() {
+      document.getElementById('history-search-input').value = '';
+      applyHistoryFilters();
+    }
+
+    function applyHistoryFilters() {
+      const searchInput = document.getElementById('history-search-input');
+      const query = (searchInput?.value || '').trim().toLowerCase();
+      document.getElementById('history-search-clear-btn').classList.toggle('hidden', query === '');
+
+      const isFilterActive = (
+        historyFilterState.kind !== 'all' ||
+        historyFilterState.category !== 'all' ||
+        historyFilterState.account !== 'all' ||
+        historyFilterState.fromAccount !== 'all' ||
+        historyFilterState.toAccount !== 'all' ||
+        historyFilterState.startDate !== '' ||
+        historyFilterState.endDate !== ''
+      );
+      document.getElementById('filter-active-indicator').classList.toggle('hidden', !isFilterActive);
+
+      let filteredList = allTransactions.filter(t => {
+        // 1. Text & Amount Search (Quick Search)
+        if (query) {
+          const noteMatch = (t.note || '').toLowerCase().includes(query);
+          const amtStr = (t.amount || t.totalAmount || 0).toString();
+          const myAmtStr = (t.myShare || 0).toString();
+          const amountMatch = amtStr.includes(query) || myAmtStr.includes(query);
+          if (!noteMatch && !amountMatch) return false;
+        }
+
+        // 2. Kind Filter
+        if (historyFilterState.kind !== 'all') {
+          if (historyFilterState.kind === 'expense' && !(t.kind === 'transaction' && t.type === 'expense' && !t.isReimburse && !t.isInstallment)) return false;
+          if (historyFilterState.kind === 'income' && !(t.kind === 'transaction' && t.type === 'income')) return false;
+          if (historyFilterState.kind === 'transfer' && t.kind !== 'transfer') return false;
+          if (historyFilterState.kind === 'split' && t.kind !== 'split') return false;
+          if (historyFilterState.kind === 'reimburse' && !(t.kind === 'transaction' && t.isReimburse)) return false;
+          if (historyFilterState.kind === 'installment' && !(t.kind === 'transaction' && t.isInstallment)) return false;
+        }
+
+        // 3. Category Filter
+        if (historyFilterState.category !== 'all') {
+          const hasCatInBreakdown = t.categoriesBreakdown?.some(b => b.categoryId === historyFilterState.category);
+          if (t.categoryId !== historyFilterState.category && !hasCatInBreakdown) return false;
+        }
+
+        // 4. Account Filter
+        if (historyFilterState.kind === 'transfer') {
+          if (historyFilterState.fromAccount !== 'all' && t.fromAccountId !== historyFilterState.fromAccount) return false;
+          if (historyFilterState.toAccount !== 'all' && t.toAccountId !== historyFilterState.toAccount) return false;
+        } else if (historyFilterState.account !== 'all') {
+          if (t.kind === 'transfer') {
+            if (t.fromAccountId !== historyFilterState.account && t.toAccountId !== historyFilterState.account) return false;
+          } else {
+            if (t.accountId !== historyFilterState.account) return false;
+          }
+        }
+
+        // 5. Date Range Filter
+        if (historyFilterState.startDate && t.date < historyFilterState.startDate) return false;
+        if (historyFilterState.endDate && t.date > historyFilterState.endDate) return false;
+
+        return true;
+      });
+
+      document.getElementById('history-count-badge').innerText = `${filteredList.length} รายการ`;
+      renderFilteredHistoryList(filteredList);
+    }
+
+    function renderFilteredHistoryList(list) {
+      let grp = {}; 
+      list.forEach(t => { if(!grp[t.date]) grp[t.date] = []; grp[t.date].push(t); });
+      
+      const container = document.getElementById('full-tx-list');
+      const dates = Object.keys(grp).sort((a,b) => b.localeCompare(a));
+
+      if (!dates.length) {
+        container.innerHTML = `<div class="text-center text-xs text-gray-400 py-10">ไม่พบรายการตรงตามเงื่อนไขที่ค้นหา</div>`;
+        return;
+      }
+
+      container.innerHTML = dates.map(d => `<div class="sticky top-0 bg-gray-100/95 px-3 py-1 text-[11px] font-bold text-gray-600 rounded-lg my-1.5">${d}</div>` + grp[d].map(t => {
+        if(t.kind==='transaction'){
+          let b=t.isReimburse ? (t.remainingPending>0?`<span class="text-[9px] bg-amber-100 text-amber-800 px-1 py-0.5 rounded ml-1">รอ ${t.remainingPending}</span>`:`<span class="text-[9px] bg-emerald-100 text-emerald-800 px-1 py-0.5 rounded ml-1">คืนครบ</span>`) : (t.isInstallment?`<span class="text-[9px] bg-indigo-100 text-indigo-800 px-1 py-0.5 rounded ml-1">ผ่อน</span>`:''); 
+          let breakdownText = t.categoriesBreakdown?.length > 1 ? `<div class="text-[9px] text-gray-400 mt-0.5 font-light">${t.categoriesBreakdown.map(sub => `${sub.categoryName}: ฿${sub.amount.toLocaleString()}`).join(' • ')}</div>` : '';
+          return `<div onclick="openEditModal('${t.id}')" class="flex justify-between items-center p-2.5 bg-gray-50 border rounded-xl text-xs hover:bg-gray-100 cursor-pointer mb-1"><div class="flex flex-col"><span class="font-medium">${escapeHtml(t.note||'-')} ${b}</span><span class="text-[10px] text-gray-400">${accountsList.find(a=>a.id===t.accountId)?.name||''} • [${t.categoryName}]</span>${breakdownText}</div><div class="flex items-center space-x-2"><span class="font-bold ${t.type==='income'?'text-emerald-600':'text-rose-600'}">${t.type==='income'?'+':'-'}${t.amount.toLocaleString()}</span><button onclick="event.stopPropagation(); deleteTx('${t.id}')" class="text-gray-300 hover:text-rose-500 font-bold px-1">×</button></div></div>`;
+        }
+        if(t.kind==='split') {
+          const pendingText = t.remainingTeamPending > 0 ? `<span class="text-[9px] bg-purple-100 text-purple-800 px-1 py-0.5 rounded ml-1">ค้างทีม ฿${t.remainingTeamPending.toLocaleString()}</span>` : `<span class="text-[9px] bg-emerald-100 text-emerald-800 px-1 py-0.5 rounded ml-1">จ่ายทีมครบ</span>`;
+          return `<div onclick="openEditModal('${t.id}')" class="flex justify-between items-center p-2.5 bg-purple-50/50 border border-purple-100 rounded-xl text-xs hover:bg-purple-100/60 cursor-pointer mb-1"><div class="flex flex-col"><span class="font-medium">รับแทนทีม (${accountsList.find(a=>a.id===t.accountId)?.name}) ${pendingText}</span><span class="text-[10px] text-gray-400">${escapeHtml(t.note||'-')} (ส่วนเรา ฿${t.myShare.toLocaleString()})</span></div><div class="flex items-center space-x-2"><span class="font-bold text-purple-900">+${t.totalAmount.toLocaleString()}</span><button onclick="event.stopPropagation(); deleteTx('${t.id}')" class="text-gray-300 hover:text-rose-500 font-bold px-1">×</button></div></div>`;
+        }
+        return `<div class="flex justify-between items-center p-2.5 border rounded-xl text-xs mb-1 ${t.kind==='transfer'?'bg-blue-50/50 border-blue-100':t.kind==='team-pay'?'bg-teal-50/50 border-teal-100':'bg-amber-50/50 border-amber-100'}"><div class="flex flex-col"><span class="font-medium">${t.kind==='transfer'?`โอน: ${t.fromAccountName} ➔ ${t.toAccountName}`:t.kind==='team-pay'?`โอนให้ทีม (${accountsList.find(a=>a.id===t.accountId)?.name})`:'รับเงินคืน'}</span><span class="text-[10px] text-gray-400">${escapeHtml(t.note||'-')}</span></div><div class="flex items-center space-x-2"><span class="font-bold">${t.kind==='transfer'||t.kind==='team-pay'?'-'+t.amount.toLocaleString():'+'+t.amount.toLocaleString()}</span><button onclick="deleteTx('${t.id}')" class="text-gray-300 hover:text-rose-500 font-bold px-1">×</button></div></div>`;
+      }).join('')).join('');
+    }
+
     function loadTransactionsRealtime(uid) {
       if(unsubscribeTx) unsubscribeTx();
       unsubscribeTx = db.collection('users').doc(uid).collection('transactions').orderBy('createdAt', 'desc').onSnapshot(snap => {
@@ -1057,19 +1316,7 @@
         if (currentEntryMode === 'team-pay') renderPendingTeamList();
         if (currentEntryMode === 'settle') renderPendingFriendList();
 
-        let grp={}; allTransactions.forEach(t => { if(!grp[t.date])grp[t.date]=[]; grp[t.date].push(t); });
-        document.getElementById('full-tx-list').innerHTML = Object.keys(grp).sort((a,b)=>b.localeCompare(a)).map(d => `<div class="sticky top-0 bg-gray-100/95 px-3 py-1 text-[11px] font-bold text-gray-600 rounded-lg my-1.5">${d}</div>` + grp[d].map(t => {
-          if(t.kind==='transaction'){
-            let b=t.isReimburse ? (t.remainingPending>0?`<span class="text-[9px] bg-amber-100 text-amber-800 px-1 py-0.5 rounded ml-1">รอ ${t.remainingPending}</span>`:`<span class="text-[9px] bg-emerald-100 text-emerald-800 px-1 py-0.5 rounded ml-1">คืนครบ</span>`) : (t.isInstallment?`<span class="text-[9px] bg-indigo-100 text-indigo-800 px-1 py-0.5 rounded ml-1">ผ่อน</span>`:''); 
-            let breakdownText = t.categoriesBreakdown?.length > 1 ? `<div class="text-[9px] text-gray-400 mt-0.5 font-light">${t.categoriesBreakdown.map(sub => `${sub.categoryName}: ฿${sub.amount.toLocaleString()}`).join(' • ')}</div>` : '';
-            return `<div onclick="openEditModal('${t.id}')" class="flex justify-between items-center p-2.5 bg-gray-50 border rounded-xl text-xs hover:bg-gray-100 cursor-pointer mb-1"><div class="flex flex-col"><span class="font-medium">${escapeHtml(t.note||'-')} ${b}</span><span class="text-[10px] text-gray-400">${accountsList.find(a=>a.id===t.accountId)?.name||''} • [${t.categoryName}]</span>${breakdownText}</div><div class="flex items-center space-x-2"><span class="font-bold ${t.type==='income'?'text-emerald-600':'text-rose-600'}">${t.type==='income'?'+':'-'}${t.amount.toLocaleString()}</span><button onclick="event.stopPropagation(); deleteTx('${t.id}')" class="text-gray-300 hover:text-rose-500 font-bold px-1">×</button></div></div>`;
-          }
-          if(t.kind==='split') {
-            const pendingText = t.remainingTeamPending > 0 ? `<span class="text-[9px] bg-purple-100 text-purple-800 px-1 py-0.5 rounded ml-1">ค้างทีม ฿${t.remainingTeamPending.toLocaleString()}</span>` : `<span class="text-[9px] bg-emerald-100 text-emerald-800 px-1 py-0.5 rounded ml-1">จ่ายทีมครบ</span>`;
-            return `<div onclick="openEditModal('${t.id}')" class="flex justify-between items-center p-2.5 bg-purple-50/50 border border-purple-100 rounded-xl text-xs hover:bg-purple-100/60 cursor-pointer mb-1"><div class="flex flex-col"><span class="font-medium">รับแทนทีม (${accountsList.find(a=>a.id===t.accountId)?.name}) ${pendingText}</span><span class="text-[10px] text-gray-400">${escapeHtml(t.note||'-')} (ส่วนเรา ฿${t.myShare.toLocaleString()})</span></div><div class="flex items-center space-x-2"><span class="font-bold text-purple-900">+${t.totalAmount.toLocaleString()}</span><button onclick="event.stopPropagation(); deleteTx('${t.id}')" class="text-gray-300 hover:text-rose-500 font-bold px-1">×</button></div></div>`;
-          }
-          return `<div class="flex justify-between items-center p-2.5 border rounded-xl text-xs mb-1 ${t.kind==='transfer'?'bg-blue-50/50 border-blue-100':t.kind==='team-pay'?'bg-teal-50/50 border-teal-100':'bg-amber-50/50 border-amber-100'}"><div class="flex flex-col"><span class="font-medium">${t.kind==='transfer'?`โอน: ${t.fromAccountName} ➔ ${t.toAccountName}`:t.kind==='team-pay'?`โอนให้ทีม (${accountsList.find(a=>a.id===t.accountId)?.name})`:'รับเงินคืน'}</span><span class="text-[10px] text-gray-400">${escapeHtml(t.note||'-')}</span></div><div class="flex items-center space-x-2"><span class="font-bold">${t.kind==='transfer'||t.kind==='team-pay'?'-'+t.amount.toLocaleString():'+'+t.amount.toLocaleString()}</span><button onclick="deleteTx('${t.id}')" class="text-gray-300 hover:text-rose-500 font-bold px-1">×</button></div></div>`;
-        }).join('')).join('') || '<p class="text-center text-xs py-6">ไม่มีประวัติ</p>';
+        applyHistoryFilters();
 
         document.getElementById('total-pending-friend').innerText=`${userSettings.currency}${pFr.toLocaleString()}`;
         document.getElementById('total-pending-team').innerText=`${userSettings.currency}${pTm.toLocaleString()}`;
@@ -1130,7 +1377,7 @@
       } catch (err) { alert(err.message); } 
     }
 
-    // Settings Functions (ซ่อน/แสดง ปุ่ม ✓ อัตโนมัติเมื่อมีการเปลี่ยนชื่อ)
+    // Settings Functions
     function checkAccountNameChange(id) {
       const inputEl = document.getElementById(`edit-acc-name-${id}`);
       const btnEl = document.getElementById(`save-acc-btn-${id}`);

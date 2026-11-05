@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YUET BETA (v1.20) - Multi-Category UI Refinement</title>
+  <title>YUET BETA (v1.22) - Minimal '+' Button Refinement</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -39,7 +39,7 @@
       <div class="flex flex-col items-center">
         <div class="flex items-baseline space-x-1">
           <h1 class="text-xl font-black tracking-wider uppercase drop-shadow-sm">YUET BETA</h1>
-          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.20)</span>
+          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.22)</span>
         </div>
         <p class="text-[8px] text-emerald-100/80 tracking-tight font-light">by Phuthai Mananararuk & Gemini</p>
       </div>
@@ -87,7 +87,11 @@
 
           <!-- Normal Form -->
           <form id="tx-form" class="bg-gray-50 p-3 rounded-2xl border border-gray-200 space-y-2">
-            <div><label class="block text-[11px] text-gray-500 mb-1">เลือกบัญชี</label><div id="account-buttons-container"></div></div>
+            <div>
+              <label class="block text-[11px] text-gray-500 mb-1">เลือกบัญชี</label>
+              <div id="account-buttons-container"></div>
+            </div>
+
             <div>
               <div class="flex justify-between items-center mb-1">
                 <label class="block text-[11px] text-gray-500">เลือกหมวดหมู่</label>
@@ -95,6 +99,7 @@
               </div>
               <div id="category-buttons-container"></div>
             </div>
+
             <div class="grid grid-cols-2 gap-2">
               <div><label class="block text-[11px] text-gray-500 mb-1">จำนวนเงิน (<span class="currency-symbol">฿</span>)</label><input type="text" id="tx-amount" readonly onclick="openCustomKeypad('tx-amount')" placeholder="0.00" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer"></div>
               <div><label class="block text-[11px] text-gray-500 mb-1">วันที่</label><input type="date" id="tx-date" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
@@ -291,13 +296,13 @@
     <footer id="auth-status-bar" class="bg-gray-100 p-2 text-center text-[10px] text-gray-400 border-t border-gray-100">สถานะ: ยังไม่ได้เข้าสู่ระบบ</footer>
   </div>
 
-  <!-- Multi-Category Selection Modal (NEW IN v1.20) -->
+  <!-- Multi-Category Selection Modal -->
   <div id="multi-cat-select-modal" class="hidden fixed inset-0 bg-black/60 flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
     <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-sm p-4 space-y-3 shadow-2xl relative max-h-[75vh] flex flex-col">
       <div class="flex justify-between items-center border-b pb-2 flex-shrink-0">
         <div>
           <h3 class="text-xs font-bold text-gray-700 uppercase">เลือกหมวดหมู่รายจ่าย</h3>
-          <p class="text-[10px] text-gray-400">แตะเพื่อเลือกหลายหมวดหมู่พร้อมกัน</p>
+          <p class="text-[10px] text-gray-400">แตะเพื่อเลือกหมวดหมู่ที่ต้องการ</p>
         </div>
         <button type="button" onclick="closeMultiCatSelectModal()" class="text-gray-400 font-bold text-lg px-2">✕</button>
       </div>
@@ -382,7 +387,7 @@
     </div>
   </div>
 
-  <!-- Selector Modal -->
+  <!-- Account Selector Modal -->
   <div id="selector-modal" class="hidden fixed inset-0 bg-black/60 flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
     <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-sm p-4 space-y-3 shadow-2xl relative max-h-[75vh] flex flex-col">
       <div class="flex justify-between items-center border-b pb-2 flex-shrink-0"><h3 id="selector-modal-title" class="text-xs font-bold text-gray-700 uppercase">เลือกรายการ</h3><button type="button" onclick="closeSelectorModal()" class="text-gray-400 font-bold text-lg px-2">✕</button></div>
@@ -761,7 +766,7 @@
     function updateSplitMath() { const t=parseFloat(document.getElementById('split-total-amount').value)||0, m=parseFloat(document.getElementById('split-my-share').value)||0; document.getElementById('split-team-share-lbl').innerText=`${userSettings.currency}${Math.max(0,t-m).toLocaleString()}`; }
     function updateEditSplitMath() { const t=parseFloat(document.getElementById('edit-split-total').value)||0, m=parseFloat(document.getElementById('edit-split-my').value)||0; document.getElementById('lbl-edit-split-team').innerText=`${userSettings.currency}${Math.max(0,t-m).toLocaleString()}`; }
 
-    // Multi-Category Select Modal Operations (NEW IN v1.20)
+    // Multi-Category Select Modal Operations
     function openMultiCatSelectModal() {
       renderMultiCatSelectGrid();
       document.getElementById('multi-cat-select-modal').classList.remove('hidden');
@@ -794,7 +799,7 @@
       }).join('');
     }
 
-    // Generic Account Pinned Selector Generator
+    // Generic Account Pinned Selector Generator (v1.22 Minimal '+' Button)
     function renderAccountPinnedSelector(selectedId, setGlobalVarFnName, activeClass) {
       let pinned = accountsList.filter(i => i.isPinned);
       if (!pinned.length && accountsList.length) pinned = [accountsList[0]];
@@ -809,9 +814,9 @@
       });
 
       const unpinnedCount = accountsList.length - pinned.length;
-      if (unpinnedCount > 0) {
-        const extraLabel = (!isSelectedInPinned && selectedItem) ? selectedItem.name : `อื่น ๆ`;
-        const extraClass = (!isSelectedInPinned && selectedItem) ? activeClass : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200';
+      if (unpinnedCount > 0 || !isSelectedInPinned) {
+        const extraLabel = (!isSelectedInPinned && selectedItem) ? `${selectedItem.name} ✓` : `+`;
+        const extraClass = (!isSelectedInPinned && selectedItem) ? activeClass : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200 font-bold';
         html += `<button type="button" onclick="openAccountSelectorModal('${setGlobalVarFnName}')" class="px-2.5 py-1 rounded-xl text-xs font-medium transition border ${extraClass}">${escapeHtml(extraLabel)}</button>`;
       }
       html += `</div>`;
@@ -821,11 +826,8 @@
     function openAccountSelectorModal(setGlobalVarFnName) {
       document.getElementById('selector-modal-title').innerText = 'เลือกบัญชี';
       const container = document.getElementById('selector-grid-container');
-      let pinned = accountsList.filter(i => i.isPinned);
-      let unpinnedList = accountsList.filter(i => !i.isPinned);
-      if (!pinned.length && accountsList.length > 1) unpinnedList = accountsList.slice(1);
-
-      container.innerHTML = unpinnedList.map(item => `
+      
+      container.innerHTML = accountsList.map(item => `
         <button type="button" onclick="${setGlobalVarFnName}='${item.id}'; renderAllAccountButtons(); closeSelectorModal();" class="p-2.5 rounded-2xl text-xs font-semibold border text-center transition flex items-center justify-between bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100">
           <span class="truncate">${escapeHtml(item.name)}</span>
         </button>
@@ -842,7 +844,7 @@
       document.getElementById('team-pay-account-buttons').innerHTML = renderAccountPinnedSelector(selectedTeamPayAccountId, 'selectedTeamPayAccountId', 'bg-teal-600 text-white border-teal-600 shadow-xs');
     }
 
-    // Category Selector Renderer (v1.20 Single Tap Behavior)
+    // Category Selector Renderer (v1.22 Minimal '+' Button)
     function getMostRecentCategories(type) {
       const filteredCats = categoriesList.filter(c => c.type === type), recentIds = [];
       allTransactions.forEach(t => {
@@ -870,8 +872,8 @@
           html += `<button type="button" onclick="selectedCategoryIds=['${i.id}']; renderCategoryButtons();" class="px-2.5 py-1 rounded-xl text-xs font-semibold transition border ${isSelected ? 'bg-rose-600 text-white border-rose-600 shadow-xs' : 'bg-white text-gray-700 border-gray-200'}">${escapeHtml(i.name)}${isSelected && selectedCategoryIds.length > 1 ? ' ✓' : ''}</button>`;
         });
         const nonRecentSelected = c.filter(i => !recentList.some(r => r.id === i.id) && selectedCategoryIds.includes(i.id));
-        const extraLabel = nonRecentSelected.length > 0 ? nonRecentSelected.map(x=>x.name).join(', ') : `อื่น ๆ`;
-        const extraClass = nonRecentSelected.length > 0 ? 'bg-rose-600 text-white border-rose-600 shadow-xs' : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200';
+        const extraLabel = nonRecentSelected.length > 0 ? `${nonRecentSelected.map(x=>x.name).join(', ')} ✓` : `+`;
+        const extraClass = nonRecentSelected.length > 0 ? 'bg-rose-600 text-white border-rose-600 shadow-xs' : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200 font-bold';
         html += `<button type="button" onclick="openCategorySelectorModal('expense')" class="px-2.5 py-1 rounded-xl text-xs font-medium transition border ${extraClass}">${escapeHtml(extraLabel)}</button></div>`;
         document.getElementById('category-buttons-container').innerHTML = html;
       } else {
@@ -885,8 +887,8 @@
         });
         const isNonRecentSelected = !recentList.some(r => r.id === selectedCategoryId);
         const selectedObj = c.find(x => x.id === selectedCategoryId);
-        const extraLabel = (isNonRecentSelected && selectedObj) ? selectedObj.name : `อื่น ๆ`;
-        const extraClass = (isNonRecentSelected && selectedObj) ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs' : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200';
+        const extraLabel = (isNonRecentSelected && selectedObj) ? `${selectedObj.name} ✓` : `+`;
+        const extraClass = (isNonRecentSelected && selectedObj) ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs' : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200 font-bold';
         html += `<button type="button" onclick="openCategorySelectorModal('income')" class="px-2.5 py-1 rounded-xl text-xs font-medium transition border ${extraClass}">${escapeHtml(extraLabel)}</button></div>`;
         document.getElementById('category-buttons-container').innerHTML = html;
       }

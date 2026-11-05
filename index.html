@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YUET BETA (v1.19) - Search & Advanced Filter</title>
+  <title>YUET BETA (v1.20) - Multi-Category UI Refinement</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -39,7 +39,7 @@
       <div class="flex flex-col items-center">
         <div class="flex items-baseline space-x-1">
           <h1 class="text-xl font-black tracking-wider uppercase drop-shadow-sm">YUET BETA</h1>
-          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.19)</span>
+          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.20)</span>
         </div>
         <p class="text-[8px] text-emerald-100/80 tracking-tight font-light">by Phuthai Mananararuk & Gemini</p>
       </div>
@@ -88,7 +88,13 @@
           <!-- Normal Form -->
           <form id="tx-form" class="bg-gray-50 p-3 rounded-2xl border border-gray-200 space-y-2">
             <div><label class="block text-[11px] text-gray-500 mb-1">เลือกบัญชี</label><div id="account-buttons-container"></div></div>
-            <div><label class="block text-[11px] text-gray-500 mb-1">เลือกหมวดหมู่ <span id="lbl-multi-cat-hint" class="text-[9px] text-rose-500 font-semibold hidden">(Double-tap เพื่อเลือกเพิ่ม)</span></label><div id="category-buttons-container"></div></div>
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label class="block text-[11px] text-gray-500">เลือกหมวดหมู่</label>
+                <button type="button" id="btn-open-multi-cat-select" onclick="openMultiCatSelectModal()" class="text-[10px] font-bold text-rose-600 hover:text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-lg transition shadow-2xs hidden">+ เลือกหลายหมวดหมู่</button>
+              </div>
+              <div id="category-buttons-container"></div>
+            </div>
             <div class="grid grid-cols-2 gap-2">
               <div><label class="block text-[11px] text-gray-500 mb-1">จำนวนเงิน (<span class="currency-symbol">฿</span>)</label><input type="text" id="tx-amount" readonly onclick="openCustomKeypad('tx-amount')" placeholder="0.00" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer"></div>
               <div><label class="block text-[11px] text-gray-500 mb-1">วันที่</label><input type="date" id="tx-date" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
@@ -285,6 +291,23 @@
     <footer id="auth-status-bar" class="bg-gray-100 p-2 text-center text-[10px] text-gray-400 border-t border-gray-100">สถานะ: ยังไม่ได้เข้าสู่ระบบ</footer>
   </div>
 
+  <!-- Multi-Category Selection Modal (NEW IN v1.20) -->
+  <div id="multi-cat-select-modal" class="hidden fixed inset-0 bg-black/60 flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-sm p-4 space-y-3 shadow-2xl relative max-h-[75vh] flex flex-col">
+      <div class="flex justify-between items-center border-b pb-2 flex-shrink-0">
+        <div>
+          <h3 class="text-xs font-bold text-gray-700 uppercase">เลือกหมวดหมู่รายจ่าย</h3>
+          <p class="text-[10px] text-gray-400">แตะเพื่อเลือกหลายหมวดหมู่พร้อมกัน</p>
+        </div>
+        <button type="button" onclick="closeMultiCatSelectModal()" class="text-gray-400 font-bold text-lg px-2">✕</button>
+      </div>
+      <div id="multi-cat-select-grid" class="grid grid-cols-2 gap-2 overflow-y-auto p-1 flex-1"></div>
+      <div class="pt-2 flex-shrink-0 border-t">
+        <button type="button" onclick="closeMultiCatSelectModal()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl text-xs font-bold transition">เสร็จสิ้น</button>
+      </div>
+    </div>
+  </div>
+
   <!-- History Advanced Filter Modal -->
   <div id="history-filter-modal" class="hidden fixed inset-0 bg-black/60 flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
     <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-sm p-4 space-y-3.5 shadow-2xl relative max-h-[85vh] flex flex-col">
@@ -294,7 +317,6 @@
       </div>
       
       <div class="space-y-3 overflow-y-auto pr-1 flex-1 text-xs">
-        <!-- 1. Transaction Kind / Type -->
         <div class="space-y-1">
           <label class="block font-semibold text-gray-600">ประเภทรายการ</label>
           <select id="filter-kind" onchange="toggleFilterAccountOptions()" class="w-full px-2.5 py-1.5 border rounded-xl bg-gray-50 focus:bg-white">
@@ -308,7 +330,6 @@
           </select>
         </div>
 
-        <!-- 2. Category -->
         <div class="space-y-1">
           <label class="block font-semibold text-gray-600">หมวดหมู่</label>
           <select id="filter-category" class="w-full px-2.5 py-1.5 border rounded-xl bg-gray-50 focus:bg-white">
@@ -316,7 +337,6 @@
           </select>
         </div>
 
-        <!-- 3. Account Filter (Dynamic based on Kind) -->
         <div id="filter-account-single-box" class="space-y-1">
           <label class="block font-semibold text-gray-600">บัญชีที่เกี่ยวข้อง</label>
           <select id="filter-account" class="w-full px-2.5 py-1.5 border rounded-xl bg-gray-50 focus:bg-white">
@@ -339,7 +359,6 @@
           </div>
         </div>
 
-        <!-- 4. Date Range -->
         <div class="space-y-1.5 border-t pt-2">
           <label class="block font-semibold text-gray-600">ช่วงวันที่</label>
           <div class="grid grid-cols-2 gap-2">
@@ -391,7 +410,7 @@
     </div>
   </div>
 
-  <!-- Multi-Cat Modal -->
+  <!-- Multi-Cat Modal (Allocation) -->
   <div id="multi-cat-modal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-40">
     <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-4 shadow-2xl relative">
       <button type="button" onclick="closeMultiCatModal()" class="absolute top-4 right-4 text-gray-400 font-bold text-lg">✕</button>
@@ -467,7 +486,6 @@
     let currentTxType = 'expense', currentEntryMode = 'expense';
     let popupYear = new Date().getFullYear(), popupMonth = new Date().getMonth() + 1;
     let activeKeypadFieldId = null, pendingMultiCatTxPayload = null;
-    let categoryTapTracker = { catId: null, timer: null };
     let balanceChartInstance = null, incomePieInstance = null, expensePieInstance = null;
 
     // History Filter State
@@ -743,21 +761,37 @@
     function updateSplitMath() { const t=parseFloat(document.getElementById('split-total-amount').value)||0, m=parseFloat(document.getElementById('split-my-share').value)||0; document.getElementById('split-team-share-lbl').innerText=`${userSettings.currency}${Math.max(0,t-m).toLocaleString()}`; }
     function updateEditSplitMath() { const t=parseFloat(document.getElementById('edit-split-total').value)||0, m=parseFloat(document.getElementById('edit-split-my').value)||0; document.getElementById('lbl-edit-split-team').innerText=`${userSettings.currency}${Math.max(0,t-m).toLocaleString()}`; }
 
-    // Category Tap Tracker
-    function handleExpenseCategoryTap(catId, rerenderModal = false) {
-      if (categoryTapTracker.timer && categoryTapTracker.catId === catId) {
-        clearTimeout(categoryTapTracker.timer); categoryTapTracker.timer = null; categoryTapTracker.catId = null;
-        if (selectedCategoryIds.includes(catId)) { if (selectedCategoryIds.length > 1) selectedCategoryIds = selectedCategoryIds.filter(id => id !== catId); }
-        else selectedCategoryIds.push(catId);
-        renderCategoryButtons(); if (rerenderModal) renderModalCategoryList();
+    // Multi-Category Select Modal Operations (NEW IN v1.20)
+    function openMultiCatSelectModal() {
+      renderMultiCatSelectGrid();
+      document.getElementById('multi-cat-select-modal').classList.remove('hidden');
+    }
+    function closeMultiCatSelectModal() {
+      document.getElementById('multi-cat-select-modal').classList.add('hidden');
+      renderCategoryButtons();
+    }
+    function toggleCategorySelection(catId) {
+      if (selectedCategoryIds.includes(catId)) {
+        if (selectedCategoryIds.length > 1) {
+          selectedCategoryIds = selectedCategoryIds.filter(id => id !== catId);
+        }
       } else {
-        if (categoryTapTracker.timer) clearTimeout(categoryTapTracker.timer);
-        categoryTapTracker.catId = catId;
-        categoryTapTracker.timer = setTimeout(() => {
-          selectedCategoryIds = [catId]; categoryTapTracker.timer = null; categoryTapTracker.catId = null;
-          renderCategoryButtons(); if (rerenderModal) renderModalCategoryList();
-        }, 300);
+        selectedCategoryIds.push(catId);
       }
+      renderMultiCatSelectGrid();
+    }
+    function renderMultiCatSelectGrid() {
+      const container = document.getElementById('multi-cat-select-grid');
+      const expCats = categoriesList.filter(c => c.type === 'expense');
+      container.innerHTML = expCats.map(cat => {
+        const isSel = selectedCategoryIds.includes(cat.id);
+        return `
+          <button type="button" onclick="toggleCategorySelection('${cat.id}')" class="p-2.5 rounded-2xl text-xs font-semibold border text-center transition flex items-center justify-between ${isSel ? 'bg-rose-600 text-white border-rose-600 shadow-xs' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'}">
+            <span class="truncate">${escapeHtml(cat.name)}</span>
+            ${isSel ? '<span class="font-bold">✓</span>' : ''}
+          </button>
+        `;
+      }).join('');
     }
 
     // Generic Account Pinned Selector Generator
@@ -808,7 +842,7 @@
       document.getElementById('team-pay-account-buttons').innerHTML = renderAccountPinnedSelector(selectedTeamPayAccountId, 'selectedTeamPayAccountId', 'bg-teal-600 text-white border-teal-600 shadow-xs');
     }
 
-    // Category Selector Renderer
+    // Category Selector Renderer (v1.20 Single Tap Behavior)
     function getMostRecentCategories(type) {
       const filteredCats = categoriesList.filter(c => c.type === type), recentIds = [];
       allTransactions.forEach(t => {
@@ -824,14 +858,16 @@
 
     function renderCategoryButtons() {
       const c = categoriesList.filter(x => x.type === currentTxType);
+      const multiCatBtn = document.getElementById('btn-open-multi-cat-select');
+
       if (currentTxType === 'expense') {
-        document.getElementById('lbl-multi-cat-hint').classList.remove('hidden');
+        multiCatBtn.classList.remove('hidden');
         if (!selectedCategoryIds.length || !selectedCategoryIds.some(id => c.some(cat => cat.id === id))) { if (c.length) selectedCategoryIds = [c[0].id]; }
         const recentList = getMostRecentCategories('expense');
         let html = `<div class="flex flex-wrap gap-1 items-center">`;
         recentList.forEach(i => {
           const isSelected = selectedCategoryIds.includes(i.id);
-          html += `<button type="button" onclick="handleExpenseCategoryTap('${i.id}')" class="px-2.5 py-1 rounded-xl text-xs font-semibold transition border ${isSelected ? 'bg-rose-600 text-white border-rose-600 shadow-xs' : 'bg-white text-gray-700 border-gray-200'}">${escapeHtml(i.name)}${isSelected && selectedCategoryIds.length > 1 ? ' ✓' : ''}</button>`;
+          html += `<button type="button" onclick="selectedCategoryIds=['${i.id}']; renderCategoryButtons();" class="px-2.5 py-1 rounded-xl text-xs font-semibold transition border ${isSelected ? 'bg-rose-600 text-white border-rose-600 shadow-xs' : 'bg-white text-gray-700 border-gray-200'}">${escapeHtml(i.name)}${isSelected && selectedCategoryIds.length > 1 ? ' ✓' : ''}</button>`;
         });
         const nonRecentSelected = c.filter(i => !recentList.some(r => r.id === i.id) && selectedCategoryIds.includes(i.id));
         const extraLabel = nonRecentSelected.length > 0 ? nonRecentSelected.map(x=>x.name).join(', ') : `อื่น ๆ`;
@@ -839,7 +875,7 @@
         html += `<button type="button" onclick="openCategorySelectorModal('expense')" class="px-2.5 py-1 rounded-xl text-xs font-medium transition border ${extraClass}">${escapeHtml(extraLabel)}</button></div>`;
         document.getElementById('category-buttons-container').innerHTML = html;
       } else {
-        document.getElementById('lbl-multi-cat-hint').classList.add('hidden');
+        multiCatBtn.classList.add('hidden');
         if (!selectedCategoryId || !c.some(x => x.id === selectedCategoryId)) if (c.length) selectedCategoryId = c[0].id;
         const recentList = getMostRecentCategories('income');
         let html = `<div class="flex flex-wrap gap-1 items-center">`;
@@ -866,7 +902,7 @@
       const container = document.getElementById('selector-grid-container'), c = categoriesList.filter(x => x.type === currentTxType);
       container.innerHTML = c.map(item => {
         const isSelected = currentTxType === 'expense' ? selectedCategoryIds.includes(item.id) : item.id === selectedCategoryId;
-        const clickFn = currentTxType === 'expense' ? `handleExpenseCategoryTap('${item.id}', true)` : `selectedCategoryId='${item.id}'; renderCategoryButtons(); closeSelectorModal();`;
+        const clickFn = currentTxType === 'expense' ? `selectedCategoryIds=['${item.id}']; renderCategoryButtons(); closeSelectorModal();` : `selectedCategoryId='${item.id}'; renderCategoryButtons(); closeSelectorModal();`;
         const activeStyle = currentTxType === 'expense' ? 'bg-rose-600 text-white border-rose-600 shadow-xs' : 'bg-emerald-600 text-white border-emerald-600 shadow-xs';
         return `<button type="button" onclick="${clickFn}" class="p-2.5 rounded-2xl text-xs font-semibold border text-center transition flex items-center justify-between ${isSelected ? activeStyle : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'}"><span class="truncate">${escapeHtml(item.name)}</span>${isSelected && currentTxType==='expense' ? '<span>✓</span>' : ''}</button>`;
       }).join('');

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>จดตังค์ BETA (v1.30) - Swipe to Edit UI</title>
+  <title>จดตังค์ BETA (v1.31) - Square Color Palette</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -40,7 +40,7 @@
       <div class="flex flex-col items-center">
         <div class="flex items-baseline space-x-1">
           <h1 class="text-xl font-black tracking-wider uppercase drop-shadow-sm">จดตังค์ BETA</h1>
-          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.30)</span>
+          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.31)</span>
         </div>
         <p class="text-[8px] text-emerald-100/80 tracking-tight font-light">by Phuthai Mananararuk & Gemini</p>
       </div>
@@ -357,7 +357,7 @@
     <footer id="auth-status-bar" class="bg-gray-100 p-2 text-center text-[10px] text-gray-400 border-t border-gray-100">สถานะ: ยังไม่ได้เข้าสู่ระบบ</footer>
   </div>
 
-  <!-- Account Edit / Create Pop-up Modal -->
+  <!-- Account Edit / Create Pop-up Modal (Square Color Palette Grid) -->
   <div id="account-edit-modal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
     <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-4 shadow-2xl relative">
       <div class="flex justify-between items-center border-b pb-2">
@@ -367,29 +367,31 @@
 
       <form id="account-modal-form" class="space-y-3">
         <input type="hidden" id="modal-acc-id">
+        <input type="hidden" id="modal-acc-color" value="kbank">
         
-        <div>
-          <label class="block text-[11px] font-semibold text-gray-600 mb-1">ชื่อบัญชี</label>
-          <input type="text" id="modal-acc-name" placeholder="ชื่อบัญชี" required class="w-full px-3 py-2 text-xs border rounded-xl bg-white font-semibold">
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
+        <div class="grid grid-cols-3 gap-2">
+          <div class="col-span-2">
+            <label class="block text-[11px] font-semibold text-gray-600 mb-1">ชื่อบัญชี</label>
+            <input type="text" id="modal-acc-name" placeholder="ชื่อบัญชี" required class="w-full px-3 py-2 text-xs border rounded-xl bg-white font-semibold">
+          </div>
           <div>
             <label class="block text-[11px] font-semibold text-gray-600 mb-1">ไอคอน</label>
             <select id="modal-acc-icon" class="w-full px-2 py-2 text-xs border rounded-xl bg-white">
               <option value="-">-</option>
               <option value="💵">💵 เงินสด</option>
               <option value="🏛️">🏛️ ธนาคาร</option>
-              <option value="💳">💳 บัตเครดิต</option>
+              <option value="💳">💳 บัตรเครดิต</option>
               <option value="📱">📱 แอปพลิเคชัน</option>
               <option value="💰">💰 ถุงเงิน</option>
               <option value="📈">📈 การลงทุน</option>
             </select>
           </div>
-          <div>
-            <label class="block text-[11px] font-semibold text-gray-600 mb-1">สีธีมประจำบัญชี</label>
-            <select id="modal-acc-color" class="w-full px-2 py-2 text-xs border rounded-xl bg-white font-medium"></select>
-          </div>
+        </div>
+
+        <!-- Square Palette Grid สำหรับเลือกสีประจำบัญชี -->
+        <div>
+          <label class="block text-[11px] font-semibold text-gray-600 mb-1.5">สีประจำบัญชี (แตะเพื่อเลือก)</label>
+          <div id="modal-acc-color-grid" class="grid grid-cols-8 gap-0 rounded-2xl overflow-hidden border border-gray-300 shadow-2xs"></div>
         </div>
 
         <div>
@@ -410,7 +412,7 @@
     </div>
   </div>
 
-  <!-- Category Edit / Create Pop-up Modal -->
+  <!-- Category Edit / Create Pop-up Modal (Square Color Palette Grid) -->
   <div id="category-edit-modal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
     <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-4 shadow-2xl relative">
       <div class="flex justify-between items-center border-b pb-2">
@@ -421,13 +423,13 @@
       <form id="category-modal-form" class="space-y-3">
         <input type="hidden" id="modal-cat-id">
         <input type="hidden" id="modal-cat-type">
+        <input type="hidden" id="modal-cat-color" value="rose">
         
-        <div>
-          <label class="block text-[11px] font-semibold text-gray-600 mb-1">ชื่อหมวดหมู่</label>
-          <input type="text" id="modal-cat-name" placeholder="ชื่อหมวดหมู่" required class="w-full px-3 py-2 text-xs border rounded-xl bg-white font-semibold">
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
+        <div class="grid grid-cols-3 gap-2">
+          <div class="col-span-2">
+            <label class="block text-[11px] font-semibold text-gray-600 mb-1">ชื่อหมวดหมู่</label>
+            <input type="text" id="modal-cat-name" placeholder="ชื่อหมวดหมู่" required class="w-full px-3 py-2 text-xs border rounded-xl bg-white font-semibold">
+          </div>
           <div>
             <label class="block text-[11px] font-semibold text-gray-600 mb-1">ไอคอน</label>
             <select id="modal-cat-icon" class="w-full px-2 py-2 text-xs border rounded-xl bg-white">
@@ -446,10 +448,12 @@
               <option value="💼">💼 ฟรีแลนซ์</option>
             </select>
           </div>
-          <div>
-            <label class="block text-[11px] font-semibold text-gray-600 mb-1">สีธีมหมวดหมู่</label>
-            <select id="modal-cat-color" class="w-full px-2 py-2 text-xs border rounded-xl bg-white font-medium"></select>
-          </div>
+        </div>
+
+        <!-- Square Palette Grid สำหรับเลือกสีหมวดหมู่ -->
+        <div>
+          <label class="block text-[11px] font-semibold text-gray-600 mb-1.5">สีธีมหมวดหมู่ (แตะเพื่อเลือก)</label>
+          <div id="modal-cat-color-grid" class="grid grid-cols-8 gap-0 rounded-2xl overflow-hidden border border-gray-300 shadow-2xs"></div>
         </div>
 
         <!-- ปุ่มลบหมวดหมู่ (ข้อความสีแดง ไม่มีกรอบ) -->
@@ -695,29 +699,29 @@
     let activeKeypadFieldId = null, pendingMultiCatTxPayload = null;
     let balanceChartInstance = null, incomePieInstance = null, expensePieInstance = null;
 
-    // Account Color Themes
-    const ACCOUNT_COLOR_THEMES = {
-      card: { active: 'bg-slate-900 text-slate-100 border-slate-900 ring-2 ring-slate-400 shadow-md', inactive: 'bg-slate-100 text-slate-800 border-slate-300 hover:bg-slate-200', bgClass: 'bg-slate-800', name: '🖤 เทาดำ' },
-      kbank: { active: 'bg-emerald-700 text-white border-emerald-700 ring-2 ring-emerald-300 shadow-md', inactive: 'bg-emerald-50 text-emerald-900 border-emerald-200 hover:bg-emerald-100', bgClass: 'bg-emerald-600', name: '💚 เขียว' },
-      scb: { active: 'bg-purple-700 text-white border-purple-700 ring-2 ring-purple-300 shadow-md', inactive: 'bg-purple-50 text-purple-900 border-purple-200 hover:bg-purple-100', bgClass: 'bg-purple-600', name: '💜 ม่วง' },
-      bbl: { active: 'bg-blue-800 text-white border-blue-800 ring-2 ring-blue-300 shadow-md', inactive: 'bg-blue-50 text-blue-950 border-blue-200 hover:bg-blue-100', bgClass: 'bg-blue-800', name: '💙 น้ำเงิน' },
-      bay: { active: 'bg-amber-500 text-amber-950 border-amber-500 ring-2 ring-amber-300 shadow-md font-bold', inactive: 'bg-amber-50 text-amber-900 border-amber-200 hover:bg-amber-100', bgClass: 'bg-amber-500', name: '💛 เหลือง' },
-      ktb: { active: 'bg-sky-500 text-white border-sky-500 ring-2 ring-sky-300 shadow-md', inactive: 'bg-sky-50 text-sky-900 border-sky-200 hover:bg-sky-100', bgClass: 'bg-sky-500', name: '🩵 ฟ้า' },
-      ttb: { active: 'bg-orange-600 text-white border-orange-600 ring-2 ring-orange-300 shadow-md', inactive: 'bg-orange-50 text-orange-950 border-orange-200 hover:bg-orange-100', bgClass: 'bg-orange-500', name: '🧡 ส้ม' },
-      cash: { active: 'bg-teal-600 text-white border-teal-600 ring-2 ring-teal-300 shadow-md', inactive: 'bg-teal-50 text-teal-900 border-teal-200 hover:bg-teal-100', bgClass: 'bg-teal-500', name: '🟢 มินต์' }
+    // Expanded 16 Color Themes Palette (Accounts & Categories)
+    const COLOR_PALETTE_16 = {
+      rose: { bgClass: 'bg-rose-600', active: 'bg-rose-600 text-white border-rose-600 shadow-md ring-2 ring-rose-300', inactive: 'bg-rose-50 text-rose-900 border-rose-200 hover:bg-rose-100', hex: '#f43f5e' },
+      red: { bgClass: 'bg-red-600', active: 'bg-red-600 text-white border-red-600 shadow-md ring-2 ring-red-300', inactive: 'bg-red-50 text-red-900 border-red-200 hover:bg-red-100', hex: '#dc2626' },
+      pink: { bgClass: 'bg-pink-500', active: 'bg-pink-500 text-white border-pink-500 shadow-md ring-2 ring-pink-300', inactive: 'bg-pink-50 text-pink-900 border-pink-200 hover:bg-pink-100', hex: '#ec4899' },
+      fuchsia: { bgClass: 'bg-fuchsia-600', active: 'bg-fuchsia-600 text-white border-fuchsia-600 shadow-md ring-2 ring-fuchsia-300', inactive: 'bg-fuchsia-50 text-fuchsia-900 border-fuchsia-200 hover:bg-fuchsia-100', hex: '#c026d3' },
+      coral: { bgClass: 'bg-rose-400', active: 'bg-rose-400 text-white border-rose-400 shadow-md ring-2 ring-rose-200', inactive: 'bg-rose-50 text-rose-900 border-rose-100 hover:bg-rose-100', hex: '#fb7185' },
+      orange: { bgClass: 'bg-orange-500', active: 'bg-orange-500 text-white border-orange-500 shadow-md ring-2 ring-orange-300', inactive: 'bg-orange-50 text-orange-950 border-orange-200 hover:bg-orange-100', hex: '#f97316' },
+      amber: { bgClass: 'bg-amber-500', active: 'bg-amber-500 text-amber-950 border-amber-500 shadow-md ring-2 ring-amber-300 font-bold', inactive: 'bg-amber-50 text-amber-900 border-amber-200 hover:bg-amber-100', hex: '#f59e0b' },
+      yellow: { bgClass: 'bg-yellow-400', active: 'bg-yellow-400 text-yellow-950 border-yellow-400 shadow-md ring-2 ring-yellow-200 font-bold', inactive: 'bg-yellow-50 text-yellow-950 border-yellow-200 hover:bg-yellow-100', hex: '#facc15' },
+      lime: { bgClass: 'bg-lime-500', active: 'bg-lime-500 text-lime-950 border-lime-500 shadow-md ring-2 ring-lime-300 font-bold', inactive: 'bg-lime-50 text-lime-950 border-lime-200 hover:bg-lime-100', hex: '#84cc16' },
+      emerald: { bgClass: 'bg-emerald-600', active: 'bg-emerald-600 text-white border-emerald-600 shadow-md ring-2 ring-emerald-300', inactive: 'bg-emerald-50 text-emerald-900 border-emerald-200 hover:bg-emerald-100', hex: '#10b981' },
+      teal: { bgClass: 'bg-teal-500', active: 'bg-teal-500 text-white border-teal-500 shadow-md ring-2 ring-teal-300', inactive: 'bg-teal-50 text-teal-900 border-teal-200 hover:bg-teal-100', hex: '#14b8a6' },
+      sky: { bgClass: 'bg-sky-500', active: 'bg-sky-500 text-white border-sky-500 shadow-md ring-2 ring-sky-300', inactive: 'bg-sky-50 text-sky-900 border-sky-200 hover:bg-sky-100', hex: '#06b6d4' },
+      blue: { bgClass: 'bg-blue-600', active: 'bg-blue-600 text-white border-blue-600 shadow-md ring-2 ring-blue-300', inactive: 'bg-blue-50 text-blue-950 border-blue-200 hover:bg-blue-100', hex: '#2563eb' },
+      indigo: { bgClass: 'bg-indigo-600', active: 'bg-indigo-600 text-white border-indigo-600 shadow-md ring-2 ring-indigo-300', inactive: 'bg-indigo-50 text-indigo-900 border-indigo-200 hover:bg-indigo-100', hex: '#6366f1' },
+      purple: { bgClass: 'bg-purple-600', active: 'bg-purple-600 text-white border-purple-600 shadow-md ring-2 ring-purple-300', inactive: 'bg-purple-50 text-purple-900 border-purple-200 hover:bg-purple-100', hex: '#8b5cf6' },
+      card: { bgClass: 'bg-slate-800', active: 'bg-slate-900 text-slate-100 border-slate-900 shadow-md ring-2 ring-slate-400', inactive: 'bg-slate-100 text-slate-800 border-slate-300 hover:bg-slate-200', hex: '#1e293b' }
     };
 
-    // Category Color Themes
-    const CATEGORY_COLOR_THEMES = {
-      rose: { active: 'bg-rose-600 text-white border-rose-600 shadow-xs', inactive: 'bg-rose-50 text-rose-800 border-rose-200 hover:bg-rose-100', bgClass: 'bg-rose-600', hex: '#f43f5e', name: '🔴 แดง' },
-      orange: { active: 'bg-orange-500 text-white border-orange-500 shadow-xs', inactive: 'bg-orange-50 text-orange-900 border-orange-200 hover:bg-orange-100', bgClass: 'bg-orange-500', hex: '#f97316', name: '🟠 ส้ม' },
-      amber: { active: 'bg-amber-500 text-amber-950 border-amber-500 shadow-xs font-bold', inactive: 'bg-amber-50 text-amber-900 border-amber-200 hover:bg-amber-100', bgClass: 'bg-amber-500', hex: '#f59e0b', name: '🟡 เหลือง' },
-      emerald: { active: 'bg-emerald-600 text-white border-emerald-600 shadow-xs', inactive: 'bg-emerald-50 text-emerald-900 border-emerald-200 hover:bg-emerald-100', bgClass: 'bg-emerald-600', hex: '#10b981', name: '🟢 เขียว' },
-      sky: { active: 'bg-sky-500 text-white border-sky-500 shadow-xs', inactive: 'bg-sky-50 text-sky-900 border-sky-200 hover:bg-sky-100', bgClass: 'bg-sky-500', hex: '#06b6d4', name: '🩵 ฟ้า' },
-      indigo: { active: 'bg-indigo-600 text-white border-indigo-600 shadow-xs', inactive: 'bg-indigo-50 text-indigo-900 border-indigo-200 hover:bg-indigo-100', bgClass: 'bg-indigo-600', hex: '#6366f1', name: '🔵 น้ำเงิน' },
-      purple: { active: 'bg-purple-600 text-white border-purple-600 shadow-xs', inactive: 'bg-purple-50 text-purple-900 border-purple-200 hover:bg-purple-100', bgClass: 'bg-purple-600', hex: '#8b5cf6', name: '🟣 ม่วง' },
-      slate: { active: 'bg-slate-700 text-white border-slate-700 shadow-xs', inactive: 'bg-slate-100 text-slate-800 border-slate-300 hover:bg-slate-200', bgClass: 'bg-slate-700', hex: '#64748b', name: 'เทา' }
-    };
+    // Aliases for compatibility
+    const ACCOUNT_COLOR_THEMES = COLOR_PALETTE_16;
+    const CATEGORY_COLOR_THEMES = COLOR_PALETTE_16;
 
     let historyFilterState = { kind: 'all', category: 'all', account: 'all', fromAccount: 'all', toAccount: 'all', startDate: '', endDate: '' };
 
@@ -810,8 +814,8 @@
       const accSnap = await db.collection('users').doc(uid).collection('accounts').limit(1).get();
       if (accSnap.empty) {
         const batch = db.batch();
-        batch.set(db.collection('users').doc(uid).collection('accounts').doc(), { name: 'เงินสด', icon: '-', colorTheme: 'cash', initialBalance: 0, isDefault: true, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-        batch.set(db.collection('users').doc(uid).collection('accounts').doc(), { name: 'ธนาคาร KBank', icon: '-', colorTheme: 'kbank', initialBalance: 0, isDefault: false, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        batch.set(db.collection('users').doc(uid).collection('accounts').doc(), { name: 'เงินสด', icon: '-', colorTheme: 'teal', initialBalance: 0, isDefault: true, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        batch.set(db.collection('users').doc(uid).collection('accounts').doc(), { name: 'ธนาคาร KBank', icon: '-', colorTheme: 'emerald', initialBalance: 0, isDefault: false, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
         batch.set(db.collection('users').doc(uid).collection('accounts').doc(), { name: 'บัตรเครดิต', icon: '-', colorTheme: 'card', initialBalance: 0, isDefault: false, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
 
         const catSnap = await db.collection('users').doc(uid).collection('categories').limit(1).get();
@@ -1099,7 +1103,7 @@
       const unpinnedCount = accountsList.length - pinned.length;
       if (unpinnedCount > 0 || !isSelectedInPinned) {
         const extraIcon = (selectedItem?.icon && selectedItem.icon !== '-') ? selectedItem.icon : '';
-        const extraLabel = (!isSelectedInPinned && selectedItem) ? `${extraIcon} ${selectedItem.name} ✓` : `+`;
+        const extraLabel = (!isSelectedInPinned && selectedItem) ? `${extraIcon} ${selectedItem.name} ✓` : `+ เลือกอื่น`;
         const extraClass = (!isSelectedInPinned && selectedItem) ? (ACCOUNT_COLOR_THEMES[selectedItem.colorTheme]?.active || 'bg-emerald-600 text-white') : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200 font-bold';
         html += `<button type="button" onclick="openAccountSelectorModal('${setGlobalVarFnName}')" class="px-2.5 py-1.5 rounded-xl text-xs font-medium transition border ${extraClass}">${escapeHtml(extraLabel)}</button>`;
       }
@@ -1574,7 +1578,7 @@
       
       const pieColors = labels.map(name => {
         const cat = categoriesList.find(c => c.name === name && c.type === type);
-        if (cat && CATEGORY_COLOR_THEMES[cat.colorTheme]) return CATEGORY_COLOR_THEMES[cat.colorTheme].hex;
+        if (cat && COLOR_PALETTE_16[cat.colorTheme]) return COLOR_PALETTE_16[cat.colorTheme].hex;
         return type === 'expense' ? '#f43f5e' : '#10b981';
       });
 
@@ -1841,7 +1845,7 @@
       if (!container) return;
 
       container.innerHTML = accountsList.map(a => {
-        const theme = ACCOUNT_COLOR_THEMES[a.colorTheme] || ACCOUNT_COLOR_THEMES.card;
+        const theme = COLOR_PALETTE_16[a.colorTheme] || COLOR_PALETTE_16.card;
         const iconDisp = (a.icon && a.icon !== '-') ? `${a.icon} ` : '';
         return `
           <div id="acc-item-${a.id}" class="relative overflow-hidden rounded-2xl bg-rose-600 shadow-2xs">
@@ -1876,7 +1880,7 @@
 
         const filtered = categoriesList.filter(c => c.type === type);
         container.innerHTML = filtered.map(c => {
-          const theme = CATEGORY_COLOR_THEMES[c.colorTheme] || (type==='expense'?CATEGORY_COLOR_THEMES.rose:CATEGORY_COLOR_THEMES.emerald);
+          const theme = COLOR_PALETTE_16[c.colorTheme] || (type==='expense'?COLOR_PALETTE_16.rose:COLOR_PALETTE_16.emerald);
           const iconDisp = (c.icon && c.icon !== '-') ? `${c.icon} ` : '';
           return `
             <div id="cat-item-${c.id}" class="relative overflow-hidden rounded-2xl bg-rose-600 shadow-2xs">
@@ -1901,6 +1905,31 @@
       });
     }
 
+    // --- RENDER SQUARE COLOR PALETTE GRID ---
+    function renderSquarePaletteGrid(gridContainerId, hiddenInputId, selectedColorKey) {
+      const container = document.getElementById(gridContainerId);
+      const hiddenInput = document.getElementById(hiddenInputId);
+      hiddenInput.value = selectedColorKey;
+
+      container.innerHTML = Object.keys(COLOR_PALETTE_16).map(key => {
+        const theme = COLOR_PALETTE_16[key];
+        const isSelected = key === selectedColorKey;
+        
+        return `
+          <button type="button" 
+            onclick="selectSquareColor('${gridContainerId}', '${hiddenInputId}', '${key}')"
+            class="h-8 w-full ${theme.bgClass} flex items-center justify-center transition active:scale-95 ${isSelected ? 'relative z-10 ring-2 ring-white shadow-md scale-105' : 'hover:opacity-90'}"
+            title="${key}">
+            ${isSelected ? '<svg class="w-4 h-4 text-white drop-shadow font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" d="M5 13l4 4L19 7"/></svg>' : ''}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectSquareColor(gridContainerId, hiddenInputId, colorKey) {
+      renderSquarePaletteGrid(gridContainerId, hiddenInputId, colorKey);
+    }
+
     // --- ACCOUNT POP-UP MODAL LOGIC ---
     function openNewAccountModal() {
       document.getElementById('account-modal-title').innerText = 'เพิ่มบัญชีใหม่';
@@ -1910,7 +1939,7 @@
       document.getElementById('modal-acc-balance').value = '0';
       document.getElementById('modal-acc-delete-container').classList.add('hidden');
       
-      populateColorSelect('modal-acc-color', ACCOUNT_COLOR_THEMES, 'card');
+      renderSquarePaletteGrid('modal-acc-color-grid', 'modal-acc-color', 'card');
       document.getElementById('account-edit-modal').classList.remove('hidden');
     }
 
@@ -1928,7 +1957,7 @@
       if (acc.isDefault) delContainer.classList.add('hidden');
       else delContainer.classList.remove('hidden');
 
-      populateColorSelect('modal-acc-color', ACCOUNT_COLOR_THEMES, acc.colorTheme || 'card');
+      renderSquarePaletteGrid('modal-acc-color-grid', 'modal-acc-color', acc.colorTheme || 'card');
       document.getElementById('account-edit-modal').classList.remove('hidden');
     }
 
@@ -1983,7 +2012,7 @@
       document.getElementById('modal-cat-icon').value = '-';
       document.getElementById('modal-cat-delete-container').classList.add('hidden');
 
-      populateColorSelect('modal-cat-color', CATEGORY_COLOR_THEMES, type==='expense'?'rose':'emerald');
+      renderSquarePaletteGrid('modal-cat-color-grid', 'modal-cat-color', type==='expense'?'rose':'emerald');
       document.getElementById('category-edit-modal').classList.remove('hidden');
     }
 
@@ -1998,7 +2027,7 @@
       document.getElementById('modal-cat-icon').value = cat.icon || '-';
       document.getElementById('modal-cat-delete-container').classList.remove('hidden');
 
-      populateColorSelect('modal-cat-color', CATEGORY_COLOR_THEMES, cat.colorTheme || (cat.type==='expense'?'rose':'emerald'));
+      renderSquarePaletteGrid('modal-cat-color-grid', 'modal-cat-color', cat.colorTheme || (cat.type==='expense'?'rose':'emerald'));
       document.getElementById('category-edit-modal').classList.remove('hidden');
     }
 
@@ -2041,15 +2070,6 @@
           closeCategoryModal();
         } catch (err) { alert(err.message); }
       }
-    }
-
-    function populateColorSelect(selectId, themeMap, selectedValue) {
-      const select = document.getElementById(selectId);
-      select.innerHTML = Object.keys(themeMap).map(key => `
-        <option value="${key}" ${key === selectedValue ? 'selected' : ''}>
-          ${themeMap[key].name}
-        </option>
-      `).join('');
     }
 
     async function toggleAccountPin(id, isPinned) { try { await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).update({ isPinned: isPinned }); } catch (err) { alert(err.message); } }

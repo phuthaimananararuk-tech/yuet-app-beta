@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>จดตังค์ BETA (v1.28) - Harmonized Settings UI</title>
+  <title>จดตังค์ BETA (v1.29) - Dropdown Color Selector UI</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -39,7 +39,7 @@
       <div class="flex flex-col items-center">
         <div class="flex items-baseline space-x-1">
           <h1 class="text-xl font-black tracking-wider uppercase drop-shadow-sm">จดตังค์ BETA</h1>
-          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.28)</span>
+          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.29)</span>
         </div>
         <p class="text-[8px] text-emerald-100/80 tracking-tight font-light">by Phuthai Mananararuk & Gemini</p>
       </div>
@@ -297,7 +297,7 @@
         <div id="full-tx-list" class="space-y-2 overflow-y-auto pr-1 flex-1"><p class="text-center text-xs text-gray-400 py-6">กำลังโหลดประวัติ...</p></div>
       </section>
 
-      <!-- 4. SETTING VIEW (Harmonized Layout) -->
+      <!-- 4. SETTING VIEW (Harmonized & Dropdown Colors) -->
       <section id="setting-view" class="hidden space-y-4 max-h-[620px] overflow-y-auto pr-1">
         <div class="border-b pb-2"><h2 class="text-xs font-bold text-gray-700 uppercase">Setting - ตั้งค่าระบบ</h2></div>
         <div class="space-y-1"><label class="block text-xs font-bold text-gray-700">สกุลเงินทั่วแอป</label><select id="setting-currency" onchange="autoSaveSettings()" class="w-full px-3 py-2 text-xs border rounded-xl bg-white"><option value="฿">บาท (฿)</option><option value="$">ดอลลาร์ ($)</option><option value="€">ยูโร (€)</option><option value="¥">เยน (¥)</option></select></div>
@@ -311,7 +311,7 @@
           
           <div id="accounts-settings-list" class="space-y-1.5"></div>
           
-          <!-- ฟอร์มเพิ่มบัญชีใหม่ (Harmonized Form Style) -->
+          <!-- ฟอร์มเพิ่มบัญชีใหม่ (Dropdown Colors) -->
           <div class="flex flex-col space-y-1.5 p-2 bg-gray-50 rounded-xl border border-gray-200">
             <div class="flex space-x-1">
               <select id="new-acc-icon" class="px-1.5 py-1 text-xs border rounded bg-white">
@@ -327,7 +327,7 @@
               <input type="text" id="new-acc-balance" readonly onclick="openCustomKeypad('new-acc-balance')" placeholder="ยอดเริ่มต้น" class="w-16 px-1.5 py-1 text-xs border rounded bg-white text-right font-bold cursor-pointer">
             </div>
             <div class="flex justify-between items-center pt-1 border-t border-gray-200">
-              <div id="new-acc-color-chips" class="flex items-center space-x-1"></div>
+              <div id="new-acc-color-picker-container" class="flex items-center space-x-1"></div>
               <button type="button" onclick="addNewAccount()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-bold transition shadow-2xs">+ เพิ่มบัญชี</button>
             </div>
           </div>
@@ -357,7 +357,7 @@
                 <input type="text" id="new-exp-cat-name" placeholder="ชื่อหมวดหมู่รายจ่าย" class="flex-1 px-2 py-1 text-xs border rounded bg-white font-semibold">
               </div>
               <div class="flex justify-between items-center pt-1 border-t border-rose-100">
-                <div id="new-exp-cat-color-chips" class="flex items-center space-x-1"></div>
+                <div id="new-exp-cat-color-picker-container" class="flex items-center space-x-1"></div>
                 <button onclick="addNewCategory('expense')" class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-1 rounded text-xs font-bold transition shadow-2xs">+ เพิ่มหมวดหมู่</button>
               </div>
             </div>
@@ -381,7 +381,7 @@
                 <input type="text" id="new-inc-cat-name" placeholder="ชื่อหมวดหมู่รายรับ" class="flex-1 px-2 py-1 text-xs border rounded bg-white font-semibold">
               </div>
               <div class="flex justify-between items-center pt-1 border-t border-emerald-100">
-                <div id="new-inc-cat-color-chips" class="flex items-center space-x-1"></div>
+                <div id="new-inc-cat-color-picker-container" class="flex items-center space-x-1"></div>
                 <button onclick="addNewCategory('income')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-xs font-bold transition shadow-2xs">+ เพิ่มหมวดหมู่</button>
               </div>
             </div>
@@ -645,26 +645,26 @@
 
     // Account Color Themes
     const ACCOUNT_COLOR_THEMES = {
-      card: { active: 'bg-slate-900 text-slate-100 border-slate-900 ring-2 ring-slate-400 shadow-md', inactive: 'bg-slate-100 text-slate-800 border-slate-300 hover:bg-slate-200', bgClass: 'bg-slate-800', name: 'เทาดำ' },
-      kbank: { active: 'bg-emerald-700 text-white border-emerald-700 ring-2 ring-emerald-300 shadow-md', inactive: 'bg-emerald-50 text-emerald-900 border-emerald-200 hover:bg-emerald-100', bgClass: 'bg-emerald-600', name: 'เขียว' },
-      scb: { active: 'bg-purple-700 text-white border-purple-700 ring-2 ring-purple-300 shadow-md', inactive: 'bg-purple-50 text-purple-900 border-purple-200 hover:bg-purple-100', bgClass: 'bg-purple-600', name: 'ม่วง' },
-      bbl: { active: 'bg-blue-800 text-white border-blue-800 ring-2 ring-blue-300 shadow-md', inactive: 'bg-blue-50 text-blue-950 border-blue-200 hover:bg-blue-100', bgClass: 'bg-blue-800', name: 'น้ำเงิน' },
-      bay: { active: 'bg-amber-500 text-amber-950 border-amber-500 ring-2 ring-amber-300 shadow-md font-bold', inactive: 'bg-amber-50 text-amber-900 border-amber-200 hover:bg-amber-100', bgClass: 'bg-amber-500', name: 'เหลือง' },
-      ktb: { active: 'bg-sky-500 text-white border-sky-500 ring-2 ring-sky-300 shadow-md', inactive: 'bg-sky-50 text-sky-900 border-sky-200 hover:bg-sky-100', bgClass: 'bg-sky-500', name: 'ฟ้า' },
-      ttb: { active: 'bg-orange-600 text-white border-orange-600 ring-2 ring-orange-300 shadow-md', inactive: 'bg-orange-50 text-orange-950 border-orange-200 hover:bg-orange-100', bgClass: 'bg-orange-500', name: 'ส้ม' },
-      cash: { active: 'bg-teal-600 text-white border-teal-600 ring-2 ring-teal-300 shadow-md', inactive: 'bg-teal-50 text-teal-900 border-teal-200 hover:bg-teal-100', bgClass: 'bg-teal-500', name: 'มินต์' }
+      card: { active: 'bg-slate-900 text-slate-100 border-slate-900 ring-2 ring-slate-400 shadow-md', inactive: 'bg-slate-100 text-slate-800 border-slate-300 hover:bg-slate-200', bgClass: 'bg-slate-800', name: '🖤 เทาดำ' },
+      kbank: { active: 'bg-emerald-700 text-white border-emerald-700 ring-2 ring-emerald-300 shadow-md', inactive: 'bg-emerald-50 text-emerald-900 border-emerald-200 hover:bg-emerald-100', bgClass: 'bg-emerald-600', name: '💚 เขียว' },
+      scb: { active: 'bg-purple-700 text-white border-purple-700 ring-2 ring-purple-300 shadow-md', inactive: 'bg-purple-50 text-purple-900 border-purple-200 hover:bg-purple-100', bgClass: 'bg-purple-600', name: '💜 ม่วง' },
+      bbl: { active: 'bg-blue-800 text-white border-blue-800 ring-2 ring-blue-300 shadow-md', inactive: 'bg-blue-50 text-blue-950 border-blue-200 hover:bg-blue-100', bgClass: 'bg-blue-800', name: '💙 น้ำเงิน' },
+      bay: { active: 'bg-amber-500 text-amber-950 border-amber-500 ring-2 ring-amber-300 shadow-md font-bold', inactive: 'bg-amber-50 text-amber-900 border-amber-200 hover:bg-amber-100', bgClass: 'bg-amber-500', name: '💛 เหลือง' },
+      ktb: { active: 'bg-sky-500 text-white border-sky-500 ring-2 ring-sky-300 shadow-md', inactive: 'bg-sky-50 text-sky-900 border-sky-200 hover:bg-sky-100', bgClass: 'bg-sky-500', name: '🩵 ฟ้า' },
+      ttb: { active: 'bg-orange-600 text-white border-orange-600 ring-2 ring-orange-300 shadow-md', inactive: 'bg-orange-50 text-orange-950 border-orange-200 hover:bg-orange-100', bgClass: 'bg-orange-500', name: '🧡 ส้ม' },
+      cash: { active: 'bg-teal-600 text-white border-teal-600 ring-2 ring-teal-300 shadow-md', inactive: 'bg-teal-50 text-teal-900 border-teal-200 hover:bg-teal-100', bgClass: 'bg-teal-500', name: '🟢 มินต์' }
     };
 
     // Category Color Themes
     const CATEGORY_COLOR_THEMES = {
-      rose: { active: 'bg-rose-600 text-white border-rose-600 shadow-xs', inactive: 'bg-rose-50 text-rose-800 border-rose-200 hover:bg-rose-100', bgClass: 'bg-rose-600', hex: '#f43f5e' },
-      orange: { active: 'bg-orange-500 text-white border-orange-500 shadow-xs', inactive: 'bg-orange-50 text-orange-900 border-orange-200 hover:bg-orange-100', bgClass: 'bg-orange-500', hex: '#f97316' },
-      amber: { active: 'bg-amber-500 text-amber-950 border-amber-500 shadow-xs font-bold', inactive: 'bg-amber-50 text-amber-900 border-amber-200 hover:bg-amber-100', bgClass: 'bg-amber-500', hex: '#f59e0b' },
-      emerald: { active: 'bg-emerald-600 text-white border-emerald-600 shadow-xs', inactive: 'bg-emerald-50 text-emerald-900 border-emerald-200 hover:bg-emerald-100', bgClass: 'bg-emerald-600', hex: '#10b981' },
-      sky: { active: 'bg-sky-500 text-white border-sky-500 shadow-xs', inactive: 'bg-sky-50 text-sky-900 border-sky-200 hover:bg-sky-100', bgClass: 'bg-sky-500', hex: '#06b6d4' },
-      indigo: { active: 'bg-indigo-600 text-white border-indigo-600 shadow-xs', inactive: 'bg-indigo-50 text-indigo-900 border-indigo-200 hover:bg-indigo-100', bgClass: 'bg-indigo-600', hex: '#6366f1' },
-      purple: { active: 'bg-purple-600 text-white border-purple-600 shadow-xs', inactive: 'bg-purple-50 text-purple-900 border-purple-200 hover:bg-purple-100', bgClass: 'bg-purple-600', hex: '#8b5cf6' },
-      slate: { active: 'bg-slate-700 text-white border-slate-700 shadow-xs', inactive: 'bg-slate-100 text-slate-800 border-slate-300 hover:bg-slate-200', bgClass: 'bg-slate-700', hex: '#64748b' }
+      rose: { active: 'bg-rose-600 text-white border-rose-600 shadow-xs', inactive: 'bg-rose-50 text-rose-800 border-rose-200 hover:bg-rose-100', bgClass: 'bg-rose-600', hex: '#f43f5e', name: '🔴 แดง' },
+      orange: { active: 'bg-orange-500 text-white border-orange-500 shadow-xs', inactive: 'bg-orange-50 text-orange-900 border-orange-200 hover:bg-orange-100', bgClass: 'bg-orange-500', hex: '#f97316', name: '🟠 ส้ม' },
+      amber: { active: 'bg-amber-500 text-amber-950 border-amber-500 shadow-xs font-bold', inactive: 'bg-amber-50 text-amber-900 border-amber-200 hover:bg-amber-100', bgClass: 'bg-amber-500', hex: '#f59e0b', name: '🟡 เหลือง' },
+      emerald: { active: 'bg-emerald-600 text-white border-emerald-600 shadow-xs', inactive: 'bg-emerald-50 text-emerald-900 border-emerald-200 hover:bg-emerald-100', bgClass: 'bg-emerald-600', hex: '#10b981', name: '🟢 เขียว' },
+      sky: { active: 'bg-sky-500 text-white border-sky-500 shadow-xs', inactive: 'bg-sky-50 text-sky-900 border-sky-200 hover:bg-sky-100', bgClass: 'bg-sky-500', hex: '#06b6d4', name: '🩵 ฟ้า' },
+      indigo: { active: 'bg-indigo-600 text-white border-indigo-600 shadow-xs', inactive: 'bg-indigo-50 text-indigo-900 border-indigo-200 hover:bg-indigo-100', bgClass: 'bg-indigo-600', hex: '#6366f1', name: '🔵 น้ำเงิน' },
+      purple: { active: 'bg-purple-600 text-white border-purple-600 shadow-xs', inactive: 'bg-purple-50 text-purple-900 border-purple-200 hover:bg-purple-100', bgClass: 'bg-purple-600', hex: '#8b5cf6', name: '🟣 ม่วง' },
+      slate: { active: 'bg-slate-700 text-white border-slate-700 shadow-xs', inactive: 'bg-slate-100 text-slate-800 border-slate-300 hover:bg-slate-200', bgClass: 'bg-slate-700', hex: '#64748b', name: 'เทา' }
     };
 
     let historyFilterState = { kind: 'all', category: 'all', account: 'all', fromAccount: 'all', toAccount: 'all', startDate: '', endDate: '' };
@@ -1755,38 +1755,49 @@
       } catch (err) { alert(err.message); } 
     }
 
-    // Dynamic Color Chips Builder
-    function buildColorChipsHTML(currentSelectedKey, themeMap, onClickFnName) {
-      return Object.keys(themeMap).map(key => {
-        const isSel = key === currentSelectedKey;
-        const colorObj = themeMap[key];
-        return `
-          <button type="button" onclick="${onClickFnName}('${key}')" class="w-5 h-5 rounded-md ${colorObj.bgClass} transition flex items-center justify-center border ${isSel ? 'ring-2 ring-blue-600 scale-110 shadow-xs' : 'opacity-60 hover:opacity-100'}" title="${colorObj.name}">
-            ${isSel ? '<span class="text-white text-[8px] font-bold">✓</span>' : ''}
-          </button>
-        `;
-      }).join('');
+    // Dynamic Color Dropdown Builder Helper
+    function buildColorDropdownHTML(currentSelectedKey, themeMap, onchangeFnCall) {
+      return `
+        <select onchange="${onchangeFnCall}" class="px-1 py-0.5 text-[11px] border rounded bg-white font-medium">
+          ${Object.keys(themeMap).map(key => `
+            <option value="${key}" ${key === currentSelectedKey ? 'selected' : ''}>
+              ${themeMap[key].name}
+            </option>
+          `).join('')}
+        </select>
+      `;
     }
 
-    // Render Color Chips สำหรับฟอร์มเพิ่มรายการใหม่
+    // Render Dropdown เลือกสีสำหรับฟอร์มสร้างรายการใหม่
     function renderNewAccountColorPicker() {
-      const container = document.getElementById('new-acc-color-chips');
-      if (container) container.innerHTML = buildColorChipsHTML(selectedNewAccColor, ACCOUNT_COLOR_THEMES, 'setNewAccountColor');
+      const container = document.getElementById('new-acc-color-picker-container');
+      if (container) {
+        container.innerHTML = `
+          <span class="text-[10px] text-gray-500">สี:</span>
+          ${buildColorDropdownHTML(selectedNewAccColor, ACCOUNT_COLOR_THEMES, 'selectedNewAccColor=this.value')}
+        `;
+      }
     }
 
     function renderNewCategoryColorPickers() {
-      const expContainer = document.getElementById('new-exp-cat-color-chips');
-      if (expContainer) expContainer.innerHTML = buildColorChipsHTML(selectedNewExpCatColor, CATEGORY_COLOR_THEMES, 'setNewExpCatColor');
+      const expContainer = document.getElementById('new-exp-cat-color-picker-container');
+      if (expContainer) {
+        expContainer.innerHTML = `
+          <span class="text-[10px] text-gray-500">สี:</span>
+          ${buildColorDropdownHTML(selectedNewExpCatColor, CATEGORY_COLOR_THEMES, 'selectedNewExpCatColor=this.value')}
+        `;
+      }
 
-      const incContainer = document.getElementById('new-inc-cat-color-chips');
-      if (incContainer) incContainer.innerHTML = buildColorChipsHTML(selectedNewIncCatColor, CATEGORY_COLOR_THEMES, 'setNewIncCatColor');
+      const incContainer = document.getElementById('new-inc-cat-color-picker-container');
+      if (incContainer) {
+        incContainer.innerHTML = `
+          <span class="text-[10px] text-gray-500">สี:</span>
+          ${buildColorDropdownHTML(selectedNewIncCatColor, CATEGORY_COLOR_THEMES, 'selectedNewIncCatColor=this.value')}
+        `;
+      }
     }
 
-    function setNewAccountColor(key) { selectedNewAccColor = key; renderNewAccountColorPicker(); }
-    function setNewExpCatColor(key) { selectedNewExpCatColor = key; renderNewCategoryColorPickers(); }
-    function setNewIncCatColor(key) { selectedNewIncCatColor = key; renderNewCategoryColorPickers(); }
-
-    // Render Settings Accounts (Compact Horizontal Row)
+    // Render Settings Accounts (Compact Horizontal Row with Color Dropdown)
     function renderSettingsAccounts() { 
       document.getElementById('accounts-settings-list').innerHTML = accountsList.map(a => `
         <div class="flex justify-between items-center p-1.5 border rounded-xl text-xs bg-gray-50 space-x-1">
@@ -1801,12 +1812,10 @@
               <option value="💰" ${a.icon==='💰'?'selected':''}>💰</option>
               <option value="📈" ${a.icon==='📈'?'selected':''}>📈</option>
             </select>
-            <input id="edit-acc-name-${a.id}" value="${escapeHtml(a.name)}" class="w-24 px-1.5 py-0.5 border rounded bg-white text-xs font-semibold">
+            <input id="edit-acc-name-${a.id}" value="${escapeHtml(a.name)}" class="w-20 px-1.5 py-0.5 border rounded bg-white text-xs font-semibold">
           </div>
           <div class="flex items-center space-x-1">
-            <div class="flex items-center space-x-0.5">
-              ${buildColorChipsHTML(a.colorTheme || 'card', ACCOUNT_COLOR_THEMES, `updateAccountColorTheme.bind(null, '${a.id}')`)}
-            </div>
+            ${buildColorDropdownHTML(a.colorTheme || 'card', ACCOUNT_COLOR_THEMES, `updateAccountColorTheme('${a.id}', this.value)`)}
             <input type="text" id="edit-acc-${a.id}" readonly onclick="openCustomKeypad('edit-acc-${a.id}')" value="${a.initialBalance || 0}" class="w-12 px-1 py-0.5 border rounded bg-white cursor-pointer text-right font-bold">
             <button onclick="updateAccountDetails('${a.id}')" class="bg-blue-600 text-white px-1.5 py-0.5 rounded font-bold">✓</button>
             ${!a.isDefault ? `<button onclick="deleteAccount('${a.id}')" class="text-rose-500 font-bold px-1">✕</button>` : ''}
@@ -1815,7 +1824,7 @@
       `).join(''); 
     }
 
-    // Render Settings Categories (Compact Horizontal Row)
+    // Render Settings Categories (Compact Horizontal Row with Color Dropdown)
     function renderSettingsCategories() { 
       ['expense', 'income'].forEach(type => {
         document.getElementById(`${type}-cats-list`).innerHTML = categoriesList.filter(c => c.type === type).map(c => `
@@ -1836,12 +1845,10 @@
                 <option value="🎁" ${c.icon==='🎁'?'selected':''}>🎁</option>
                 <option value="💼" ${c.icon==='💼'?'selected':''}>💼</option>
               </select>
-              <input id="edit-cat-${c.id}" value="${escapeHtml(c.name)}" class="flex-1 px-1.5 py-0.5 border rounded bg-white text-xs font-semibold">
+              <input id="edit-cat-${c.id}" value="${escapeHtml(c.name)}" class="flex-1 min-w-[70px] px-1.5 py-0.5 border rounded bg-white text-xs font-semibold">
             </div>
             <div class="flex items-center space-x-1">
-              <div class="flex items-center space-x-0.5">
-                ${buildColorChipsHTML(c.colorTheme || (type==='expense'?'rose':'emerald'), CATEGORY_COLOR_THEMES, `updateCategoryColorTheme.bind(null, '${c.id}')`)}
-              </div>
+              ${buildColorDropdownHTML(c.colorTheme || (type==='expense'?'rose':'emerald'), CATEGORY_COLOR_THEMES, `updateCategoryColorTheme('${c.id}', this.value)`)}
               <button onclick="updateCategoryDetails('${c.id}')" class="bg-blue-600 text-white px-1.5 py-0.5 rounded font-bold">✓</button>
               <button onclick="deleteCategory('${c.id}')" class="text-rose-500 font-bold px-1">✕</button>
             </div>

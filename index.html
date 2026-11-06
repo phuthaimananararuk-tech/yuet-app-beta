@@ -40,7 +40,7 @@
       <div class="flex flex-col items-center">
         <div class="flex items-baseline space-x-1">
           <h1 class="text-xl font-black tracking-wider uppercase drop-shadow-xs text-slate-100">จดตังค์ BETA</h1>
-          <span class="text-[9px] font-medium text-slate-400 tracking-tight">(v1.38)</span>
+          <span class="text-[9px] font-medium text-slate-400 tracking-tight">(v1.39)</span>
         </div>
         <p class="text-[8px] text-slate-400 tracking-tight font-light">by Phuthai Mananararuk & Gemini</p>
       </div>
@@ -97,7 +97,6 @@
             <div>
               <div class="flex justify-between items-center mb-1">
                 <label class="block text-[11px] font-medium text-slate-400">เลือกหมวดหมู่</label>
-                <!-- ปุ่มเลือกหลายหมวดหมู่แบบไร้กรอบ -->
                 <button type="button" id="btn-open-multi-cat-select" onclick="openMultiCatSelectModal()" class="text-[10px] font-bold text-slate-600 hover:text-slate-800 transition hidden">+ เลือกหลายหมวดหมู่</button>
               </div>
               <div id="category-buttons-container"></div>
@@ -267,9 +266,11 @@
           <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/80 shadow-xs space-y-1 flex flex-col items-center"><h4 class="text-[10px] font-bold text-slate-600 text-center">หมวดหมู่รายรับ</h4><div class="h-36 w-36 relative flex items-center justify-center"><canvas id="incomePieChart"></canvas></div></div>
           <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/80 shadow-xs space-y-1 flex flex-col items-center"><h4 class="text-[10px] font-bold text-slate-600 text-center">หมวดหมู่รายจ่าย</h4><div class="h-36 w-36 relative flex items-center justify-center"><canvas id="expensePieChart"></canvas></div></div>
         </div>
+        
+        <!-- Interactive Cards with Read-Only Modal Click -->
         <div class="grid grid-cols-2 gap-2">
-          <div id="card-pending-friend" class="bg-slate-50 p-2.5 rounded-2xl border border-slate-200/80 shadow-xs text-center"><p class="text-[9px] font-bold text-slate-500">เงินรอคืน (เพื่อน)</p><p id="total-pending-friend" class="text-xs font-bold text-slate-700">0.00</p></div>
-          <div id="card-pending-team" class="bg-slate-50 p-2.5 rounded-2xl border border-slate-200/80 shadow-xs text-center"><p class="text-[9px] font-bold text-slate-500">เงินรอจ่าย (ทีมงาน)</p><p id="total-pending-team" class="text-xs font-bold text-slate-700">0.00</p></div>
+          <div id="card-pending-friend" onclick="openReadOnlyPendingFriendModal()" class="bg-slate-50 p-2.5 rounded-2xl border border-slate-200/80 shadow-xs text-center cursor-pointer hover:bg-slate-100 transition"><p class="text-[9px] font-bold text-slate-500">เงินรอคืน (เพื่อน) 🔍</p><p id="total-pending-friend" class="text-xs font-bold text-slate-700">0.00</p></div>
+          <div id="card-pending-team" onclick="openReadOnlyPendingTeamModal()" class="bg-slate-50 p-2.5 rounded-2xl border border-slate-200/80 shadow-xs text-center cursor-pointer hover:bg-slate-100 transition"><p class="text-[9px] font-bold text-slate-500">เงินรอจ่าย (ทีมงาน) 🔍</p><p id="total-pending-team" class="text-xs font-bold text-slate-700">0.00</p></div>
         </div>
         <div class="space-y-2 border-t border-slate-200 pt-2.5">
           <div class="flex justify-between items-center"><h3 class="text-xs font-bold text-slate-600 uppercase">สัญญาผ่อนชำระ</h3><span id="lbl-total-active-inst" class="text-[10px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">0 รายการ</span></div>
@@ -520,6 +521,57 @@
         </div>
       </form>
 
+    </div>
+  </div>
+
+  <!-- READ-ONLY MODAL: Pending Friend List -->
+  <div id="readonly-pending-friend-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-sm p-4 space-y-3 shadow-2xl relative max-h-[80vh] flex flex-col border border-slate-200">
+      <div class="flex justify-between items-center border-b border-slate-200 pb-2 flex-shrink-0">
+        <div>
+          <h3 class="text-xs font-bold text-slate-700 uppercase">รายละเอียดเงินรอคืน (เพื่อน)</h3>
+          <p class="text-[10px] text-slate-400">รายการสำรองจ่ายที่ยังได้คืนไม่ครบ</p>
+        </div>
+        <button type="button" onclick="closeReadOnlyPendingFriendModal()" class="text-slate-400 font-bold text-lg px-2">✕</button>
+      </div>
+      <div id="readonly-pending-friend-container" class="space-y-2 overflow-y-auto p-1 flex-1"></div>
+      <div class="pt-2 flex-shrink-0 border-t border-slate-200">
+        <button type="button" onclick="closeReadOnlyPendingFriendModal()" class="w-full bg-slate-700 hover:bg-slate-800 text-white py-2.5 rounded-xl text-xs font-bold transition">ปิด</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- READ-ONLY MODAL: Pending Team List -->
+  <div id="readonly-pending-team-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-sm p-4 space-y-3 shadow-2xl relative max-h-[80vh] flex flex-col border border-slate-200">
+      <div class="flex justify-between items-center border-b border-slate-200 pb-2 flex-shrink-0">
+        <div>
+          <h3 class="text-xs font-bold text-slate-700 uppercase">รายละเอียดเงินรอจ่าย (ทีมงาน)</h3>
+          <p class="text-[10px] text-slate-400">รายการรับเงินแทนที่ยังไม่ได้โอนให้ทีม</p>
+        </div>
+        <button type="button" onclick="closeReadOnlyPendingTeamModal()" class="text-slate-400 font-bold text-lg px-2">✕</button>
+      </div>
+      <div id="readonly-pending-team-container" class="space-y-2 overflow-y-auto p-1 flex-1"></div>
+      <div class="pt-2 flex-shrink-0 border-t border-slate-200">
+        <button type="button" onclick="closeReadOnlyPendingTeamModal()" class="w-full bg-slate-700 hover:bg-slate-800 text-white py-2.5 rounded-xl text-xs font-bold transition">ปิด</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- READ-ONLY MODAL: Installment Payment History -->
+  <div id="readonly-inst-history-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-sm p-4 space-y-3 shadow-2xl relative max-h-[80vh] flex flex-col border border-slate-200">
+      <div class="flex justify-between items-center border-b border-slate-200 pb-2 flex-shrink-0">
+        <div>
+          <h3 id="readonly-inst-title" class="text-xs font-bold text-slate-700 uppercase">ประวัติการผ่อนชำระ</h3>
+          <p id="readonly-inst-subtitle" class="text-[10px] text-slate-400">รายละเอียดงวดที่จ่ายไปแล้ว</p>
+        </div>
+        <button type="button" onclick="closeReadOnlyInstHistoryModal()" class="text-slate-400 font-bold text-lg px-2">✕</button>
+      </div>
+      <div id="readonly-inst-history-container" class="space-y-2 overflow-y-auto p-1 flex-1"></div>
+      <div class="pt-2 flex-shrink-0 border-t border-slate-200">
+        <button type="button" onclick="closeReadOnlyInstHistoryModal()" class="w-full bg-slate-700 hover:bg-slate-800 text-white py-2.5 rounded-xl text-xs font-bold transition">ปิด</button>
+      </div>
     </div>
   </div>
 
@@ -1371,6 +1423,89 @@
       }catch(err){alert(err.message);}
     });
 
+    // READ-ONLY MODAL SYSTEM FOR SUMMARY VIEW
+    function openReadOnlyPendingFriendModal() {
+      const container = document.getElementById('readonly-pending-friend-container');
+      const pendingList = allTransactions.filter(t => t.kind === 'transaction' && t.isReimburse && t.remainingPending > 0);
+
+      if (!pendingList.length) {
+        container.innerHTML = `<p class="text-center text-xs text-slate-400 py-6">ไม่มีรายการเงินรอคืนจากเพื่อน</p>`;
+      } else {
+        container.innerHTML = pendingList.map(t => {
+          const accName = accountsList.find(a => a.id === t.accountId)?.name || 'บัญชี';
+          return `
+            <div class="p-2.5 bg-slate-50 border border-slate-200/80 rounded-2xl space-y-1">
+              <div class="flex justify-between items-start text-xs">
+                <span class="font-bold text-slate-800">${escapeHtml(t.note || 'สำรองจ่าย')}</span>
+                <span class="font-black text-rose-600">รอคืน: ${t.remainingPending.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+              </div>
+              <div class="flex justify-between items-center text-[10px] text-slate-400">
+                <span>ยอดเต็ม: ${t.amount.toLocaleString(undefined, {minimumFractionDigits: 2})} (ส่วนเรา: ${t.myShare.toLocaleString(undefined, {minimumFractionDigits: 2})})</span>
+                <span>${t.date} (${accName})</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+      document.getElementById('readonly-pending-friend-modal').classList.remove('hidden');
+    }
+    function closeReadOnlyPendingFriendModal() { document.getElementById('readonly-pending-friend-modal').classList.add('hidden'); }
+
+    function openReadOnlyPendingTeamModal() {
+      const container = document.getElementById('readonly-pending-team-container');
+      const pendingList = allTransactions.filter(t => t.kind === 'split' && t.remainingTeamPending > 0);
+
+      if (!pendingList.length) {
+        container.innerHTML = `<p class="text-center text-xs text-slate-400 py-6">ไม่มีรายการเงินรอจ่ายทีมงาน</p>`;
+      } else {
+        container.innerHTML = pendingList.map(t => {
+          const accName = accountsList.find(a => a.id === t.accountId)?.name || 'บัญชี';
+          return `
+            <div class="p-2.5 bg-slate-50 border border-slate-200/80 rounded-2xl space-y-1">
+              <div class="flex justify-between items-start text-xs">
+                <span class="font-bold text-slate-800">${escapeHtml(t.note || 'รับเงินแทน')}</span>
+                <span class="font-black text-amber-600">รอจ่ายทีม: ${t.remainingTeamPending.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+              </div>
+              <div class="flex justify-between items-center text-[10px] text-slate-400">
+                <span>ยอดเต็ม: ${t.totalAmount.toLocaleString(undefined, {minimumFractionDigits: 2})} (ส่วนเรา: ${t.myShare.toLocaleString(undefined, {minimumFractionDigits: 2})})</span>
+                <span>${t.date} (${accName})</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+      document.getElementById('readonly-pending-team-modal').classList.remove('hidden');
+    }
+    function closeReadOnlyPendingTeamModal() { document.getElementById('readonly-pending-team-modal').classList.add('hidden'); }
+
+    function openReadOnlyInstHistoryModal(planId) {
+      const plan = activeInstallmentPlans.find(p => p.id === planId);
+      if (!plan) return;
+
+      document.getElementById('readonly-inst-title').innerText = `ประวัติ: ${plan.title || 'ผ่อนชำระ'}`;
+      document.getElementById('readonly-inst-subtitle').innerText = `ยอดเต็ม ${plan.totalAmount?.toLocaleString(undefined, {minimumFractionDigits: 2})} (${plan.currentCount||1}/${plan.totalCount||1} งวด)`;
+
+      const container = document.getElementById('readonly-inst-history-container');
+      const logs = allTransactions.filter(t => t.kind === 'transaction' && t.isInstallment && t.installmentPlanId === planId)
+                                  .sort((a,b) => (a.installmentCurrentCount || 0) - (b.installmentCurrentCount || 0));
+
+      if (!logs.length) {
+        container.innerHTML = `<p class="text-center text-xs text-slate-400 py-6">ยังไม่มีประวัติบันทึกงวดผ่อน</p>`;
+      } else {
+        container.innerHTML = logs.map(t => `
+          <div class="p-2.5 bg-slate-50 border border-slate-200/80 rounded-2xl flex justify-between items-center text-xs">
+            <div>
+              <p class="font-bold text-slate-800">งวดที่ ${t.installmentCurrentCount}/${t.installmentTotalCount}</p>
+              <p class="text-[10px] text-slate-400">${t.date} • ${escapeHtml(t.note || '')}</p>
+            </div>
+            <span class="font-bold text-slate-800">-${t.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+          </div>
+        `).join('');
+      }
+      document.getElementById('readonly-inst-history-modal').classList.remove('hidden');
+    }
+    function closeReadOnlyInstHistoryModal() { document.getElementById('readonly-inst-history-modal').classList.add('hidden'); }
+
     // --- FULL COMPATIBLE TRANSACTION EDIT SYSTEM ---
     function updateEditSplitMath() {
       const tot = parseFloat(document.getElementById('edit-split-total-amount').value) || 0;
@@ -1657,10 +1792,10 @@
           const pct = Math.min(100, Math.round((currentCount / totalCount) * 100));
 
           c.innerHTML += `
-            <div class="bg-slate-50 border border-slate-200/80 p-3 rounded-2xl space-y-2 text-xs shadow-xs">
+            <div onclick="openReadOnlyInstHistoryModal('${plan.id}')" class="bg-slate-50 border border-slate-200/80 p-3 rounded-2xl space-y-2 text-xs shadow-xs cursor-pointer hover:bg-slate-100 transition">
               <div class="flex justify-between">
                 <div>
-                  <h4 class="font-bold text-slate-800">${escapeHtml(plan.title)}</h4>
+                  <h4 class="font-bold text-slate-800">${escapeHtml(plan.title)} 🔍</h4>
                   <p class="text-[10px] text-slate-400">${acc} • [${escapeHtml(plan.categoryName)}]</p>
                 </div>
                 <span class="text-[10px] font-bold text-slate-700 bg-white px-2 py-0.5 rounded-lg border border-slate-200">
@@ -1672,7 +1807,7 @@
               </div>
               <div class="flex justify-between items-center text-[10px] pt-1">
                 <span class="text-slate-500">งวดถัดไป: ${plan.nextDueDate||'ครบแล้ว'}</span>
-                <button onclick="db.collection('users').doc('${currentUser.uid}').collection('installment_plans').doc('${plan.id}').update({status:'cancelled'})" class="text-rose-400 underline">ยกเลิกสัญญา</button>
+                <button onclick="event.stopPropagation(); db.collection('users').doc('${currentUser.uid}').collection('installment_plans').doc('${plan.id}').update({status:'cancelled'})" class="text-rose-400 underline">ยกเลิกสัญญา</button>
               </div>
             </div>
           `;

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>จดตังค์ BETA - No Icon & 16 Color Palette (Inc. White)</title>
+  <title>จดตังค์ BETA - Full Transaction History Editor Compatible</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -40,7 +40,7 @@
       <div class="flex flex-col items-center">
         <div class="flex items-baseline space-x-1">
           <h1 class="text-xl font-black tracking-wider uppercase drop-shadow-sm">จดตังค์ BETA</h1>
-          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.33)</span>
+          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.35)</span>
         </div>
         <p class="text-[8px] text-emerald-100/80 tracking-tight font-light">by Phuthai Mananararuk & Gemini</p>
       </div>
@@ -303,33 +303,25 @@
         <div class="border-b pb-2"><h2 class="text-xs font-bold text-gray-700 uppercase">Setting - ตั้งค่าระบบ</h2></div>
         <div class="space-y-1"><label class="block text-xs font-bold text-gray-700">สกุลเงินทั่วแอป</label><select id="setting-currency" onchange="autoSaveSettings()" class="w-full px-3 py-2 text-xs border rounded-xl bg-white"><option value="฿">บาท (฿)</option><option value="$">ดอลลาร์ ($)</option><option value="€">ยูโร (€)</option><option value="¥">เยน (¥)</option></select></div>
         
-        <!-- SECTION: จัดการบัญชีเงิน -->
         <div class="space-y-2 border-t pt-3">
           <div class="flex justify-between items-center">
             <h3 class="text-xs font-bold text-gray-700 uppercase">จัดการบัญชีเงิน</h3>
             <span class="text-[9px] text-gray-400 font-light">*ปัดซ้ายเพื่อแก้ไข</span>
           </div>
-          
           <div id="accounts-settings-list" class="space-y-2"></div>
-          
           <button type="button" onclick="openNewAccountModal()" class="w-full py-2 bg-blue-50 border border-blue-200 text-blue-700 hover:bg-blue-100 rounded-xl text-xs font-bold transition shadow-2xs">+ เพิ่มบัญชีใหม่</button>
         </div>
 
-        <!-- SECTION: จัดการหมวดหมู่ -->
         <div class="space-y-2 border-t pt-3">
           <div class="flex justify-between items-center">
             <h3 class="text-xs font-bold text-gray-700 uppercase">จัดการหมวดหมู่</h3>
             <span class="text-[9px] text-gray-400 font-light">*ปัดซ้ายเพื่อแก้ไข</span>
           </div>
-          
-          <!-- หมวดหมู่รายจ่าย -->
           <div class="space-y-1.5">
             <p class="text-[11px] font-semibold text-rose-600">หมวดหมู่รายจ่าย</p>
             <div id="expense-cats-list" class="space-y-2"></div>
             <button type="button" onclick="openNewCategoryModal('expense')" class="w-full py-2 bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 rounded-xl text-xs font-bold transition shadow-2xs">+ เพิ่มหมวดหมู่รายจ่าย</button>
           </div>
-          
-          <!-- หมวดหมู่รายรับ -->
           <div class="space-y-1.5 border-t pt-2">
             <p class="text-[11px] font-semibold text-emerald-600">หมวดหมู่รายรับ</p>
             <div id="income-cats-list" class="space-y-2"></div>
@@ -337,15 +329,12 @@
           </div>
         </div>
 
-        <!-- SECTION: จัดการบันทึกช่วยจำ (Preset Notes) -->
         <div class="space-y-2 border-t pt-3">
           <div class="flex justify-between items-center">
             <h3 class="text-xs font-bold text-gray-700 uppercase">จัดการบันทึกช่วยจำด่วน (Preset Notes)</h3>
             <span class="text-[9px] text-gray-400 font-light">*คำช่วยพิมพ์ในหน้าบันทึก</span>
           </div>
-          
           <div id="preset-notes-list" class="flex flex-wrap gap-1.5 min-h-[32px] p-2.5 bg-gray-50 border rounded-2xl"></div>
-          
           <div class="flex space-x-1 pt-1">
             <input type="text" id="new-preset-note-input" placeholder="เพิ่มคำด่วน เช่น ข้าวมันไก่, กาแฟ" class="flex-1 px-2.5 py-1.5 text-xs border rounded-xl bg-white">
             <button type="button" onclick="addNewPresetNote()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-xs">+ เพิ่ม</button>
@@ -357,38 +346,31 @@
     <footer id="auth-status-bar" class="bg-gray-100 p-2 text-center text-[10px] text-gray-400 border-t border-gray-100">สถานะ: ยังไม่ได้เข้าสู่ระบบ</footer>
   </div>
 
-  <!-- Account Edit / Create Pop-up Modal (No Icon, 16 Square Color Palette Grid Inc. White) -->
+  <!-- Account Edit Modal -->
   <div id="account-edit-modal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
     <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-4 shadow-2xl relative">
       <div class="flex justify-between items-center border-b pb-2">
         <h3 id="account-modal-title" class="text-xs font-bold text-gray-700 uppercase">แก้ไขบัญชี</h3>
         <button type="button" onclick="closeAccountModal()" class="text-gray-400 font-bold text-lg px-2">✕</button>
       </div>
-
       <form id="account-modal-form" class="space-y-3">
         <input type="hidden" id="modal-acc-id">
         <input type="hidden" id="modal-acc-color" value="emerald">
-        
         <div>
           <label class="block text-[11px] font-semibold text-gray-600 mb-1">ชื่อบัญชี</label>
           <input type="text" id="modal-acc-name" placeholder="ชื่อบัญชี" required class="w-full px-3 py-2 text-xs border rounded-xl bg-white font-semibold">
         </div>
-
-        <!-- 16-Color Square Palette Grid (8 Cols x 2 Rows) -->
         <div>
           <label class="block text-[11px] font-semibold text-gray-600 mb-1.5">สีประจำบัญชี (แตะเพื่อเลือก)</label>
           <div id="modal-acc-color-grid" class="grid grid-cols-8 gap-0 rounded-2xl overflow-hidden border border-gray-300 shadow-2xs"></div>
         </div>
-
         <div>
           <label class="block text-[11px] font-semibold text-gray-600 mb-1">ยอดเงินเริ่มต้น (<span class="currency-symbol">฿</span>)</label>
           <input type="text" id="modal-acc-balance" readonly onclick="openCustomKeypad('modal-acc-balance')" placeholder="0.00" class="w-full px-3 py-2 text-xs border rounded-xl bg-white text-right font-bold cursor-pointer">
         </div>
-
         <div id="modal-acc-delete-container" class="pt-2 text-center border-t border-gray-100">
           <button type="button" onclick="confirmDeleteAccountFromModal()" class="text-xs font-semibold text-rose-600 hover:text-rose-800 transition">ลบบัญชี</button>
         </div>
-
         <div class="pt-2 flex space-x-2 border-t">
           <button type="button" onclick="closeAccountModal()" class="w-1/2 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2.5 rounded-xl text-xs font-semibold">ยกเลิก</button>
           <button type="submit" class="w-1/2 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl text-xs font-bold transition shadow-xs">เสร็จสิ้น</button>
@@ -397,34 +379,28 @@
     </div>
   </div>
 
-  <!-- Category Edit / Create Pop-up Modal (No Icon, 16 Square Color Palette Grid Inc. White) -->
+  <!-- Category Edit Modal -->
   <div id="category-edit-modal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
     <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-4 shadow-2xl relative">
       <div class="flex justify-between items-center border-b pb-2">
         <h3 id="category-modal-title" class="text-xs font-bold text-gray-700 uppercase">แก้ไขหมวดหมู่</h3>
         <button type="button" onclick="closeCategoryModal()" class="text-gray-400 font-bold text-lg px-2">✕</button>
       </div>
-
       <form id="category-modal-form" class="space-y-3">
         <input type="hidden" id="modal-cat-id">
         <input type="hidden" id="modal-cat-type">
         <input type="hidden" id="modal-cat-color" value="rose">
-        
         <div>
           <label class="block text-[11px] font-semibold text-gray-600 mb-1">ชื่อหมวดหมู่</label>
           <input type="text" id="modal-cat-name" placeholder="ชื่อหมวดหมู่" required class="w-full px-3 py-2 text-xs border rounded-xl bg-white font-semibold">
         </div>
-
-        <!-- 16-Color Square Palette Grid (8 Cols x 2 Rows) -->
         <div>
           <label class="block text-[11px] font-semibold text-gray-600 mb-1.5">สีธีมหมวดหมู่ (แตะเพื่อเลือก)</label>
           <div id="modal-cat-color-grid" class="grid grid-cols-8 gap-0 rounded-2xl overflow-hidden border border-gray-300 shadow-2xs"></div>
         </div>
-
         <div id="modal-cat-delete-container" class="pt-2 text-center border-t border-gray-100">
           <button type="button" onclick="confirmDeleteCategoryFromModal()" class="text-xs font-semibold text-rose-600 hover:text-rose-800 transition">ลบหมวดหมู่</button>
         </div>
-
         <div class="pt-2 flex space-x-2 border-t">
           <button type="button" onclick="closeCategoryModal()" class="w-1/2 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2.5 rounded-xl text-xs font-semibold">ยกเลิก</button>
           <button type="submit" class="w-1/2 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl text-xs font-bold transition shadow-xs">เสร็จสิ้น</button>
@@ -433,14 +409,14 @@
     </div>
   </div>
 
-  <!-- Edit Transaction Modal -->
+  <!-- ALL-COMPATIBLE EDIT TRANSACTION MODAL -->
   <div id="edit-tx-modal" class="hidden fixed inset-0 bg-black/60 flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
     <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-sm p-4 space-y-3 shadow-2xl relative max-h-[90vh] flex flex-col overflow-y-auto">
       
       <div class="flex justify-between items-center border-b pb-2 flex-shrink-0">
         <div>
-          <h3 class="text-xs font-bold text-amber-800 uppercase">แก้ไขรายการ</h3>
-          <p class="text-[10px] text-gray-400">ปรับเปลี่ยนข้อมูลรายการเดิมที่บันทึกไว้</p>
+          <h3 class="text-xs font-bold text-amber-800 uppercase">แก้ไขรายการประวัติ</h3>
+          <p id="edit-tx-modal-subhead" class="text-[10px] text-gray-400">ปรับเปลี่ยนข้อมูลตามรูปแบบรายการ</p>
         </div>
         <button type="button" onclick="closeEditTxModal()" class="text-gray-400 font-bold text-lg px-2">✕</button>
       </div>
@@ -456,10 +432,47 @@
           <div id="edit-category-buttons-container"></div>
         </div>
 
-        <div class="grid grid-cols-2 gap-2">
-          <div>
+        <!-- Dynamic Split Amount Box -->
+        <div id="edit-split-fields" class="hidden space-y-2">
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[11px] text-purple-900 mb-1">ยอดเต็มลูกค้า (<span class="currency-symbol">฿</span>)</label>
+              <input type="text" id="edit-split-total-amount" readonly onclick="openCustomKeypad('edit-split-total-amount')" oninput="updateEditSplitMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold">
+            </div>
+            <div>
+              <label class="block text-[11px] text-purple-900 mb-1">ส่วนของเรา (<span class="currency-symbol">฿</span>)</label>
+              <input type="text" id="edit-split-my-share" readonly onclick="openCustomKeypad('edit-split-my-share')" oninput="updateEditSplitMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold">
+            </div>
+          </div>
+          <div class="bg-purple-50 p-2 rounded-xl border border-purple-100 flex justify-between items-center text-xs">
+            <span class="text-purple-700">รอจ่ายทีมงาน:</span>
+            <b id="edit-split-team-share-lbl" class="text-purple-900 text-sm">฿0.00</b>
+          </div>
+        </div>
+
+        <!-- Dynamic Reimb Amount Box -->
+        <div id="edit-reimb-fields" class="hidden space-y-2">
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[11px] text-amber-900 mb-1">จ่ายจริงทั้งหมด (<span class="currency-symbol">฿</span>)</label>
+              <input type="text" id="edit-reimb-total-amount" readonly onclick="openCustomKeypad('edit-reimb-total-amount')" oninput="updateEditReimbMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold">
+            </div>
+            <div>
+              <label class="block text-[11px] text-amber-900 mb-1">ส่วนของเราจริง (<span class="currency-symbol">฿</span>)</label>
+              <input type="text" id="edit-reimb-my-share" readonly onclick="openCustomKeypad('edit-reimb-my-share')" oninput="updateEditReimbMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold">
+            </div>
+          </div>
+          <div class="bg-amber-50 p-2 rounded-xl border border-amber-200 flex justify-between items-center text-xs">
+            <span class="text-amber-800">ส่วนของเพื่อน (รอคืน):</span>
+            <b id="edit-reimb-friend-share-lbl" class="text-amber-950 text-sm">฿0.00</b>
+          </div>
+        </div>
+
+        <!-- Normal Single Amount Field -->
+        <div id="edit-normal-amount-field" class="grid grid-cols-2 gap-2">
+          <div id="edit-normal-amount-box">
             <label class="block text-[11px] text-gray-500 mb-1">จำนวนเงิน (<span class="currency-symbol">฿</span>)</label>
-            <input type="text" id="edit-tx-amount" readonly onclick="openCustomKeypad('edit-tx-amount')" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold">
+            <input type="text" id="edit-tx-amount" readonly onclick="openCustomKeypad('edit-tx-amount')" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold">
           </div>
           <div>
             <label class="block text-[11px] text-gray-500 mb-1">วันที่</label>
@@ -662,12 +675,9 @@
     let popupYear = new Date().getFullYear(), popupMonth = new Date().getMonth() + 1;
     let activeKeypadFieldId = null, pendingMultiCatTxPayload = null;
     let balanceChartInstance = null, incomePieInstance = null, expensePieInstance = null;
-
     let activeSwipedCardId = null;
 
-    // 16 Color Themes Palette (8 Columns x 2 Rows, Including White)
     const COLOR_PALETTE_16 = {
-      // Row 1
       rose: { bgClass: 'bg-rose-600', active: 'bg-rose-600 text-white border-rose-600 shadow-md ring-2 ring-rose-300', inactive: 'bg-rose-50 text-rose-900 border-rose-200 hover:bg-rose-100', hex: '#f43f5e' },
       red: { bgClass: 'bg-red-600', active: 'bg-red-600 text-white border-red-600 shadow-md ring-2 ring-red-300', inactive: 'bg-red-50 text-red-900 border-red-200 hover:bg-red-100', hex: '#dc2626' },
       pink: { bgClass: 'bg-pink-500', active: 'bg-pink-500 text-white border-pink-500 shadow-md ring-2 ring-pink-300', inactive: 'bg-pink-50 text-pink-900 border-pink-200 hover:bg-pink-100', hex: '#ec4899' },
@@ -676,8 +686,6 @@
       yellow: { bgClass: 'bg-yellow-400', active: 'bg-yellow-400 text-yellow-950 border-yellow-400 shadow-md ring-2 ring-yellow-200 font-bold', inactive: 'bg-yellow-50 text-yellow-950 border-yellow-200 hover:bg-yellow-100', hex: '#facc15' },
       emerald: { bgClass: 'bg-emerald-600', active: 'bg-emerald-600 text-white border-emerald-600 shadow-md ring-2 ring-emerald-300', inactive: 'bg-emerald-50 text-emerald-900 border-emerald-200 hover:bg-emerald-100', hex: '#10b981' },
       teal: { bgClass: 'bg-teal-500', active: 'bg-teal-500 text-white border-teal-500 shadow-md ring-2 ring-teal-300', inactive: 'bg-teal-50 text-teal-900 border-teal-200 hover:bg-teal-100', hex: '#14b8a6' },
-
-      // Row 2
       cyan: { bgClass: 'bg-cyan-400', active: 'bg-cyan-400 text-cyan-950 border-cyan-500 shadow-md ring-2 ring-cyan-200 font-bold', inactive: 'bg-cyan-50 text-cyan-950 border-cyan-200 hover:bg-cyan-100', hex: '#22d3ee' },
       blue: { bgClass: 'bg-blue-600', active: 'bg-blue-600 text-white border-blue-600 shadow-md ring-2 ring-blue-300', inactive: 'bg-blue-50 text-blue-950 border-blue-200 hover:bg-blue-100', hex: '#2563eb' },
       indigo: { bgClass: 'bg-indigo-600', active: 'bg-indigo-600 text-white border-indigo-600 shadow-md ring-2 ring-indigo-300', inactive: 'bg-indigo-50 text-indigo-900 border-indigo-200 hover:bg-indigo-100', hex: '#6366f1' },
@@ -778,7 +786,6 @@
       } 
     });
 
-    // Auto-create default accounts & categories
     async function initUserAccountsAndCategories(uid) {
       const accSnap = await db.collection('users').doc(uid).collection('accounts').limit(1).get();
       if (accSnap.empty) {
@@ -796,7 +803,6 @@
       }
     }
 
-    // Dynamic Balance Recalculation
     function recalculateAccountBalances() {
       accountsList.forEach(acc => {
         let netTx = 0;
@@ -817,7 +823,6 @@
       });
     }
 
-    // Initial Data Fetch
     async function initUserData(uid) {
       [unsubscribeAcc, unsubscribeCat, unsubscribeTx, unsubscribeInst, unsubscribePresetNotes].forEach(u => u && u());
 
@@ -877,7 +882,6 @@
 
     function updateCurrencyUI() { document.querySelectorAll('.currency-symbol').forEach(el => el.innerText = userSettings.currency); }
 
-    // Preset Notes Operations
     function loadPresetNotesRealtime(uid) {
       unsubscribePresetNotes = db.collection('users').doc(uid).collection('settings').doc('preset_notes').onSnapshot(doc => {
         if (doc.exists) {
@@ -940,16 +944,10 @@
     function appendNoteText(textToAppend) {
       const activeNoteInput = document.querySelector('#entry-view form:not(.hidden) input[id$="-note"], #edit-tx-modal-form input[id$="-note"]');
       if (!activeNoteInput) return;
-
       const currentVal = activeNoteInput.value.trim();
-      if (!currentVal) {
-        activeNoteInput.value = textToAppend;
-      } else {
-        activeNoteInput.value = `${currentVal} ${textToAppend}`;
-      }
+      activeNoteInput.value = !currentVal ? textToAppend : `${currentVal} ${textToAppend}`;
     }
 
-    // Mode Switching
     function handleModeClick(mode) {
       const isBaseMode = (
         (mode === 'expense' && ['expense', 'installment', 'reimburse'].includes(currentEntryMode)) ||
@@ -1006,7 +1004,6 @@
       else if (mode === 'team-pay') { renderAllAccountButtons(); renderPendingTeamList(); }
     }
 
-    // Math Helpers
     function updateDedicatedInstMath() {
       const tot = parseFloat(document.getElementById('inst-total-amount').value) || 0;
       const count = parseInt(document.getElementById('inst-count').value) || 1;
@@ -1031,7 +1028,6 @@
     }
     function updateSplitMath() { const t=parseFloat(document.getElementById('split-total-amount').value)||0, m=parseFloat(document.getElementById('split-my-share').value)||0; document.getElementById('split-team-share-lbl').innerText=`${userSettings.currency}${Math.max(0,t-m).toLocaleString()}`; }
 
-    // Multi-Category Select Modal Operations
     function openMultiCatSelectModal() { renderMultiCatSelectGrid(); document.getElementById('multi-cat-select-modal').classList.remove('hidden'); }
     function closeMultiCatSelectModal() { document.getElementById('multi-cat-select-modal').classList.add('hidden'); renderCategoryButtons(); }
     function toggleCategorySelection(catId) {
@@ -1050,7 +1046,6 @@
       }).join('');
     }
 
-    // Visual Account Selector Renderer
     function renderAccountPinnedSelector(selectedId, setGlobalVarFnName) {
       let pinned = accountsList.filter(i => i.isPinned);
       if (!pinned.length && accountsList.length) pinned = [accountsList[0]];
@@ -1103,7 +1098,6 @@
       document.getElementById('team-pay-account-buttons').innerHTML = renderAccountPinnedSelector(selectedTeamPayAccountId, 'selectedTeamPayAccountId');
     }
 
-    // Dynamic Category Selector Renderer
     function getMostRecentCategories(type) {
       const filteredCats = categoriesList.filter(c => c.type === type), recentIds = [];
       allTransactions.forEach(t => {
@@ -1194,7 +1188,6 @@
       document.getElementById('transfer-to-container').innerHTML = accountsList.map(a => a.id === transferFromId ? `<button type="button" disabled class="px-2 py-1.5 rounded-xl text-xs font-semibold transition border text-left bg-gray-200 text-gray-400 border-gray-200 opacity-40 cursor-not-allowed"><span>${escapeHtml(a.name)}</span></button>` : `<button type="button" onclick="transferToId='${a.id}'; renderTransferButtons()" class="px-2 py-1.5 rounded-xl text-xs font-semibold transition border text-left flex items-center space-x-1 ${a.id === transferToId ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700'}"><span>${escapeHtml(a.name)}</span></button>`).join(''); 
     }
 
-    // Multi-Category Allocation Logic
     function openMultiCatModal(payload) {
       pendingMultiCatTxPayload = payload;
       document.getElementById('lbl-multi-modal-total').innerText = `${userSettings.currency}${payload.amount.toLocaleString()}`;
@@ -1229,7 +1222,6 @@
       await db.collection('users').doc(currentUser.uid).collection('transactions').add({ ...payload, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
     }
 
-    // Submit Handlers
     document.getElementById('tx-form').addEventListener('submit', async (e) => {
       e.preventDefault(); if (!currentUser || !selectedAccountId) return alert("เลือกบัญชี");
       const amt = parseFloat(document.getElementById('tx-amount').value), n = document.getElementById('tx-note').value.trim(), d = document.getElementById('tx-date').value;
@@ -1249,7 +1241,7 @@
         }
       } else {
         if (!selectedCategoryId) return alert("เลือกหมวดหมู่");
-        const cat = categoriesList.find(c => c.id === selectedCategoryId);
+        const cat = selectedCategoriesObj = categoriesList.find(c => c.id === selectedCategoryId);
         try {
           await saveTransactionToDB({ kind: 'transaction', type: 'income', amount: amt, myShare: amt, friendShare: 0, remainingPending: 0, isReimburse: false, isDeposit: false, isMultiCategory: false, note: n, date: d, accountId: selectedAccountId, categoryId: cat.id, categoryName: cat.name, categoriesBreakdown: [{ categoryId: cat.id, categoryName: cat.name, amount: amt }] });
           triggerSuccessToast(); document.getElementById('tx-amount').value = ''; document.getElementById('tx-note').value = ''; renderCategoryButtons();
@@ -1358,21 +1350,81 @@
       }catch(err){alert(err.message);}
     });
 
-    // Edit Modal System
+    // --- FULL COMPATIBLE TRANSACTION EDIT SYSTEM ---
+    function updateEditSplitMath() {
+      const tot = parseFloat(document.getElementById('edit-split-total-amount').value) || 0;
+      const my = parseFloat(document.getElementById('edit-split-my-share').value) || 0;
+      document.getElementById('edit-split-team-share-lbl').innerText = `${userSettings.currency}${Math.max(0, tot - my).toLocaleString()}`;
+    }
+
+    function updateEditReimbMath() {
+      const tot = parseFloat(document.getElementById('edit-reimb-total-amount').value) || 0;
+      const my = parseFloat(document.getElementById('edit-reimb-my-share').value) || 0;
+      document.getElementById('edit-reimb-friend-share-lbl').innerText = `${userSettings.currency}${Math.max(0, tot - my).toLocaleString()}`;
+    }
+
     function startEditingTransaction(id) {
       const t = allTransactions.find(x => x.id === id);
       if (!t) return;
 
       editingTxIdInModal = id;
-      editSelectedAccountId = t.accountId || (accountsList.length ? accountsList[0].id : null);
+      editSelectedAccountId = t.accountId || t.fromAccountId || (accountsList.length ? accountsList[0].id : null);
       editSelectedCategoryId = t.categoryId || null;
 
-      document.getElementById('edit-tx-amount').value = t.amount || t.totalAmount || 0;
+      const isSplit = t.kind === 'split';
+      const isReimb = t.kind === 'transaction' && t.isReimburse;
+      const isTransfer = t.kind === 'transfer';
+      const isSettlement = t.kind === 'settlement';
+      const isTeamPay = t.kind === 'team-pay';
+
+      const splitFields = document.getElementById('edit-split-fields');
+      const reimbFields = document.getElementById('edit-reimb-fields');
+      const normalAmountField = document.getElementById('edit-normal-amount-field');
+      const normalAmountBox = document.getElementById('edit-normal-amount-box');
+      const categorySection = document.getElementById('edit-category-section');
+      const subhead = document.getElementById('edit-tx-modal-subhead');
+
+      // Reset Visibility State
+      splitFields.classList.add('hidden');
+      reimbFields.classList.add('hidden');
+      normalAmountField.classList.add('grid-cols-2');
+      normalAmountBox.classList.remove('hidden');
+      categorySection.classList.remove('hidden');
+
+      if (isSplit) {
+        subhead.innerText = "แก้ไขรายการรับเงินแทน (Split)";
+        splitFields.classList.remove('hidden');
+        normalAmountField.classList.remove('grid-cols-2');
+        normalAmountBox.classList.add('hidden');
+
+        document.getElementById('edit-split-total-amount').value = t.totalAmount || 0;
+        document.getElementById('edit-split-my-share').value = t.myShare || 0;
+        updateEditSplitMath();
+        renderEditModalCategoryButtons('income');
+      } else if (isReimb) {
+        subhead.innerText = "แก้ไขรายการหารค่าใช้จ่าย (Reimburse)";
+        reimbFields.classList.remove('hidden');
+        normalAmountField.classList.remove('grid-cols-2');
+        normalAmountBox.classList.add('hidden');
+
+        document.getElementById('edit-reimb-total-amount').value = t.amount || 0;
+        document.getElementById('edit-reimb-my-share').value = t.myShare || 0;
+        updateEditReimbMath();
+        renderEditModalCategoryButtons('expense');
+      } else if (isTransfer || isSettlement || isTeamPay) {
+        subhead.innerText = isTransfer ? "แก้ไขรายการโอนเงิน" : isSettlement ? "แก้ไขรายการรับเงินคืน" : "แก้ไขรายการโอนให้ทีม";
+        categorySection.classList.add('hidden'); // ซ่อนหมวดหมู่เพราะแบบฟอร์มเดิมไม่มีหมวดหมู่
+        document.getElementById('edit-tx-amount').value = t.amount || 0;
+      } else {
+        subhead.innerText = "แก้ไขรายการ" + (t.type === 'income' ? 'รายรับ' : 'รายจ่าย');
+        document.getElementById('edit-tx-amount').value = t.amount || 0;
+        renderEditModalCategoryButtons(t.type || 'expense');
+      }
+
       document.getElementById('edit-tx-date').value = t.date || '';
       document.getElementById('edit-tx-note').value = t.note || '';
 
       renderEditModalAccountButtons();
-      renderEditModalCategoryButtons(t.type || 'expense');
       renderEntryPresetNotes();
 
       document.getElementById('edit-tx-modal').classList.remove('hidden');
@@ -1404,32 +1456,73 @@
       e.preventDefault();
       if (!editingTxIdInModal || !currentUser) return;
 
-      const amt = parseFloat(document.getElementById('edit-tx-amount').value);
+      const t = allTransactions.find(x => x.id === editingTxIdInModal);
       const dateStr = document.getElementById('edit-tx-date').value;
       const noteStr = document.getElementById('edit-tx-note').value.trim();
       const catObj = categoriesList.find(c => c.id === editSelectedCategoryId);
 
-      if (isNaN(amt) || amt <= 0) return alert("กรุณากรอกจำนวนเงินให้ถูกต้อง");
+      let updatePayload = {
+        date: dateStr,
+        note: noteStr,
+        accountId: editSelectedAccountId,
+      };
+
+      if (catObj && !['transfer', 'settlement', 'team-pay'].includes(t.kind)) {
+        updatePayload.categoryId = catObj.id;
+        updatePayload.categoryName = catObj.name;
+      }
+
+      if (t.kind === 'split') {
+        const tot = parseFloat(document.getElementById('edit-split-total-amount').value);
+        const my = parseFloat(document.getElementById('edit-split-my-share').value);
+
+        if (isNaN(tot) || tot <= 0 || isNaN(my) || my < 0 || my > tot) {
+          return alert("กรุณากรอกยอดเงินให้ถูกต้อง");
+        }
+
+        const newTeamShare = Math.max(0, tot - my);
+        const prevPaidTeam = (t.teamShare || 0) - (t.remainingTeamPending || 0);
+
+        updatePayload.totalAmount = tot;
+        updatePayload.myShare = my;
+        updatePayload.teamShare = newTeamShare;
+        updatePayload.remainingTeamPending = Math.max(0, newTeamShare - prevPaidTeam);
+      } else if (t.kind === 'transaction' && t.isReimburse) {
+        const tot = parseFloat(document.getElementById('edit-reimb-total-amount').value);
+        const my = parseFloat(document.getElementById('edit-reimb-my-share').value);
+
+        if (isNaN(tot) || tot <= 0 || isNaN(my) || my < 0 || my > tot) {
+          return alert("กรุณากรอกยอดเงินหารให้ถูกต้อง");
+        }
+
+        const newFriendShare = Math.max(0, tot - my);
+        const prevPaidFriend = (t.friendShare || 0) - (t.remainingPending || 0);
+
+        updatePayload.amount = tot;
+        updatePayload.myShare = my;
+        updatePayload.friendShare = newFriendShare;
+        updatePayload.remainingPending = Math.max(0, newFriendShare - prevPaidFriend);
+        
+        if (catObj) {
+          updatePayload.categoriesBreakdown = [{ categoryId: catObj.id, categoryName: catObj.name, amount: my }];
+        }
+      } else if (t.kind === 'transfer') {
+        const amt = parseFloat(document.getElementById('edit-tx-amount').value);
+        if (isNaN(amt) || amt <= 0) return alert("กรุณากรอกจำนวนเงินให้ถูกต้อง");
+        updatePayload.amount = amt;
+        updatePayload.fromAccountId = editSelectedAccountId;
+        updatePayload.fromAccountName = accountsList.find(a => a.id === editSelectedAccountId)?.name || '';
+      } else {
+        const amt = parseFloat(document.getElementById('edit-tx-amount').value);
+        if (isNaN(amt) || amt <= 0) return alert("กรุณากรอกจำนวนเงินให้ถูกต้อง");
+        updatePayload.amount = amt;
+        updatePayload.myShare = amt;
+        if (catObj) {
+          updatePayload.categoriesBreakdown = [{ categoryId: catObj.id, categoryName: catObj.name, amount: amt }];
+        }
+      }
 
       try {
-        const t = allTransactions.find(x => x.id === editingTxIdInModal);
-        let updatePayload = {
-          amount: amt,
-          date: dateStr,
-          note: noteStr,
-          accountId: editSelectedAccountId,
-        };
-
-        if (catObj) {
-          updatePayload.categoryId = catObj.id;
-          updatePayload.categoryName = catObj.name;
-        }
-
-        if (t.kind === 'split') {
-          updatePayload.totalAmount = amt;
-          updatePayload.myShare = amt;
-        }
-
         await db.collection('users').doc(currentUser.uid).collection('transactions').doc(editingTxIdInModal).update(updatePayload);
 
         triggerSuccessToast();
@@ -1440,7 +1533,6 @@
       }
     });
 
-    // Realtime Transactions Listener & UI Render
     function loadInstallmentPlansRealtime(uid) {
       if(unsubscribeInst) unsubscribeInst();
       unsubscribeInst = db.collection('users').doc(uid).collection('installment_plans').orderBy('createdAt','desc').onSnapshot(snap => {
@@ -1568,7 +1660,6 @@
     function changePopupCashflowMonth(off) { popupMonth+=off; if(popupMonth>12){popupMonth=1; popupYear++;} else if(popupMonth<1){popupMonth=12; popupYear--;} updatePopupCashflowUI(); }
     function updatePopupCashflowUI() { document.getElementById('popup-cashflow-month-label').innerText = `${["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."][popupMonth-1]} ${popupYear}`; const {netFlow, inc, exp} = calculateCashflowForMonth(popupYear, popupMonth); renderCashflowBar(netFlow, Math.max(inc,exp,1), 'popup-cashflow-bar-fill', 'popup-cashflow-net-text'); }
 
-    // History Search & Advanced Filter Logic
     function populateHistoryFilterDropdowns() {
       const catSelect = document.getElementById('filter-category');
       catSelect.innerHTML = `<option value="all">ทุกหมวดหมู่</option>` + categoriesList.map(c => `<option value="${c.id}">${escapeHtml(c.name)} (${c.type === 'expense' ? 'จ่าย' : 'รับ'})</option>`).join('');
@@ -1768,7 +1859,6 @@
       } catch (err) { alert(err.message); } 
     }
 
-    // --- SINGLE SWIPE LOCK HELPER ---
     function closeActiveSwipedCard() {
       if (activeSwipedCardId) {
         const prevCard = document.getElementById(activeSwipedCardId);
@@ -1826,7 +1916,6 @@
       container.addEventListener('mouseup', onTouchEnd);
     }
 
-    // --- CLEAN RENDERERS FOR SETTING (SINGLE SWIPE LIST, NO ICONS) ---
     function renderSettingsAccounts() {
       const container = document.getElementById('accounts-settings-list');
       if (!container) return;
@@ -1888,7 +1977,6 @@
       });
     }
 
-    // --- RENDER 16 SQUARE COLOR PALETTE GRID (INCLUDING WHITE) ---
     function renderSquarePaletteGrid(gridContainerId, hiddenInputId, selectedColorKey) {
       const container = document.getElementById(gridContainerId);
       const hiddenInput = document.getElementById(hiddenInputId);
@@ -1914,7 +2002,6 @@
       renderSquarePaletteGrid(gridContainerId, hiddenInputId, colorKey);
     }
 
-    // --- ACCOUNT POP-UP MODAL LOGIC ---
     function openNewAccountModal() {
       document.getElementById('account-modal-title').innerText = 'เพิ่มบัญชีใหม่';
       document.getElementById('modal-acc-id').value = '';
@@ -1985,7 +2072,6 @@
       }
     }
 
-    // --- CATEGORY POP-UP MODAL LOGIC ---
     function openNewCategoryModal(type) {
       document.getElementById('category-modal-title').innerText = `เพิ่มหมวดหมู่${type==='expense'?'รายจ่าย':'รายรับ'}`;
       document.getElementById('modal-cat-id').value = '';

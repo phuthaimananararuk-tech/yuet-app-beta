@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>จดตังค์ BETA (v1.32) - Single Swipe & 24 Color Palette</title>
+  <title>จดตังค์ BETA - No Icon & 16 Color Palette (Inc. White)</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -40,7 +40,7 @@
       <div class="flex flex-col items-center">
         <div class="flex items-baseline space-x-1">
           <h1 class="text-xl font-black tracking-wider uppercase drop-shadow-sm">จดตังค์ BETA</h1>
-          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.32)</span>
+          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.33)</span>
         </div>
         <p class="text-[8px] text-emerald-100/80 tracking-tight font-light">by Phuthai Mananararuk & Gemini</p>
       </div>
@@ -298,7 +298,7 @@
         <div id="full-tx-list" class="space-y-2 overflow-y-auto pr-1 flex-1"><p class="text-center text-xs text-gray-400 py-6">กำลังโหลดประวัติ...</p></div>
       </section>
 
-      <!-- 4. SETTING VIEW (Single Swipe Lock Enabled) -->
+      <!-- 4. SETTING VIEW -->
       <section id="setting-view" class="hidden space-y-4 max-h-[620px] overflow-y-auto pr-1">
         <div class="border-b pb-2"><h2 class="text-xs font-bold text-gray-700 uppercase">Setting - ตั้งค่าระบบ</h2></div>
         <div class="space-y-1"><label class="block text-xs font-bold text-gray-700">สกุลเงินทั่วแอป</label><select id="setting-currency" onchange="autoSaveSettings()" class="w-full px-3 py-2 text-xs border rounded-xl bg-white"><option value="฿">บาท (฿)</option><option value="$">ดอลลาร์ ($)</option><option value="€">ยูโร (€)</option><option value="¥">เยน (¥)</option></select></div>
@@ -357,7 +357,7 @@
     <footer id="auth-status-bar" class="bg-gray-100 p-2 text-center text-[10px] text-gray-400 border-t border-gray-100">สถานะ: ยังไม่ได้เข้าสู่ระบบ</footer>
   </div>
 
-  <!-- Account Edit / Create Pop-up Modal (24 Square Color Palette Grid) -->
+  <!-- Account Edit / Create Pop-up Modal (No Icon, 16 Square Color Palette Grid Inc. White) -->
   <div id="account-edit-modal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
     <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-4 shadow-2xl relative">
       <div class="flex justify-between items-center border-b pb-2">
@@ -367,28 +367,14 @@
 
       <form id="account-modal-form" class="space-y-3">
         <input type="hidden" id="modal-acc-id">
-        <input type="hidden" id="modal-acc-color" value="kbank">
+        <input type="hidden" id="modal-acc-color" value="emerald">
         
-        <div class="grid grid-cols-3 gap-2">
-          <div class="col-span-2">
-            <label class="block text-[11px] font-semibold text-gray-600 mb-1">ชื่อบัญชี</label>
-            <input type="text" id="modal-acc-name" placeholder="ชื่อบัญชี" required class="w-full px-3 py-2 text-xs border rounded-xl bg-white font-semibold">
-          </div>
-          <div>
-            <label class="block text-[11px] font-semibold text-gray-600 mb-1">ไอคอน</label>
-            <select id="modal-acc-icon" class="w-full px-2 py-2 text-xs border rounded-xl bg-white">
-              <option value="-">-</option>
-              <option value="💵">💵 เงินสด</option>
-              <option value="🏛️">🏛️ ธนาคาร</option>
-              <option value="💳">💳 บัตรเครดิต</option>
-              <option value="📱">📱 แอปพลิเคชัน</option>
-              <option value="💰">💰 ถุงเงิน</option>
-              <option value="📈">📈 การลงทุน</option>
-            </select>
-          </div>
+        <div>
+          <label class="block text-[11px] font-semibold text-gray-600 mb-1">ชื่อบัญชี</label>
+          <input type="text" id="modal-acc-name" placeholder="ชื่อบัญชี" required class="w-full px-3 py-2 text-xs border rounded-xl bg-white font-semibold">
         </div>
 
-        <!-- 24-Color Square Palette Grid สำหรับเลือกสีประจำบัญชี -->
+        <!-- 16-Color Square Palette Grid (8 Cols x 2 Rows) -->
         <div>
           <label class="block text-[11px] font-semibold text-gray-600 mb-1.5">สีประจำบัญชี (แตะเพื่อเลือก)</label>
           <div id="modal-acc-color-grid" class="grid grid-cols-8 gap-0 rounded-2xl overflow-hidden border border-gray-300 shadow-2xs"></div>
@@ -411,7 +397,7 @@
     </div>
   </div>
 
-  <!-- Category Edit / Create Pop-up Modal (24 Square Color Palette Grid) -->
+  <!-- Category Edit / Create Pop-up Modal (No Icon, 16 Square Color Palette Grid Inc. White) -->
   <div id="category-edit-modal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
     <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-4 shadow-2xl relative">
       <div class="flex justify-between items-center border-b pb-2">
@@ -424,32 +410,12 @@
         <input type="hidden" id="modal-cat-type">
         <input type="hidden" id="modal-cat-color" value="rose">
         
-        <div class="grid grid-cols-3 gap-2">
-          <div class="col-span-2">
-            <label class="block text-[11px] font-semibold text-gray-600 mb-1">ชื่อหมวดหมู่</label>
-            <input type="text" id="modal-cat-name" placeholder="ชื่อหมวดหมู่" required class="w-full px-3 py-2 text-xs border rounded-xl bg-white font-semibold">
-          </div>
-          <div>
-            <label class="block text-[11px] font-semibold text-gray-600 mb-1">ไอคอน</label>
-            <select id="modal-cat-icon" class="w-full px-2 py-2 text-xs border rounded-xl bg-white">
-              <option value="-">-</option>
-              <option value="🍔">🍔 อาหาร</option>
-              <option value="☕">☕ กาแฟ</option>
-              <option value="🚗">🚗 เดินทาง</option>
-              <option value="🏠">🏠 บ้าน</option>
-              <option value="🛒">🛒 ช้อปปิ้ง</option>
-              <option value="🎬">🎬 บันเทิง</option>
-              <option value="💡">💡 ค่าน้ำไฟ</option>
-              <option value="💰">💰 รายรับทั่วไป</option>
-              <option value="💵">💵 เงินเดือน</option>
-              <option value="📈">📈 การลงทุน</option>
-              <option value="🎁">🎁 ของขวัญ</option>
-              <option value="💼">💼 ฟรีแลนซ์</option>
-            </select>
-          </div>
+        <div>
+          <label class="block text-[11px] font-semibold text-gray-600 mb-1">ชื่อหมวดหมู่</label>
+          <input type="text" id="modal-cat-name" placeholder="ชื่อหมวดหมู่" required class="w-full px-3 py-2 text-xs border rounded-xl bg-white font-semibold">
         </div>
 
-        <!-- 24-Color Square Palette Grid สำหรับเลือกสีหมวดหมู่ -->
+        <!-- 16-Color Square Palette Grid (8 Cols x 2 Rows) -->
         <div>
           <label class="block text-[11px] font-semibold text-gray-600 mb-1.5">สีธีมหมวดหมู่ (แตะเพื่อเลือก)</label>
           <div id="modal-cat-color-grid" class="grid grid-cols-8 gap-0 rounded-2xl overflow-hidden border border-gray-300 shadow-2xs"></div>
@@ -697,45 +663,33 @@
     let activeKeypadFieldId = null, pendingMultiCatTxPayload = null;
     let balanceChartInstance = null, incomePieInstance = null, expensePieInstance = null;
 
-    // Single Swipe Lock Global State Variable
     let activeSwipedCardId = null;
 
-    // Expanded 24 Color Themes Palette (8 Columns x 3 Rows)
-    const COLOR_PALETTE_24 = {
-      // Row 1: Warm & Red/Pink/Orange Tones
+    // 16 Color Themes Palette (8 Columns x 2 Rows, Including White)
+    const COLOR_PALETTE_16 = {
+      // Row 1
       rose: { bgClass: 'bg-rose-600', active: 'bg-rose-600 text-white border-rose-600 shadow-md ring-2 ring-rose-300', inactive: 'bg-rose-50 text-rose-900 border-rose-200 hover:bg-rose-100', hex: '#f43f5e' },
-      'rose-light': { bgClass: 'bg-pink-300', active: 'bg-pink-300 text-gray-900 border-pink-400 shadow-md ring-2 ring-pink-200 font-bold', inactive: 'bg-pink-50 text-pink-900 border-pink-200 hover:bg-pink-100', hex: '#f472b6' },
       red: { bgClass: 'bg-red-600', active: 'bg-red-600 text-white border-red-600 shadow-md ring-2 ring-red-300', inactive: 'bg-red-50 text-red-900 border-red-200 hover:bg-red-100', hex: '#dc2626' },
       pink: { bgClass: 'bg-pink-500', active: 'bg-pink-500 text-white border-pink-500 shadow-md ring-2 ring-pink-300', inactive: 'bg-pink-50 text-pink-900 border-pink-200 hover:bg-pink-100', hex: '#ec4899' },
-      fuchsia: { bgClass: 'bg-fuchsia-600', active: 'bg-fuchsia-600 text-white border-fuchsia-600 shadow-md ring-2 ring-fuchsia-300', inactive: 'bg-fuchsia-50 text-fuchsia-900 border-fuchsia-200 hover:bg-fuchsia-100', hex: '#c026d3' },
-      coral: { bgClass: 'bg-rose-400', active: 'bg-rose-400 text-white border-rose-400 shadow-md ring-2 ring-rose-200', inactive: 'bg-rose-50 text-rose-900 border-rose-100 hover:bg-rose-100', hex: '#fb7185' },
       orange: { bgClass: 'bg-orange-500', active: 'bg-orange-500 text-white border-orange-500 shadow-md ring-2 ring-orange-300', inactive: 'bg-orange-50 text-orange-950 border-orange-200 hover:bg-orange-100', hex: '#f97316' },
-      'amber-dark': { bgClass: 'bg-amber-700', active: 'bg-amber-700 text-white border-amber-800 shadow-md ring-2 ring-amber-400', inactive: 'bg-amber-50 text-amber-950 border-amber-300 hover:bg-amber-100', hex: '#b45309' },
-
-      // Row 2: Yellow/Lime/Green Tones
       amber: { bgClass: 'bg-amber-500', active: 'bg-amber-500 text-amber-950 border-amber-500 shadow-md ring-2 ring-amber-300 font-bold', inactive: 'bg-amber-50 text-amber-900 border-amber-200 hover:bg-amber-100', hex: '#f59e0b' },
       yellow: { bgClass: 'bg-yellow-400', active: 'bg-yellow-400 text-yellow-950 border-yellow-400 shadow-md ring-2 ring-yellow-200 font-bold', inactive: 'bg-yellow-50 text-yellow-950 border-yellow-200 hover:bg-yellow-100', hex: '#facc15' },
-      lime: { bgClass: 'bg-lime-500', active: 'bg-lime-500 text-lime-950 border-lime-500 shadow-md ring-2 ring-lime-300 font-bold', inactive: 'bg-lime-50 text-lime-950 border-lime-200 hover:bg-lime-100', hex: '#84cc16' },
       emerald: { bgClass: 'bg-emerald-600', active: 'bg-emerald-600 text-white border-emerald-600 shadow-md ring-2 ring-emerald-300', inactive: 'bg-emerald-50 text-emerald-900 border-emerald-200 hover:bg-emerald-100', hex: '#10b981' },
-      'emerald-dark': { bgClass: 'bg-emerald-900', active: 'bg-emerald-900 text-white border-emerald-950 shadow-md ring-2 ring-emerald-500', inactive: 'bg-emerald-50 text-emerald-950 border-emerald-300 hover:bg-emerald-100', hex: '#064e3b' },
       teal: { bgClass: 'bg-teal-500', active: 'bg-teal-500 text-white border-teal-500 shadow-md ring-2 ring-teal-300', inactive: 'bg-teal-50 text-teal-900 border-teal-200 hover:bg-teal-100', hex: '#14b8a6' },
-      'teal-light': { bgClass: 'bg-teal-300', active: 'bg-teal-300 text-teal-950 border-teal-400 shadow-md ring-2 ring-teal-200 font-bold', inactive: 'bg-teal-50 text-teal-950 border-teal-200 hover:bg-teal-100', hex: '#5eead4' },
-      cyan: { bgClass: 'bg-cyan-400', active: 'bg-cyan-400 text-cyan-950 border-cyan-500 shadow-md ring-2 ring-cyan-200 font-bold', inactive: 'bg-cyan-50 text-cyan-950 border-cyan-200 hover:bg-cyan-100', hex: '#22d3ee' },
 
-      // Row 3: Blue/Purple/Dark Tones
-      sky: { bgClass: 'bg-sky-500', active: 'bg-sky-500 text-white border-sky-500 shadow-md ring-2 ring-sky-300', inactive: 'bg-sky-50 text-sky-900 border-sky-200 hover:bg-sky-100', hex: '#06b6d4' },
+      // Row 2
+      cyan: { bgClass: 'bg-cyan-400', active: 'bg-cyan-400 text-cyan-950 border-cyan-500 shadow-md ring-2 ring-cyan-200 font-bold', inactive: 'bg-cyan-50 text-cyan-950 border-cyan-200 hover:bg-cyan-100', hex: '#22d3ee' },
       blue: { bgClass: 'bg-blue-600', active: 'bg-blue-600 text-white border-blue-600 shadow-md ring-2 ring-blue-300', inactive: 'bg-blue-50 text-blue-950 border-blue-200 hover:bg-blue-100', hex: '#2563eb' },
       indigo: { bgClass: 'bg-indigo-600', active: 'bg-indigo-600 text-white border-indigo-600 shadow-md ring-2 ring-indigo-300', inactive: 'bg-indigo-50 text-indigo-900 border-indigo-200 hover:bg-indigo-100', hex: '#6366f1' },
-      'indigo-dark': { bgClass: 'bg-indigo-950', active: 'bg-indigo-950 text-indigo-100 border-black shadow-md ring-2 ring-indigo-500', inactive: 'bg-indigo-50 text-indigo-950 border-indigo-300 hover:bg-indigo-100', hex: '#1e1b4b' },
       purple: { bgClass: 'bg-purple-600', active: 'bg-purple-600 text-white border-purple-600 shadow-md ring-2 ring-purple-300', inactive: 'bg-purple-50 text-purple-900 border-purple-200 hover:bg-purple-100', hex: '#8b5cf6' },
-      'violet-light': { bgClass: 'bg-violet-300', active: 'bg-violet-300 text-violet-950 border-violet-400 shadow-md ring-2 ring-violet-200 font-bold', inactive: 'bg-violet-50 text-violet-950 border-violet-200 hover:bg-violet-100', hex: '#c4b5fd' },
+      fuchsia: { bgClass: 'bg-fuchsia-600', active: 'bg-fuchsia-600 text-white border-fuchsia-600 shadow-md ring-2 ring-fuchsia-300', inactive: 'bg-fuchsia-50 text-fuchsia-900 border-fuchsia-200 hover:bg-fuchsia-100', hex: '#c026d3' },
       stone: { bgClass: 'bg-stone-500', active: 'bg-stone-500 text-white border-stone-600 shadow-md ring-2 ring-stone-300', inactive: 'bg-stone-100 text-stone-800 border-stone-300 hover:bg-stone-200', hex: '#78716c' },
+      white: { bgClass: 'bg-white border border-gray-300', active: 'bg-white text-gray-900 border-gray-400 shadow-md ring-2 ring-gray-400 font-bold', inactive: 'bg-gray-50 text-gray-800 border-gray-300 hover:bg-gray-100', hex: '#ffffff' },
       card: { bgClass: 'bg-slate-800', active: 'bg-slate-900 text-slate-100 border-slate-900 shadow-md ring-2 ring-slate-400', inactive: 'bg-slate-100 text-slate-800 border-slate-300 hover:bg-slate-200', hex: '#1e293b' }
     };
 
-    // Aliases for compatibility
-    const ACCOUNT_COLOR_THEMES = COLOR_PALETTE_24;
-    const CATEGORY_COLOR_THEMES = COLOR_PALETTE_24;
+    const ACCOUNT_COLOR_THEMES = COLOR_PALETTE_16;
+    const CATEGORY_COLOR_THEMES = COLOR_PALETTE_16;
 
     let historyFilterState = { kind: 'all', category: 'all', account: 'all', fromAccount: 'all', toAccount: 'all', startDate: '', endDate: '' };
 
@@ -829,14 +783,14 @@
       const accSnap = await db.collection('users').doc(uid).collection('accounts').limit(1).get();
       if (accSnap.empty) {
         const batch = db.batch();
-        batch.set(db.collection('users').doc(uid).collection('accounts').doc(), { name: 'เงินสด', icon: '-', colorTheme: 'teal', initialBalance: 0, isDefault: true, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-        batch.set(db.collection('users').doc(uid).collection('accounts').doc(), { name: 'ธนาคาร KBank', icon: '-', colorTheme: 'emerald', initialBalance: 0, isDefault: false, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-        batch.set(db.collection('users').doc(uid).collection('accounts').doc(), { name: 'บัตรเครดิต', icon: '-', colorTheme: 'card', initialBalance: 0, isDefault: false, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        batch.set(db.collection('users').doc(uid).collection('accounts').doc(), { name: 'เงินสด', colorTheme: 'teal', initialBalance: 0, isDefault: true, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        batch.set(db.collection('users').doc(uid).collection('accounts').doc(), { name: 'ธนาคาร KBank', colorTheme: 'emerald', initialBalance: 0, isDefault: false, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        batch.set(db.collection('users').doc(uid).collection('accounts').doc(), { name: 'บัตรเครดิต', colorTheme: 'card', initialBalance: 0, isDefault: false, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
 
         const catSnap = await db.collection('users').doc(uid).collection('categories').limit(1).get();
         if (catSnap.empty) {
-          batch.set(db.collection('users').doc(uid).collection('categories').doc(), { name: 'ทั่วไป', type: 'expense', icon: '-', colorTheme: 'rose', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-          batch.set(db.collection('users').doc(uid).collection('categories').doc(), { name: 'ทั่วไป', type: 'income', icon: '-', colorTheme: 'emerald', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+          batch.set(db.collection('users').doc(uid).collection('categories').doc(), { name: 'ทั่วไป', type: 'expense', colorTheme: 'rose', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+          batch.set(db.collection('users').doc(uid).collection('categories').doc(), { name: 'ทั่วไป', type: 'income', colorTheme: 'emerald', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
         }
         await batch.commit();
       }
@@ -887,7 +841,7 @@
         snap.forEach(d => {
           const data = d.data();
           const initBal = typeof data.initialBalance === 'number' ? data.initialBalance : (data.balance || 0);
-          accountsList.push({ id: d.id, icon: '-', colorTheme: 'card', ...data, initialBalance: initBal }); 
+          accountsList.push({ id: d.id, colorTheme: 'card', ...data, initialBalance: initBal }); 
         }); 
         if (!accountsList.length) return;
         
@@ -910,7 +864,7 @@
       });
 
       unsubscribeCat = db.collection('users').doc(uid).collection('categories').orderBy('createdAt','asc').onSnapshot(snap => { 
-        categoriesList = []; snap.forEach(d => categoriesList.push({ id: d.id, icon: '-', colorTheme: d.data().type==='expense'?'rose':'emerald', ...d.data() })); 
+        categoriesList = []; snap.forEach(d => categoriesList.push({ id: d.id, colorTheme: d.data().type==='expense'?'rose':'emerald', ...d.data() })); 
         renderCategoryButtons(); renderSplitCategoryButtons(); renderInstCategoryButtons(); renderReimbCategoryButtons(); renderSettingsCategories(); populateHistoryFilterDropdowns();
         if (!views.summary.classList.contains('hidden')) renderSummaryAnalyticsUI();
       });
@@ -1092,8 +1046,7 @@
         const isSel = selectedCategoryIds.includes(cat.id);
         const theme = CATEGORY_COLOR_THEMES[cat.colorTheme] || CATEGORY_COLOR_THEMES.rose;
         const styleClass = isSel ? theme.active : theme.inactive;
-        const iconDisp = (cat.icon && cat.icon !== '-') ? `${cat.icon} ` : '';
-        return `<button type="button" onclick="toggleCategorySelection('${cat.id}')" class="p-2.5 rounded-2xl text-xs font-semibold border text-center transition flex items-center justify-between ${styleClass}"><span class="truncate">${iconDisp}${escapeHtml(cat.name)}</span>${isSel ? '<span class="font-bold">✓</span>' : ''}</button>`;
+        return `<button type="button" onclick="toggleCategorySelection('${cat.id}')" class="p-2.5 rounded-2xl text-xs font-semibold border text-center transition flex items-center justify-between ${styleClass}"><span class="truncate">${escapeHtml(cat.name)}</span>${isSel ? '<span class="font-bold">✓</span>' : ''}</button>`;
       }).join('');
     }
 
@@ -1110,15 +1063,13 @@
         const isSel = i.id === selectedId;
         const theme = ACCOUNT_COLOR_THEMES[i.colorTheme] || ACCOUNT_COLOR_THEMES.card;
         const styleClass = isSel ? theme.active : theme.inactive;
-        const iconDisp = (i.icon && i.icon !== '-') ? `<span>${i.icon}</span>` : '';
 
-        html += `<button type="button" onclick="${setGlobalVarFnName}='${i.id}'; renderAllAccountButtons();" class="px-3 py-1.5 rounded-xl text-xs font-semibold transition border flex items-center space-x-1 ${styleClass}">${iconDisp}<span>${escapeHtml(i.name)}</span></button>`;
+        html += `<button type="button" onclick="${setGlobalVarFnName}='${i.id}'; renderAllAccountButtons();" class="px-3 py-1.5 rounded-xl text-xs font-semibold transition border flex items-center space-x-1 ${styleClass}"><span>${escapeHtml(i.name)}</span></button>`;
       });
 
       const unpinnedCount = accountsList.length - pinned.length;
       if (unpinnedCount > 0 || !isSelectedInPinned) {
-        const extraIcon = (selectedItem?.icon && selectedItem.icon !== '-') ? selectedItem.icon : '';
-        const extraLabel = (!isSelectedInPinned && selectedItem) ? `${extraIcon} ${selectedItem.name} ✓` : `+ เลือกอื่น`;
+        const extraLabel = (!isSelectedInPinned && selectedItem) ? `${selectedItem.name} ✓` : `+ เลือกอื่น`;
         const extraClass = (!isSelectedInPinned && selectedItem) ? (ACCOUNT_COLOR_THEMES[selectedItem.colorTheme]?.active || 'bg-emerald-600 text-white') : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200 font-bold';
         html += `<button type="button" onclick="openAccountSelectorModal('${setGlobalVarFnName}')" class="px-2.5 py-1.5 rounded-xl text-xs font-medium transition border ${extraClass}">${escapeHtml(extraLabel)}</button>`;
       }
@@ -1132,11 +1083,9 @@
       
       container.innerHTML = accountsList.map(item => {
         const theme = ACCOUNT_COLOR_THEMES[item.colorTheme] || ACCOUNT_COLOR_THEMES.card;
-        const iconDisp = (item.icon && item.icon !== '-') ? `<span class="text-base">${item.icon}</span>` : '';
         return `
           <button type="button" onclick="${setGlobalVarFnName}='${item.id}'; renderAllAccountButtons(); closeSelectorModal();" class="p-3 rounded-2xl text-xs font-semibold border text-center transition flex items-center justify-between ${theme.inactive}">
             <div class="flex items-center space-x-1.5">
-              ${iconDisp}
               <span class="truncate font-bold">${escapeHtml(item.name)}</span>
             </div>
           </button>
@@ -1181,12 +1130,11 @@
           const isSelected = selectedCategoryIds.includes(i.id);
           const theme = CATEGORY_COLOR_THEMES[i.colorTheme] || CATEGORY_COLOR_THEMES.rose;
           const styleClass = isSelected ? theme.active : theme.inactive;
-          const iconDisp = (i.icon && i.icon !== '-') ? `${i.icon} ` : '';
 
-          html += `<button type="button" onclick="selectedCategoryIds=['${i.id}']; renderCategoryButtons();" class="px-2.5 py-1 rounded-xl text-xs font-semibold transition border ${styleClass}">${iconDisp}${escapeHtml(i.name)}${isSelected && selectedCategoryIds.length > 1 ? ' ✓' : ''}</button>`;
+          html += `<button type="button" onclick="selectedCategoryIds=['${i.id}']; renderCategoryButtons();" class="px-2.5 py-1 rounded-xl text-xs font-semibold transition border ${styleClass}">${escapeHtml(i.name)}${isSelected && selectedCategoryIds.length > 1 ? ' ✓' : ''}</button>`;
         });
         const nonRecentSelected = c.filter(i => !recentList.some(r => r.id === i.id) && selectedCategoryIds.includes(i.id));
-        const extraLabel = nonRecentSelected.length > 0 ? `${nonRecentSelected.map(x=>(x.icon&&x.icon!=='-'?x.icon+' ':'')+x.name).join(', ')} ✓` : `+`;
+        const extraLabel = nonRecentSelected.length > 0 ? `${nonRecentSelected.map(x=>x.name).join(', ')} ✓` : `+`;
         const extraClass = nonRecentSelected.length > 0 ? 'bg-rose-600 text-white border-rose-600 shadow-xs' : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200 font-bold';
         html += `<button type="button" onclick="openCategorySelectorModal('expense')" class="px-2.5 py-1 rounded-xl text-xs font-medium transition border ${extraClass}">${escapeHtml(extraLabel)}</button></div>`;
         document.getElementById('category-buttons-container').innerHTML = html;
@@ -1199,14 +1147,12 @@
           const isSel = i.id === selectedCategoryId;
           const theme = CATEGORY_COLOR_THEMES[i.colorTheme] || CATEGORY_COLOR_THEMES.emerald;
           const styleClass = isSel ? theme.active : theme.inactive;
-          const iconDisp = (i.icon && i.icon !== '-') ? `${i.icon} ` : '';
 
-          html += `<button type="button" onclick="selectedCategoryId='${i.id}'; renderCategoryButtons();" class="px-2.5 py-1 rounded-xl text-xs font-semibold transition border ${styleClass}">${iconDisp}${escapeHtml(i.name)}</button>`;
+          html += `<button type="button" onclick="selectedCategoryId='${i.id}'; renderCategoryButtons();" class="px-2.5 py-1 rounded-xl text-xs font-semibold transition border ${styleClass}">${escapeHtml(i.name)}</button>`;
         });
         const isNonRecentSelected = !recentList.some(r => r.id === selectedCategoryId);
         const selectedObj = c.find(x => x.id === selectedCategoryId);
-        const extraIcon = (selectedObj?.icon && selectedObj.icon !== '-') ? selectedObj.icon+' ' : '';
-        const extraLabel = (isNonRecentSelected && selectedObj) ? `${extraIcon}${selectedObj.name} ✓` : `+`;
+        const extraLabel = (isNonRecentSelected && selectedObj) ? `${selectedObj.name} ✓` : `+`;
         const extraClass = (isNonRecentSelected && selectedObj) ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs' : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200 font-bold';
         html += `<button type="button" onclick="openCategorySelectorModal('income')" class="px-2.5 py-1 rounded-xl text-xs font-medium transition border ${extraClass}">${escapeHtml(extraLabel)}</button></div>`;
         document.getElementById('category-buttons-container').innerHTML = html;
@@ -1226,9 +1172,8 @@
         const clickFn = currentTxType === 'expense' ? `selectedCategoryIds=['${item.id}']; renderCategoryButtons(); closeSelectorModal();` : `selectedCategoryId='${item.id}'; renderCategoryButtons(); closeSelectorModal();`;
         const theme = CATEGORY_COLOR_THEMES[item.colorTheme] || (currentTxType==='expense'?CATEGORY_COLOR_THEMES.rose:CATEGORY_COLOR_THEMES.emerald);
         const styleClass = isSelected ? theme.active : theme.inactive;
-        const iconDisp = (item.icon && item.icon !== '-') ? `${item.icon} ` : '';
 
-        return `<button type="button" onclick="${clickFn}" class="p-2.5 rounded-2xl text-xs font-semibold border text-center transition flex items-center justify-between ${styleClass}"><span class="truncate">${iconDisp}${escapeHtml(item.name)}</span>${isSelected && currentTxType==='expense' ? '<span>✓</span>' : ''}</button>`;
+        return `<button type="button" onclick="${clickFn}" class="p-2.5 rounded-2xl text-xs font-semibold border text-center transition flex items-center justify-between ${styleClass}"><span class="truncate">${escapeHtml(item.name)}</span>${isSelected && currentTxType==='expense' ? '<span>✓</span>' : ''}</button>`;
       }).join('');
     }
 
@@ -1236,8 +1181,7 @@
       return list.map(i => {
         const theme = CATEGORY_COLOR_THEMES[i.colorTheme] || CATEGORY_COLOR_THEMES.purple;
         const styleClass = i.id === selId ? theme.active : theme.inactive;
-        const iconDisp = (i.icon && i.icon !== '-') ? `${i.icon} ` : '';
-        return `<button type="button" onclick="${cb}='${i.id}'; ${cb.includes('InstCat')?'renderInstCategoryButtons()':cb.includes('ReimbCat')?'renderReimbCategoryButtons()':'renderSplitCategoryButtons()'}" class="px-2.5 py-1 rounded-xl text-xs font-semibold transition border ${styleClass}">${iconDisp}${escapeHtml(i.name)}</button>`;
+        return `<button type="button" onclick="${cb}='${i.id}'; ${cb.includes('InstCat')?'renderInstCategoryButtons()':cb.includes('ReimbCat')?'renderReimbCategoryButtons()':'renderSplitCategoryButtons()'}" class="px-2.5 py-1 rounded-xl text-xs font-semibold transition border ${styleClass}">${escapeHtml(i.name)}</button>`;
       }).join('');
     }
     function renderSplitCategoryButtons() { const c=categoriesList.filter(x=>x.type==='income'); if(!selectedSplitCategoryId||!c.some(x=>x.id===selectedSplitCategoryId))if(c.length)selectedSplitCategoryId=c[0].id; document.getElementById('split-category-buttons').innerHTML=genBtns(c,selectedSplitCategoryId,'selectedSplitCategoryId'); }
@@ -1246,8 +1190,8 @@
     function closeSelectorModal() { document.getElementById('selector-modal').classList.add('hidden'); }
 
     function renderTransferButtons() { 
-      document.getElementById('transfer-from-container').innerHTML = accountsList.map(a => `<button type="button" onclick="transferFromId='${a.id}'; if(transferToId==='${a.id}') { const alt=accountsList.find(x=>x.id!=='${a.id}'); if(alt) transferToId=alt.id; } renderTransferButtons()" class="px-2 py-1.5 rounded-xl text-xs font-semibold transition border text-left flex items-center space-x-1 ${a.id === transferFromId ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700'}"><span>${(a.icon && a.icon !== '-') ? a.icon : ''}</span><span>${escapeHtml(a.name)}</span></button>`).join(''); 
-      document.getElementById('transfer-to-container').innerHTML = accountsList.map(a => a.id === transferFromId ? `<button type="button" disabled class="px-2 py-1.5 rounded-xl text-xs font-semibold transition border text-left bg-gray-200 text-gray-400 border-gray-200 opacity-40 cursor-not-allowed"><span>${(a.icon && a.icon !== '-') ? a.icon : ''}</span><span>${escapeHtml(a.name)}</span></button>` : `<button type="button" onclick="transferToId='${a.id}'; renderTransferButtons()" class="px-2 py-1.5 rounded-xl text-xs font-semibold transition border text-left flex items-center space-x-1 ${a.id === transferToId ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700'}"><span>${(a.icon && a.icon !== '-') ? a.icon : ''}</span><span>${escapeHtml(a.name)}</span></button>`).join(''); 
+      document.getElementById('transfer-from-container').innerHTML = accountsList.map(a => `<button type="button" onclick="transferFromId='${a.id}'; if(transferToId==='${a.id}') { const alt=accountsList.find(x=>x.id!=='${a.id}'); if(alt) transferToId=alt.id; } renderTransferButtons()" class="px-2 py-1.5 rounded-xl text-xs font-semibold transition border text-left flex items-center space-x-1 ${a.id === transferFromId ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700'}"><span>${escapeHtml(a.name)}</span></button>`).join(''); 
+      document.getElementById('transfer-to-container').innerHTML = accountsList.map(a => a.id === transferFromId ? `<button type="button" disabled class="px-2 py-1.5 rounded-xl text-xs font-semibold transition border text-left bg-gray-200 text-gray-400 border-gray-200 opacity-40 cursor-not-allowed"><span>${escapeHtml(a.name)}</span></button>` : `<button type="button" onclick="transferToId='${a.id}'; renderTransferButtons()" class="px-2 py-1.5 rounded-xl text-xs font-semibold transition border text-left flex items-center space-x-1 ${a.id === transferToId ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700'}"><span>${escapeHtml(a.name)}</span></button>`).join(''); 
     }
 
     // Multi-Category Allocation Logic
@@ -1452,8 +1396,7 @@
       container.innerHTML = `<div class="flex flex-wrap gap-1 items-center">` + c.map(item => {
         const isSel = item.id === editSelectedCategoryId;
         const theme = CATEGORY_COLOR_THEMES[item.colorTheme] || CATEGORY_COLOR_THEMES.rose;
-        const iconDisp = (item.icon && item.icon !== '-') ? `${item.icon} ` : '';
-        return `<button type="button" onclick="editSelectedCategoryId='${item.id}'; renderEditModalCategoryButtons('${type}')" class="px-2.5 py-1 rounded-xl text-xs font-semibold transition border ${isSel ? theme.active : theme.inactive}">${iconDisp}${escapeHtml(item.name)}</button>`;
+        return `<button type="button" onclick="editSelectedCategoryId='${item.id}'; renderEditModalCategoryButtons('${type}')" class="px-2.5 py-1 rounded-xl text-xs font-semibold transition border ${isSel ? theme.active : theme.inactive}">${escapeHtml(item.name)}</button>`;
       }).join('') + `</div>`;
     }
 
@@ -1593,7 +1536,7 @@
       
       const pieColors = labels.map(name => {
         const cat = categoriesList.find(c => c.name === name && c.type === type);
-        if (cat && COLOR_PALETTE_24[cat.colorTheme]) return COLOR_PALETTE_24[cat.colorTheme].hex;
+        if (cat && COLOR_PALETTE_16[cat.colorTheme]) return COLOR_PALETTE_16[cat.colorTheme].hex;
         return type === 'expense' ? '#f43f5e' : '#10b981';
       });
 
@@ -1766,8 +1709,7 @@
 
       container.innerHTML = dates.map(d => `<div class="sticky top-0 bg-gray-100/95 px-3 py-1 text-[11px] font-bold text-gray-600 rounded-lg my-1.5">${d}</div>` + grp[d].map(t => {
         const accObj = accountsList.find(a=>a.id===t.accountId);
-        const iconStr = (accObj?.icon && accObj.icon !== '-') ? `${accObj.icon} ` : '';
-        const accDisp = accObj ? `${iconStr}${accObj.name}` : '';
+        const accDisp = accObj ? `${accObj.name}` : '';
 
         if(t.kind==='transaction'){
           let b=t.isReimburse ? (t.remainingPending>0?`<span class="text-[9px] bg-amber-100 text-amber-800 px-1 py-0.5 rounded ml-1">รอ ${t.remainingPending}</span>`:`<span class="text-[9px] bg-emerald-100 text-emerald-800 px-1 py-0.5 rounded ml-1">คืนครบ</span>`) : (t.isInstallment?`<span class="text-[9px] bg-indigo-100 text-indigo-800 px-1 py-0.5 rounded ml-1">ผ่อน</span>`:''); 
@@ -1884,14 +1826,13 @@
       container.addEventListener('mouseup', onTouchEnd);
     }
 
-    // --- CLEAN RENDERERS FOR SETTING (SINGLE SWIPE LIST) ---
+    // --- CLEAN RENDERERS FOR SETTING (SINGLE SWIPE LIST, NO ICONS) ---
     function renderSettingsAccounts() {
       const container = document.getElementById('accounts-settings-list');
       if (!container) return;
 
       container.innerHTML = accountsList.map(a => {
-        const theme = COLOR_PALETTE_24[a.colorTheme] || COLOR_PALETTE_24.card;
-        const iconDisp = (a.icon && a.icon !== '-') ? `${a.icon} ` : '';
+        const theme = COLOR_PALETTE_16[a.colorTheme] || COLOR_PALETTE_16.card;
         return `
           <div id="acc-item-${a.id}" class="relative overflow-hidden rounded-2xl bg-blue-600 shadow-2xs">
             <div class="absolute inset-y-0 right-0 w-16 bg-blue-600 flex items-center justify-center">
@@ -1903,7 +1844,6 @@
             <div class="swipe-item-content relative bg-white p-3 border rounded-2xl flex justify-between items-center z-10 cursor-pointer">
               <div class="flex items-center space-x-2">
                 <button type="button" onclick="toggleAccountPin('${a.id}', ${!a.isPinned})" class="px-2 py-0.5 rounded-lg text-[9px] font-bold transition ${a.isPinned ? 'bg-amber-100 text-amber-800 border border-amber-200' : 'bg-gray-100 text-gray-400'}">${a.isPinned ? 'ปักหมุด' : 'ซ่อน'}</button>
-                <span class="text-sm">${iconDisp}</span>
                 <span class="text-xs font-bold text-gray-800">${escapeHtml(a.name)}</span>
               </div>
               <div class="flex items-center space-x-2">
@@ -1925,8 +1865,7 @@
 
         const filtered = categoriesList.filter(c => c.type === type);
         container.innerHTML = filtered.map(c => {
-          const theme = COLOR_PALETTE_24[c.colorTheme] || (type==='expense'?COLOR_PALETTE_24.rose:COLOR_PALETTE_24.emerald);
-          const iconDisp = (c.icon && c.icon !== '-') ? `${c.icon} ` : '';
+          const theme = COLOR_PALETTE_16[c.colorTheme] || (type==='expense'?COLOR_PALETTE_16.rose:COLOR_PALETTE_16.emerald);
           return `
             <div id="cat-item-${c.id}" class="relative overflow-hidden rounded-2xl bg-blue-600 shadow-2xs">
               <div class="absolute inset-y-0 right-0 w-16 bg-blue-600 flex items-center justify-center">
@@ -1937,7 +1876,6 @@
               </div>
               <div class="swipe-item-content relative bg-white p-3 border rounded-2xl flex justify-between items-center z-10 cursor-pointer">
                 <div class="flex items-center space-x-2">
-                  <span class="text-sm">${iconDisp}</span>
                   <span class="text-xs font-bold text-gray-800">${escapeHtml(c.name)}</span>
                 </div>
                 <span class="w-2.5 h-2.5 rounded-full ${theme.bgClass}"></span>
@@ -1950,22 +1888,23 @@
       });
     }
 
-    // --- RENDER 24 SQUARE COLOR PALETTE GRID ---
+    // --- RENDER 16 SQUARE COLOR PALETTE GRID (INCLUDING WHITE) ---
     function renderSquarePaletteGrid(gridContainerId, hiddenInputId, selectedColorKey) {
       const container = document.getElementById(gridContainerId);
       const hiddenInput = document.getElementById(hiddenInputId);
       hiddenInput.value = selectedColorKey;
 
-      container.innerHTML = Object.keys(COLOR_PALETTE_24).map(key => {
-        const theme = COLOR_PALETTE_24[key];
+      container.innerHTML = Object.keys(COLOR_PALETTE_16).map(key => {
+        const theme = COLOR_PALETTE_16[key];
         const isSelected = key === selectedColorKey;
+        const checkColor = key === 'white' ? 'text-gray-800' : 'text-white';
         
         return `
           <button type="button" 
             onclick="selectSquareColor('${gridContainerId}', '${hiddenInputId}', '${key}')"
             class="h-8 w-full ${theme.bgClass} flex items-center justify-center transition active:scale-95 ${isSelected ? 'relative z-10 ring-2 ring-white shadow-md scale-105' : 'hover:opacity-90'}"
             title="${key}">
-            ${isSelected ? '<svg class="w-4 h-4 text-white drop-shadow font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" d="M5 13l4 4L19 7"/></svg>' : ''}
+            ${isSelected ? `<svg class="w-4 h-4 ${checkColor} drop-shadow font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" d="M5 13l4 4L19 7"/></svg>` : ''}
           </button>
         `;
       }).join('');
@@ -1980,11 +1919,10 @@
       document.getElementById('account-modal-title').innerText = 'เพิ่มบัญชีใหม่';
       document.getElementById('modal-acc-id').value = '';
       document.getElementById('modal-acc-name').value = '';
-      document.getElementById('modal-acc-icon').value = '-';
       document.getElementById('modal-acc-balance').value = '0';
       document.getElementById('modal-acc-delete-container').classList.add('hidden');
       
-      renderSquarePaletteGrid('modal-acc-color-grid', 'modal-acc-color', 'card');
+      renderSquarePaletteGrid('modal-acc-color-grid', 'modal-acc-color', 'emerald');
       document.getElementById('account-edit-modal').classList.remove('hidden');
     }
 
@@ -1996,14 +1934,13 @@
       document.getElementById('account-modal-title').innerText = 'แก้ไขบัญชี';
       document.getElementById('modal-acc-id').value = id;
       document.getElementById('modal-acc-name').value = acc.name || '';
-      document.getElementById('modal-acc-icon').value = acc.icon || '-';
       document.getElementById('modal-acc-balance').value = acc.initialBalance || 0;
       
       const delContainer = document.getElementById('modal-acc-delete-container');
       if (acc.isDefault) delContainer.classList.add('hidden');
       else delContainer.classList.remove('hidden');
 
-      renderSquarePaletteGrid('modal-acc-color-grid', 'modal-acc-color', acc.colorTheme || 'card');
+      renderSquarePaletteGrid('modal-acc-color-grid', 'modal-acc-color', acc.colorTheme || 'emerald');
       document.getElementById('account-edit-modal').classList.remove('hidden');
     }
 
@@ -2013,7 +1950,6 @@
       e.preventDefault();
       const id = document.getElementById('modal-acc-id').value;
       const name = document.getElementById('modal-acc-name').value.trim();
-      const icon = document.getElementById('modal-acc-icon').value;
       const color = document.getElementById('modal-acc-color').value;
       const initBal = parseFloat(document.getElementById('modal-acc-balance').value) || 0;
 
@@ -2022,11 +1958,11 @@
       try {
         if (id) {
           await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).update({
-            name: name, icon: icon, colorTheme: color, initialBalance: initBal
+            name: name, colorTheme: color, initialBalance: initBal
           });
         } else {
           await db.collection('users').doc(currentUser.uid).collection('accounts').add({
-            name: name, icon: icon, colorTheme: color, initialBalance: initBal, isDefault: false, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            name: name, colorTheme: color, initialBalance: initBal, isDefault: false, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp()
           });
         }
         triggerSuccessToast();
@@ -2055,7 +1991,6 @@
       document.getElementById('modal-cat-id').value = '';
       document.getElementById('modal-cat-type').value = type;
       document.getElementById('modal-cat-name').value = '';
-      document.getElementById('modal-cat-icon').value = '-';
       document.getElementById('modal-cat-delete-container').classList.add('hidden');
 
       renderSquarePaletteGrid('modal-cat-color-grid', 'modal-cat-color', type==='expense'?'rose':'emerald');
@@ -2071,7 +2006,6 @@
       document.getElementById('modal-cat-id').value = id;
       document.getElementById('modal-cat-type').value = cat.type;
       document.getElementById('modal-cat-name').value = cat.name || '';
-      document.getElementById('modal-cat-icon').value = cat.icon || '-';
       document.getElementById('modal-cat-delete-container').classList.remove('hidden');
 
       renderSquarePaletteGrid('modal-cat-color-grid', 'modal-cat-color', cat.colorTheme || (cat.type==='expense'?'rose':'emerald'));
@@ -2085,7 +2019,6 @@
       const id = document.getElementById('modal-cat-id').value;
       const type = document.getElementById('modal-cat-type').value;
       const name = document.getElementById('modal-cat-name').value.trim();
-      const icon = document.getElementById('modal-cat-icon').value;
       const color = document.getElementById('modal-cat-color').value;
 
       if (!name) return alert("กรุณาระบุชื่อหมวดหมู่");
@@ -2093,11 +2026,11 @@
       try {
         if (id) {
           await db.collection('users').doc(currentUser.uid).collection('categories').doc(id).update({
-            name: name, icon: icon, colorTheme: color
+            name: name, colorTheme: color
           });
         } else {
           await db.collection('users').doc(currentUser.uid).collection('categories').add({
-            name: name, type: type, icon: icon, colorTheme: color, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            name: name, type: type, colorTheme: color, createdAt: firebase.firestore.FieldValue.serverTimestamp()
           });
         }
         triggerSuccessToast();

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>จดตังค์ BETA - Full Transaction History Editor Compatible</title>
+  <title>จดตังค์ BETA - Clean Currency & Complete Installment Editor</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -40,7 +40,7 @@
       <div class="flex flex-col items-center">
         <div class="flex items-baseline space-x-1">
           <h1 class="text-xl font-black tracking-wider uppercase drop-shadow-sm">จดตังค์ BETA</h1>
-          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.35)</span>
+          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.36)</span>
         </div>
         <p class="text-[8px] text-emerald-100/80 tracking-tight font-light">by Phuthai Mananararuk & Gemini</p>
       </div>
@@ -103,7 +103,7 @@
             </div>
 
             <div class="grid grid-cols-2 gap-2">
-              <div><label class="block text-[11px] text-gray-500 mb-1">จำนวนเงิน (<span class="currency-symbol">฿</span>)</label><input type="text" id="tx-amount" readonly onclick="openCustomKeypad('tx-amount')" placeholder="0.00" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold"></div>
+              <div><label class="block text-[11px] text-gray-500 mb-1">จำนวนเงิน</label><input type="text" id="tx-amount" readonly onclick="openCustomKeypad('tx-amount')" placeholder="0.00" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold"></div>
               <div><label class="block text-[11px] text-gray-500 mb-1">วันที่</label><input type="date" id="tx-date" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
             </div>
             
@@ -122,7 +122,7 @@
               <div><label class="block text-[11px] text-gray-500 mb-1">ปลายทาง</label><div id="transfer-to-container" class="flex flex-col gap-1"></div></div>
             </div>
             <div class="grid grid-cols-2 gap-2">
-              <div><label class="block text-[11px] text-gray-500 mb-1">จำนวนเงิน (<span class="currency-symbol">฿</span>)</label><input type="text" id="tr-amount" readonly onclick="openCustomKeypad('tr-amount')" placeholder="0.00" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold"></div>
+              <div><label class="block text-[11px] text-gray-500 mb-1">จำนวนเงิน</label><input type="text" id="tr-amount" readonly onclick="openCustomKeypad('tr-amount')" placeholder="0.00" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold"></div>
               <div><label class="block text-[11px] text-gray-500 mb-1">วันที่</label><input type="date" id="tr-date" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
             </div>
             <div>
@@ -138,7 +138,7 @@
             <div class="flex justify-between items-center mb-1 border-b border-amber-200 pb-1"><h3 class="text-[11px] font-bold text-amber-800 uppercase">รับเงินคืน</h3><button type="button" onclick="switchEntryMode('income')" class="text-[10px] bg-white px-2 py-0.5 rounded border border-amber-200 text-amber-700">ยกเลิก</button></div>
             <div><label class="block text-[11px] text-gray-600 mb-1">บัญชีที่เงินเข้า</label><div id="settle-account-buttons"></div></div>
             <div class="grid grid-cols-2 gap-2">
-              <div><label class="block text-[11px] text-gray-600 mb-1">เงินที่ได้คืน (<span class="currency-symbol">฿</span>)</label><input type="text" id="settle-received-amount" readonly onclick="openCustomKeypad('settle-received-amount')" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold"></div>
+              <div><label class="block text-[11px] text-gray-600 mb-1">เงินที่ได้คืน</label><input type="text" id="settle-received-amount" readonly onclick="openCustomKeypad('settle-received-amount')" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold"></div>
               <div><label class="block text-[11px] text-gray-600 mb-1">วันที่</label><input type="date" id="settle-date" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
             </div>
             <div><label class="block text-[11px] text-gray-600 mb-1">รายการที่รอคืน (ติ๊กเลือก)</label><div id="pending-items-container" class="space-y-1 max-h-32 overflow-y-auto pr-1 border bg-white p-2 rounded-xl"></div></div>
@@ -155,10 +155,10 @@
             <div class="flex justify-between items-center mb-1 border-b border-purple-200 pb-1"><h3 class="text-[11px] font-bold text-purple-900 uppercase">รับเงินแทน</h3><button type="button" onclick="switchEntryMode('income')" class="text-[10px] bg-white px-2 py-0.5 rounded border border-purple-200 text-purple-700">ยกเลิก</button></div>
             <div><label class="block text-[11px] text-purple-900 font-medium mb-1">บัญชีที่เงินก้อนเข้า</label><div id="split-account-buttons"></div></div>
             <div class="grid grid-cols-2 gap-2">
-              <div><label class="block text-[11px] text-purple-900 mb-1">ยอดเต็มลูกค้า (<span class="currency-symbol">฿</span>)</label><input type="text" id="split-total-amount" readonly onclick="openCustomKeypad('split-total-amount')" required oninput="updateSplitMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold"></div>
-              <div><label class="block text-[11px] text-purple-900 mb-1">ส่วนของเรา (<span class="currency-symbol">฿</span>)</label><input type="text" id="split-my-share" readonly onclick="openCustomKeypad('split-my-share')" required oninput="updateSplitMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold"></div>
+              <div><label class="block text-[11px] text-purple-900 mb-1">ยอดเต็มลูกค้า</label><input type="text" id="split-total-amount" readonly onclick="openCustomKeypad('split-total-amount')" required oninput="updateSplitMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold"></div>
+              <div><label class="block text-[11px] text-purple-900 mb-1">ส่วนของเรา</label><input type="text" id="split-my-share" readonly onclick="openCustomKeypad('split-my-share')" required oninput="updateSplitMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold"></div>
             </div>
-            <div class="bg-white p-2 rounded-xl border border-purple-100 flex justify-between items-center text-xs"><span class="text-purple-700">รอจ่ายทีมงาน:</span><b id="split-team-share-lbl" class="text-purple-900 text-sm">฿0.00</b></div>
+            <div class="bg-white p-2 rounded-xl border border-purple-100 flex justify-between items-center text-xs"><span class="text-purple-700">รอจ่ายทีมงาน:</span><b id="split-team-share-lbl" class="text-purple-900 text-sm">0.00</b></div>
             <div class="grid grid-cols-2 gap-2">
               <div><label class="block text-[11px] text-purple-900 mb-1">หมวดหมู่รายรับเรา</label><div id="split-category-buttons"></div></div>
               <div><label class="block text-[11px] text-purple-900 mb-1">วันที่</label><input type="date" id="split-date" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
@@ -177,7 +177,7 @@
             <div><label class="block text-[11px] text-indigo-900 mb-1">เลือกบัญชีที่ตัดเงิน</label><div id="inst-account-buttons"></div></div>
             <div><label class="block text-[11px] text-indigo-900 mb-1">เลือกหมวดหมู่รายจ่าย</label><div id="inst-category-buttons"></div></div>
             <div class="grid grid-cols-2 gap-2">
-              <div><label class="block text-[11px] text-indigo-900 mb-1">ยอดรวมเต็ม (<span class="currency-symbol">฿</span>)</label><input type="text" id="inst-total-amount" readonly onclick="openCustomKeypad('inst-total-amount')" required oninput="updateDedicatedInstMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold"></div>
+              <div><label class="block text-[11px] text-indigo-900 mb-1">ยอดรวมเต็ม</label><input type="text" id="inst-total-amount" readonly onclick="openCustomKeypad('inst-total-amount')" required oninput="updateDedicatedInstMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold"></div>
               <div><label class="block text-[11px] text-indigo-900 mb-1">จำนวนงวดทั้งหมด</label><input type="number" id="inst-count" min="2" max="120" value="10" required oninput="updateDedicatedInstMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
             </div>
             <div class="grid grid-cols-2 gap-2">
@@ -186,8 +186,8 @@
             </div>
             <div><label class="block text-[11px] text-indigo-900 mb-1">วันที่เริ่มสัญญา</label><input type="date" id="inst-date" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
             <div class="bg-white p-2 rounded-xl border border-indigo-200 text-[10px] space-y-0.5 text-indigo-800">
-              <div class="flex justify-between font-medium"><span>งวดทั่วไป (1 - <span id="lbl-ded-inst-cnt">9</span>):</span><b id="lbl-ded-inst-norm">฿0.00</b></div>
-              <div class="flex justify-between font-medium text-indigo-950"><span>งวดสุดท้าย:</span><b id="lbl-ded-inst-final">฿0.00</b></div>
+              <div class="flex justify-between font-medium"><span>งวดทั่วไป (1 - <span id="lbl-ded-inst-cnt">9</span>):</span><b id="lbl-ded-inst-norm">0.00</b></div>
+              <div class="flex justify-between font-medium text-indigo-950"><span>งวดสุดท้าย:</span><b id="lbl-ded-inst-final">0.00</b></div>
             </div>
             <div>
               <label class="block text-[11px] text-indigo-900 mb-1">ชื่อสัญญา / บันทึกช่วยจำ</label>
@@ -203,10 +203,10 @@
             <div><label class="block text-[11px] text-amber-900 mb-1">เลือกบัญชีที่จ่ายเงินออก</label><div id="reimb-account-buttons"></div></div>
             <div><label class="block text-[11px] text-amber-900 mb-1">เลือกหมวดหมู่รายจ่าย</label><div id="reimb-category-buttons"></div></div>
             <div class="grid grid-cols-2 gap-2">
-              <div><label class="block text-[11px] text-amber-900 mb-1">จ่ายจริงทั้งหมด (<span class="currency-symbol">฿</span>)</label><input type="text" id="reimb-total-amount" readonly onclick="openCustomKeypad('reimb-total-amount')" required oninput="updateDedicatedReimbMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold"></div>
-              <div><label class="block text-[11px] text-amber-900 mb-1">ส่วนของเราจริง (<span class="currency-symbol">฿</span>)</label><input type="text" id="reimb-my-share" readonly onclick="openCustomKeypad('reimb-my-share')" oninput="updateDedicatedReimbMath()" placeholder="0.00" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold"></div>
+              <div><label class="block text-[11px] text-amber-900 mb-1">จ่ายจริงทั้งหมด</label><input type="text" id="reimb-total-amount" readonly onclick="openCustomKeypad('reimb-total-amount')" required oninput="updateDedicatedReimbMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold"></div>
+              <div><label class="block text-[11px] text-amber-900 mb-1">ส่วนของเราจริง</label><input type="text" id="reimb-my-share" readonly onclick="openCustomKeypad('reimb-my-share')" oninput="updateDedicatedReimbMath()" placeholder="0.00" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold"></div>
             </div>
-            <div class="bg-white p-2 rounded-xl border border-amber-200 flex justify-between items-center text-xs"><span class="text-amber-800">ส่วนของเพื่อน (รอคืน):</span><b id="lbl-ded-reimb-friend" class="text-amber-950 text-sm">฿0.00</b></div>
+            <div class="bg-white p-2 rounded-xl border border-amber-200 flex justify-between items-center text-xs"><span class="text-amber-800">ส่วนของเพื่อน (รอคืน):</span><b id="lbl-ded-reimb-friend" class="text-amber-950 text-sm">0.00</b></div>
             <div><label class="block text-[11px] text-amber-900 mb-1">วันที่</label><input type="date" id="reimb-date" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
             <div>
               <label class="block text-[11px] text-amber-900 mb-1">บันทึกช่วยจำ</label>
@@ -221,7 +221,7 @@
             <div class="flex justify-between items-center mb-1 border-b border-teal-200 pb-1"><h3 class="text-[11px] font-bold text-teal-900 uppercase">โอนให้ทีม (ตัดยอดค้างจ่ายทีมงาน)</h3><button type="button" onclick="switchEntryMode('transfer')" class="text-[10px] bg-white px-2 py-0.5 rounded border border-teal-200 text-teal-700">ยกเลิก</button></div>
             <div><label class="block text-[11px] text-teal-900 mb-1">เลือกบัญชีที่โอนเงินออก</label><div id="team-pay-account-buttons"></div></div>
             <div class="grid grid-cols-2 gap-2">
-              <div><label class="block text-[11px] text-teal-900 mb-1">จำนวนเงินโอน (<span class="currency-symbol">฿</span>)</label><input type="text" id="team-pay-amount" readonly onclick="openCustomKeypad('team-pay-amount')" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold"></div>
+              <div><label class="block text-[11px] text-teal-900 mb-1">จำนวนเงินโอน</label><input type="text" id="team-pay-amount" readonly onclick="openCustomKeypad('team-pay-amount')" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold"></div>
               <div><label class="block text-[11px] text-teal-900 mb-1">วันที่</label><input type="date" id="team-pay-date" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
             </div>
             <div><label class="block text-[11px] text-teal-900 mb-1">รายการค้างจ่ายทีมงาน (ติ๊กเลือก)</label><div id="pending-team-items-container" class="space-y-1 max-h-32 overflow-y-auto pr-1 border bg-white p-2 rounded-xl"></div></div>
@@ -245,7 +245,7 @@
             <div id="entry-cashflow-bar-fill" class="h-full transition-all duration-500 ease-out"></div>
           </div>
           <div class="flex justify-between items-center text-[10px]">
-            <span class="text-rose-500 font-medium">จ่าย</span><span id="entry-cashflow-net-text" class="font-bold text-gray-700">฿0.00</span><span class="text-emerald-500 font-medium">รับ</span>
+            <span class="text-rose-500 font-medium">จ่าย</span><span id="entry-cashflow-net-text" class="font-bold text-gray-700">0.00</span><span class="text-emerald-500 font-medium">รับ</span>
           </div>
         </div>
       </section>
@@ -254,10 +254,10 @@
       <section id="summary-view" class="hidden space-y-3.5 max-h-[620px] overflow-y-auto pr-1">
         <div class="flex justify-between items-center border-b pb-1.5">
           <h2 class="text-xs font-bold text-gray-700 uppercase">Summary - สรุปยอด & การวิเคราะห์</h2>
-          <span id="summary-current-balance" class="text-xs font-black text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">฿0.00</span>
+          <span id="summary-current-balance" class="text-xs font-black text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">0.00</span>
         </div>
         <div class="bg-gray-50 p-3 rounded-2xl border border-gray-200 space-y-1.5 shadow-xs">
-          <div class="flex justify-between items-center text-[11px] font-bold"><span class="text-rose-600">รายจ่าย: <b id="lbl-ratio-exp">฿0.00</b></span><span class="text-emerald-600">รายรับ: <b id="lbl-ratio-inc">฿0.00</b></span></div>
+          <div class="flex justify-between items-center text-[11px] font-bold"><span class="text-rose-600">รายจ่าย: <b id="lbl-ratio-exp">0.00</b></span><span class="text-emerald-600">รายรับ: <b id="lbl-ratio-inc">0.00</b></span></div>
           <div class="w-full h-4 bg-gray-200 rounded-full overflow-hidden flex border border-gray-300"><div id="ratio-bar-exp" class="h-full bg-rose-500 transition-all duration-500" style="width: 50%;"></div><div id="ratio-bar-inc" class="h-full bg-emerald-500 transition-all duration-500" style="width: 50%;"></div></div>
           <div class="flex justify-between text-[9px] text-gray-400 font-medium"><span id="pct-ratio-exp">50.0%</span><span id="pct-ratio-inc">50.0%</span></div>
         </div>
@@ -267,8 +267,8 @@
           <div class="bg-gray-50 p-3 rounded-2xl border border-gray-200 shadow-xs space-y-1 flex flex-col items-center"><h4 class="text-[10px] font-bold text-rose-700 text-center">หมวดหมู่รายจ่าย</h4><div class="h-36 w-36 relative flex items-center justify-center"><canvas id="expensePieChart"></canvas></div></div>
         </div>
         <div class="grid grid-cols-2 gap-2">
-          <div id="card-pending-friend" class="bg-amber-50 p-2.5 rounded-2xl border border-amber-100 shadow-xs text-center"><p class="text-[9px] font-bold text-amber-600">เงินรอคืน (เพื่อน)</p><p id="total-pending-friend" class="text-xs font-bold text-amber-700">฿0.00</p></div>
-          <div id="card-pending-team" class="bg-purple-50 p-2.5 rounded-2xl border border-purple-100 shadow-xs text-center"><p class="text-[9px] font-bold text-purple-600">เงินรอจ่าย (ทีมงาน)</p><p id="total-pending-team" class="text-xs font-bold text-purple-700">฿0.00</p></div>
+          <div id="card-pending-friend" class="bg-amber-50 p-2.5 rounded-2xl border border-amber-100 shadow-xs text-center"><p class="text-[9px] font-bold text-amber-600">เงินรอคืน (เพื่อน)</p><p id="total-pending-friend" class="text-xs font-bold text-amber-700">0.00</p></div>
+          <div id="card-pending-team" class="bg-purple-50 p-2.5 rounded-2xl border border-purple-100 shadow-xs text-center"><p class="text-[9px] font-bold text-purple-600">เงินรอจ่าย (ทีมงาน)</p><p id="total-pending-team" class="text-xs font-bold text-purple-700">0.00</p></div>
         </div>
         <div class="space-y-2 border-t pt-2.5">
           <div class="flex justify-between items-center"><h3 class="text-xs font-bold text-indigo-900 uppercase">สัญญาผ่อนชำระ</h3><span id="lbl-total-active-inst" class="text-[10px] font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full border">0 รายการ</span></div>
@@ -301,7 +301,6 @@
       <!-- 4. SETTING VIEW -->
       <section id="setting-view" class="hidden space-y-4 max-h-[620px] overflow-y-auto pr-1">
         <div class="border-b pb-2"><h2 class="text-xs font-bold text-gray-700 uppercase">Setting - ตั้งค่าระบบ</h2></div>
-        <div class="space-y-1"><label class="block text-xs font-bold text-gray-700">สกุลเงินทั่วแอป</label><select id="setting-currency" onchange="autoSaveSettings()" class="w-full px-3 py-2 text-xs border rounded-xl bg-white"><option value="฿">บาท (฿)</option><option value="$">ดอลลาร์ ($)</option><option value="€">ยูโร (€)</option><option value="¥">เยน (¥)</option></select></div>
         
         <div class="space-y-2 border-t pt-3">
           <div class="flex justify-between items-center">
@@ -365,7 +364,7 @@
           <div id="modal-acc-color-grid" class="grid grid-cols-8 gap-0 rounded-2xl overflow-hidden border border-gray-300 shadow-2xs"></div>
         </div>
         <div>
-          <label class="block text-[11px] font-semibold text-gray-600 mb-1">ยอดเงินเริ่มต้น (<span class="currency-symbol">฿</span>)</label>
+          <label class="block text-[11px] font-semibold text-gray-600 mb-1">ยอดเงินเริ่มต้น</label>
           <input type="text" id="modal-acc-balance" readonly onclick="openCustomKeypad('modal-acc-balance')" placeholder="0.00" class="w-full px-3 py-2 text-xs border rounded-xl bg-white text-right font-bold cursor-pointer">
         </div>
         <div id="modal-acc-delete-container" class="pt-2 text-center border-t border-gray-100">
@@ -432,21 +431,49 @@
           <div id="edit-category-buttons-container"></div>
         </div>
 
+        <!-- Dynamic Installment Fields -->
+        <div id="edit-inst-fields" class="hidden space-y-2 bg-indigo-50/70 p-2.5 rounded-2xl border border-indigo-100">
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[11px] text-indigo-900 mb-1">ยอดรวมเต็ม</label>
+              <input type="text" id="edit-inst-total-amount" readonly onclick="openCustomKeypad('edit-inst-total-amount')" oninput="updateEditInstMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold">
+            </div>
+            <div>
+              <label class="block text-[11px] text-indigo-900 mb-1">จำนวนงวดทั้งหมด</label>
+              <input type="number" id="edit-inst-total-count" min="2" max="120" oninput="updateEditInstMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white font-bold">
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[11px] text-indigo-900 mb-1">เริ่มบันทึกงวดที่</label>
+              <input type="number" id="edit-inst-current-count" min="1" max="120" oninput="updateEditInstMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white font-bold">
+            </div>
+            <div>
+              <label class="block text-[11px] text-indigo-900 mb-1">ตัดเงินทุกวันที่</label>
+              <input type="number" id="edit-inst-pay-day" min="1" max="31" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white font-bold">
+            </div>
+          </div>
+          <div class="bg-white p-2 rounded-xl border border-indigo-200 text-[10px] space-y-0.5 text-indigo-800">
+            <div class="flex justify-between font-medium"><span>งวดทั่วไป:</span><b id="lbl-edit-inst-norm">0.00</b></div>
+            <div class="flex justify-between font-medium text-indigo-950"><span>งวดสุดท้าย:</span><b id="lbl-edit-inst-final">0.00</b></div>
+          </div>
+        </div>
+
         <!-- Dynamic Split Amount Box -->
         <div id="edit-split-fields" class="hidden space-y-2">
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block text-[11px] text-purple-900 mb-1">ยอดเต็มลูกค้า (<span class="currency-symbol">฿</span>)</label>
+              <label class="block text-[11px] text-purple-900 mb-1">ยอดเต็มลูกค้า</label>
               <input type="text" id="edit-split-total-amount" readonly onclick="openCustomKeypad('edit-split-total-amount')" oninput="updateEditSplitMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold">
             </div>
             <div>
-              <label class="block text-[11px] text-purple-900 mb-1">ส่วนของเรา (<span class="currency-symbol">฿</span>)</label>
+              <label class="block text-[11px] text-purple-900 mb-1">ส่วนของเรา</label>
               <input type="text" id="edit-split-my-share" readonly onclick="openCustomKeypad('edit-split-my-share')" oninput="updateEditSplitMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold">
             </div>
           </div>
           <div class="bg-purple-50 p-2 rounded-xl border border-purple-100 flex justify-between items-center text-xs">
             <span class="text-purple-700">รอจ่ายทีมงาน:</span>
-            <b id="edit-split-team-share-lbl" class="text-purple-900 text-sm">฿0.00</b>
+            <b id="edit-split-team-share-lbl" class="text-purple-900 text-sm">0.00</b>
           </div>
         </div>
 
@@ -454,24 +481,24 @@
         <div id="edit-reimb-fields" class="hidden space-y-2">
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block text-[11px] text-amber-900 mb-1">จ่ายจริงทั้งหมด (<span class="currency-symbol">฿</span>)</label>
+              <label class="block text-[11px] text-amber-900 mb-1">จ่ายจริงทั้งหมด</label>
               <input type="text" id="edit-reimb-total-amount" readonly onclick="openCustomKeypad('edit-reimb-total-amount')" oninput="updateEditReimbMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold">
             </div>
             <div>
-              <label class="block text-[11px] text-amber-900 mb-1">ส่วนของเราจริง (<span class="currency-symbol">฿</span>)</label>
+              <label class="block text-[11px] text-amber-900 mb-1">ส่วนของเราจริง</label>
               <input type="text" id="edit-reimb-my-share" readonly onclick="openCustomKeypad('edit-reimb-my-share')" oninput="updateEditReimbMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold">
             </div>
           </div>
           <div class="bg-amber-50 p-2 rounded-xl border border-amber-200 flex justify-between items-center text-xs">
             <span class="text-amber-800">ส่วนของเพื่อน (รอคืน):</span>
-            <b id="edit-reimb-friend-share-lbl" class="text-amber-950 text-sm">฿0.00</b>
+            <b id="edit-reimb-friend-share-lbl" class="text-amber-950 text-sm">0.00</b>
           </div>
         </div>
 
         <!-- Normal Single Amount Field -->
         <div id="edit-normal-amount-field" class="grid grid-cols-2 gap-2">
           <div id="edit-normal-amount-box">
-            <label class="block text-[11px] text-gray-500 mb-1">จำนวนเงิน (<span class="currency-symbol">฿</span>)</label>
+            <label class="block text-[11px] text-gray-500 mb-1">จำนวนเงิน</label>
             <input type="text" id="edit-tx-amount" readonly onclick="openCustomKeypad('edit-tx-amount')" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer font-bold">
           </div>
           <div>
@@ -618,9 +645,9 @@
   <div id="multi-cat-modal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-40">
     <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-4 shadow-2xl relative">
       <button type="button" onclick="closeMultiCatModal()" class="absolute top-4 right-4 text-gray-400 font-bold text-lg">✕</button>
-      <div class="border-b pb-2"><h3 class="text-xs font-bold text-gray-700 uppercase">จัดสรรยอดเงินตามหมวดหมู่</h3><p class="text-[10px] text-gray-400 mt-0.5">ยอดรวมสลิป: <b id="lbl-multi-modal-total" class="text-rose-600 font-bold">฿0.00</b></p></div>
+      <div class="border-b pb-2"><h3 class="text-xs font-bold text-gray-700 uppercase">จัดสรรยอดเงินตามหมวดหมู่</h3><p class="text-[10px] text-gray-400 mt-0.5">ยอดรวมสลิป: <b id="lbl-multi-modal-total" class="text-rose-600 font-bold">0.00</b></p></div>
       <div id="multi-cat-inputs-container" class="space-y-2.5 max-h-60 overflow-y-auto pr-1"></div>
-      <div class="bg-gray-50 p-2.5 rounded-2xl border text-xs space-y-1"><div class="flex justify-between items-center text-gray-600"><span>รวมที่จัดสรรแล้ว:</span><b id="lbl-multi-modal-allocated" class="font-bold">฿0.00</b></div><div class="flex justify-between items-center"><span>คงเหลือที่ต้องระบุ:</span><b id="lbl-multi-modal-remaining" class="font-bold text-rose-500">฿0.00</b></div></div>
+      <div class="bg-gray-50 p-2.5 rounded-2xl border text-xs space-y-1"><div class="flex justify-between items-center text-gray-600"><span>รวมที่จัดสรรแล้ว:</span><b id="lbl-multi-modal-allocated" class="font-bold">0.00</b></div><div class="flex justify-between items-center"><span>คงเหลือที่ต้องระบุ:</span><b id="lbl-multi-modal-remaining" class="font-bold text-rose-500">0.00</b></div></div>
       <div class="pt-1 flex space-x-2"><button type="button" onclick="closeMultiCatModal()" class="w-1/3 bg-gray-200 text-gray-700 py-2.5 rounded-xl text-xs font-medium">ยกเลิก</button><button type="button" id="btn-confirm-multi-cat" onclick="submitMultiCatAllocation()" class="w-2/3 bg-rose-600 text-white py-2.5 rounded-xl text-xs font-bold transition disabled:opacity-40" disabled>ยืนยันการจัดสรร</button></div>
     </div>
   </div>
@@ -643,7 +670,7 @@
 
   <!-- Cash Flow Modal -->
   <div id="cashflow-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-40">
-    <div class="bg-white rounded-3xl w-full max-w-xs p-4 space-y-4 shadow-2xl relative"><button onclick="closeCashflowPopUpModal()" class="absolute top-3 right-4 text-gray-400 font-bold text-base">✕</button><div class="border-b pb-2"><h3 class="text-xs font-bold text-gray-700 uppercase">Cash Flow</h3></div><div class="flex items-center justify-between bg-gray-50 p-2 rounded-2xl border border-gray-200"><button onclick="changePopupCashflowMonth(-1)" class="p-1.5 hover:bg-gray-200 rounded-xl text-gray-700 font-bold">←</button><span id="popup-cashflow-month-label" class="text-xs font-bold text-gray-800"></span><button onclick="changePopupCashflowMonth(1)" class="p-1.5 hover:bg-gray-200 rounded-xl text-gray-700 font-bold">→</button></div><div class="space-y-1.5 bg-gray-50 p-3 rounded-2xl border border-gray-100"><div class="relative w-full h-4 bg-gray-200 rounded-full overflow-hidden flex items-center border"><div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gray-500 z-10"></div><div id="popup-cashflow-bar-fill" class="h-full transition-all duration-500 ease-out"></div></div><div class="flex justify-between items-center text-xs pt-1"><span class="text-rose-500 font-medium">จ่าย</span><span id="popup-cashflow-net-text" class="font-bold">฿0.00</span><span class="text-emerald-500 font-medium">รับ</span></div></div></div>
+    <div class="bg-white rounded-3xl w-full max-w-xs p-4 space-y-4 shadow-2xl relative"><button onclick="closeCashflowPopUpModal()" class="absolute top-3 right-4 text-gray-400 font-bold text-base">✕</button><div class="border-b pb-2"><h3 class="text-xs font-bold text-gray-700 uppercase">Cash Flow</h3></div><div class="flex items-center justify-between bg-gray-50 p-2 rounded-2xl border border-gray-200"><button onclick="changePopupCashflowMonth(-1)" class="p-1.5 hover:bg-gray-200 rounded-xl text-gray-700 font-bold">←</button><span id="popup-cashflow-month-label" class="text-xs font-bold text-gray-800"></span><button onclick="changePopupCashflowMonth(1)" class="p-1.5 hover:bg-gray-200 rounded-xl text-gray-700 font-bold">→</button></div><div class="space-y-1.5 bg-gray-50 p-3 rounded-2xl border border-gray-100"><div class="relative w-full h-4 bg-gray-200 rounded-full overflow-hidden flex items-center border"><div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gray-500 z-10"></div><div id="popup-cashflow-bar-fill" class="h-full transition-all duration-500 ease-out"></div></div><div class="flex justify-between items-center text-xs pt-1"><span class="text-rose-500 font-medium">จ่าย</span><span id="popup-cashflow-net-text" class="font-bold">0.00</span><span class="text-emerald-500 font-medium">รับ</span></div></div></div>
   </div>
 
   <script>
@@ -661,7 +688,6 @@
     db.enablePersistence().catch(err => console.warn(err.code));
 
     let currentUser = null, unsubscribeTx = null, unsubscribeAcc = null, unsubscribeCat = null, unsubscribeInst = null, unsubscribePresetNotes = null;
-    let userSettings = { currency: '฿' };
     let accountsList = [], categoriesList = [], allTransactions = [], activeInstallmentPlans = [], presetNotesList = [];
     
     let editingTxIdInModal = null, editSelectedAccountId = null, editSelectedCategoryId = null;
@@ -834,13 +860,6 @@
         if (el) el.value = todayStr;
       });
 
-      const doc = await db.collection('users').doc(uid).collection('settings').doc('config').get();
-      if (doc.exists) userSettings = { currency: '฿', ...doc.data() }; 
-      else await db.collection('users').doc(uid).collection('settings').doc('config').set({ currency: '฿' });
-      
-      document.getElementById('setting-currency').value = userSettings.currency || '฿';
-      updateCurrencyUI();
-
       unsubscribeAcc = db.collection('users').doc(uid).collection('accounts').orderBy('createdAt','asc').onSnapshot(snap => {
         accountsList = []; 
         snap.forEach(d => {
@@ -879,8 +898,6 @@
       loadInstallmentPlansRealtime(uid); 
       goToView('entry');
     }
-
-    function updateCurrencyUI() { document.querySelectorAll('.currency-symbol').forEach(el => el.innerText = userSettings.currency); }
 
     function loadPresetNotesRealtime(uid) {
       unsubscribePresetNotes = db.collection('users').doc(uid).collection('settings').doc('preset_notes').onSnapshot(doc => {
@@ -1018,15 +1035,18 @@
       const finalAmt = Math.round((tot - (normalAmt * (count - 1))) * 100) / 100;
 
       document.getElementById('lbl-ded-inst-cnt').innerText = count > 1 ? (count - 1) : 1;
-      document.getElementById('lbl-ded-inst-norm').innerText = `${userSettings.currency}${normalAmt.toLocaleString()}`;
-      document.getElementById('lbl-ded-inst-final').innerText = `${userSettings.currency}${finalAmt.toLocaleString()}`;
+      document.getElementById('lbl-ded-inst-norm').innerText = normalAmt.toLocaleString(undefined, {minimumFractionDigits: 2});
+      document.getElementById('lbl-ded-inst-final').innerText = finalAmt.toLocaleString(undefined, {minimumFractionDigits: 2});
     }
 
     function updateDedicatedReimbMath() {
       const tot = parseFloat(document.getElementById('reimb-total-amount').value) || 0, my = parseFloat(document.getElementById('reimb-my-share').value) || 0;
-      document.getElementById('lbl-ded-reimb-friend').innerText = `${userSettings.currency}${Math.max(0, tot - my).toLocaleString()}`;
+      document.getElementById('lbl-ded-reimb-friend').innerText = Math.max(0, tot - my).toLocaleString(undefined, {minimumFractionDigits: 2});
     }
-    function updateSplitMath() { const t=parseFloat(document.getElementById('split-total-amount').value)||0, m=parseFloat(document.getElementById('split-my-share').value)||0; document.getElementById('split-team-share-lbl').innerText=`${userSettings.currency}${Math.max(0,t-m).toLocaleString()}`; }
+    function updateSplitMath() { 
+      const t=parseFloat(document.getElementById('split-total-amount').value)||0, m=parseFloat(document.getElementById('split-my-share').value)||0; 
+      document.getElementById('split-team-share-lbl').innerText = Math.max(0,t-m).toLocaleString(undefined, {minimumFractionDigits: 2}); 
+    }
 
     function openMultiCatSelectModal() { renderMultiCatSelectGrid(); document.getElementById('multi-cat-select-modal').classList.remove('hidden'); }
     function closeMultiCatSelectModal() { document.getElementById('multi-cat-select-modal').classList.add('hidden'); renderCategoryButtons(); }
@@ -1190,9 +1210,9 @@
 
     function openMultiCatModal(payload) {
       pendingMultiCatTxPayload = payload;
-      document.getElementById('lbl-multi-modal-total').innerText = `${userSettings.currency}${payload.amount.toLocaleString()}`;
+      document.getElementById('lbl-multi-modal-total').innerText = payload.amount.toLocaleString(undefined, {minimumFractionDigits: 2});
       document.getElementById('multi-cat-inputs-container').innerHTML = payload.categoriesBreakdown.map((item, idx) => `
-        <div class="flex items-center justify-between bg-gray-50 p-2 rounded-xl border border-gray-200"><span class="text-xs font-semibold text-gray-700 truncate max-w-[120px]">${escapeHtml(item.categoryName)}</span><div class="flex items-center space-x-1"><span class="text-[11px] text-gray-400">${userSettings.currency}</span><input type="text" id="multi-cat-amt-${idx}" readonly onclick="openCustomKeypad('multi-cat-amt-${idx}')" oninput="updateMultiCatAllocationMath()" placeholder="0.00" class="w-24 px-2 py-1 text-xs border rounded-lg bg-white text-right cursor-pointer font-bold"></div></div>
+        <div class="flex items-center justify-between bg-gray-50 p-2 rounded-xl border border-gray-200"><span class="text-xs font-semibold text-gray-700 truncate max-w-[120px]">${escapeHtml(item.categoryName)}</span><div class="flex items-center space-x-1"><input type="text" id="multi-cat-amt-${idx}" readonly onclick="openCustomKeypad('multi-cat-amt-${idx}')" oninput="updateMultiCatAllocationMath()" placeholder="0.00" class="w-24 px-2 py-1 text-xs border rounded-lg bg-white text-right cursor-pointer font-bold"></div></div>
       `).join('');
       document.getElementById('multi-cat-modal').classList.remove('hidden'); updateMultiCatAllocationMath();
     }
@@ -1202,9 +1222,9 @@
       let sum = 0;
       pendingMultiCatTxPayload.categoriesBreakdown.forEach((_, idx) => { const el = document.getElementById(`multi-cat-amt-${idx}`); if (el) sum += (parseFloat(el.value) || 0); });
       const rem = Math.round((pendingMultiCatTxPayload.amount - sum) * 100) / 100;
-      document.getElementById('lbl-multi-modal-allocated').innerText = `${userSettings.currency}${sum.toLocaleString()}`;
+      document.getElementById('lbl-multi-modal-allocated').innerText = sum.toLocaleString(undefined, {minimumFractionDigits: 2});
       const remEl = document.getElementById('lbl-multi-modal-remaining');
-      remEl.innerText = `${userSettings.currency}${rem.toLocaleString()}`;
+      remEl.innerText = rem.toLocaleString(undefined, {minimumFractionDigits: 2});
       remEl.className = rem === 0 ? "font-bold text-emerald-600" : "font-bold text-rose-500";
       document.getElementById('btn-confirm-multi-cat').disabled = (rem !== 0 || sum !== pendingMultiCatTxPayload.amount);
     }
@@ -1295,13 +1315,13 @@
     function renderPendingFriendList() {
       const c=document.getElementById('pending-items-container'), lst=allTransactions.filter(t=>t.kind==='transaction'&&t.isReimburse&&t.remainingPending>0);
       if(!lst.length)return c.innerHTML=`<p class="text-center text-xs text-gray-400 py-3">ไม่มีรายการค้าง</p>`;
-      c.innerHTML=lst.map(t=>`<div class="flex justify-between p-1.5 border-b text-xs hover:bg-gray-50"><label class="flex items-center space-x-2 cursor-pointer flex-1"><input type="checkbox" name="settle-item" value="${t.id}" data-max="${t.remainingPending}" class="rounded w-4 h-4"><div class="flex flex-col"><span class="font-medium">${escapeHtml(t.note||'-')}</span><span class="text-[10px] text-gray-400">ค้าง: ${userSettings.currency}${t.remainingPending.toLocaleString()} • ${t.date}</span></div></label></div>`).join('');
+      c.innerHTML=lst.map(t=>`<div class="flex justify-between p-1.5 border-b text-xs hover:bg-gray-50"><label class="flex items-center space-x-2 cursor-pointer flex-1"><input type="checkbox" name="settle-item" value="${t.id}" data-max="${t.remainingPending}" class="rounded w-4 h-4"><div class="flex flex-col"><span class="font-medium">${escapeHtml(t.note||'-')}</span><span class="text-[10px] text-gray-400">ค้าง: ${t.remainingPending.toLocaleString(undefined, {minimumFractionDigits: 2})} • ${t.date}</span></div></label></div>`).join('');
     }
 
     function renderPendingTeamList() {
       const c=document.getElementById('pending-team-items-container'), lst=allTransactions.filter(t=>t.kind==='split'&&t.remainingTeamPending>0);
       if(!lst.length)return c.innerHTML=`<p class="text-center text-xs text-gray-400 py-3">ไม่มีรายการค้างจ่ายทีมงาน</p>`;
-      c.innerHTML=lst.map(t=>`<div class="flex justify-between p-1.5 border-b text-xs hover:bg-gray-50"><label class="flex items-center space-x-2 cursor-pointer flex-1"><input type="checkbox" name="team-pay-item" value="${t.id}" data-max="${t.remainingTeamPending}" data-note="${escapeHtml(t.note || '')}" onchange="handleTeamPayCheckboxChange()" class="rounded w-4 h-4"><div class="flex flex-col"><span class="font-medium">${escapeHtml(t.note||'-')}</span><span class="text-[10px] text-gray-400">ค้างจ่ายทีม: ${userSettings.currency}${t.remainingTeamPending.toLocaleString()} • ${t.date}</span></div></label></div>`).join('');
+      c.innerHTML=lst.map(t=>`<div class="flex justify-between p-1.5 border-b text-xs hover:bg-gray-50"><label class="flex items-center space-x-2 cursor-pointer flex-1"><input type="checkbox" name="team-pay-item" value="${t.id}" data-max="${t.remainingTeamPending}" data-note="${escapeHtml(t.note || '')}" onchange="handleTeamPayCheckboxChange()" class="rounded w-4 h-4"><div class="flex flex-col"><span class="font-medium">${escapeHtml(t.note||'-')}</span><span class="text-[10px] text-gray-400">ค้างจ่ายทีม: ${t.remainingTeamPending.toLocaleString(undefined, {minimumFractionDigits: 2})} • ${t.date}</span></div></label></div>`).join('');
     }
 
     function handleTeamPayCheckboxChange() {
@@ -1354,13 +1374,30 @@
     function updateEditSplitMath() {
       const tot = parseFloat(document.getElementById('edit-split-total-amount').value) || 0;
       const my = parseFloat(document.getElementById('edit-split-my-share').value) || 0;
-      document.getElementById('edit-split-team-share-lbl').innerText = `${userSettings.currency}${Math.max(0, tot - my).toLocaleString()}`;
+      document.getElementById('edit-split-team-share-lbl').innerText = Math.max(0, tot - my).toLocaleString(undefined, {minimumFractionDigits: 2});
     }
 
     function updateEditReimbMath() {
       const tot = parseFloat(document.getElementById('edit-reimb-total-amount').value) || 0;
       const my = parseFloat(document.getElementById('edit-reimb-my-share').value) || 0;
-      document.getElementById('edit-reimb-friend-share-lbl').innerText = `${userSettings.currency}${Math.max(0, tot - my).toLocaleString()}`;
+      document.getElementById('edit-reimb-friend-share-lbl').innerText = Math.max(0, tot - my).toLocaleString(undefined, {minimumFractionDigits: 2});
+    }
+
+    function updateEditInstMath() {
+      const tot = parseFloat(document.getElementById('edit-inst-total-amount').value) || 0;
+      const count = parseInt(document.getElementById('edit-inst-total-count').value) || 1;
+      let curr = parseInt(document.getElementById('edit-inst-current-count').value) || 1;
+
+      if (curr > count) {
+        curr = count;
+        document.getElementById('edit-inst-current-count').value = count;
+      }
+
+      const normalAmt = Math.floor((tot / count) * 100) / 100;
+      const finalAmt = Math.round((tot - (normalAmt * (count - 1))) * 100) / 100;
+
+      document.getElementById('lbl-edit-inst-norm').innerText = normalAmt.toLocaleString(undefined, {minimumFractionDigits: 2});
+      document.getElementById('lbl-edit-inst-final').innerText = finalAmt.toLocaleString(undefined, {minimumFractionDigits: 2});
     }
 
     function startEditingTransaction(id) {
@@ -1373,12 +1410,14 @@
 
       const isSplit = t.kind === 'split';
       const isReimb = t.kind === 'transaction' && t.isReimburse;
+      const isInst = t.kind === 'transaction' && t.isInstallment;
       const isTransfer = t.kind === 'transfer';
       const isSettlement = t.kind === 'settlement';
       const isTeamPay = t.kind === 'team-pay';
 
       const splitFields = document.getElementById('edit-split-fields');
       const reimbFields = document.getElementById('edit-reimb-fields');
+      const instFields = document.getElementById('edit-inst-fields');
       const normalAmountField = document.getElementById('edit-normal-amount-field');
       const normalAmountBox = document.getElementById('edit-normal-amount-box');
       const categorySection = document.getElementById('edit-category-section');
@@ -1387,11 +1426,24 @@
       // Reset Visibility State
       splitFields.classList.add('hidden');
       reimbFields.classList.add('hidden');
+      instFields.classList.add('hidden');
       normalAmountField.classList.add('grid-cols-2');
       normalAmountBox.classList.remove('hidden');
       categorySection.classList.remove('hidden');
 
-      if (isSplit) {
+      if (isInst) {
+        subhead.innerText = "แก้ไขรายการผ่อนชำระ (Installment)";
+        instFields.classList.remove('hidden');
+        
+        const plan = activeInstallmentPlans.find(p => p.id === t.installmentPlanId) || {};
+        document.getElementById('edit-inst-total-amount').value = plan.totalAmount || (t.amount * (t.installmentTotalCount || 1));
+        document.getElementById('edit-inst-total-count').value = plan.totalCount || t.installmentTotalCount || 2;
+        document.getElementById('edit-inst-current-count').value = t.installmentCurrentCount || 1;
+        document.getElementById('edit-inst-pay-day').value = plan.payDay || 1;
+
+        updateEditInstMath();
+        renderEditModalCategoryButtons('expense');
+      } else if (isSplit) {
         subhead.innerText = "แก้ไขรายการรับเงินแทน (Split)";
         splitFields.classList.remove('hidden');
         normalAmountField.classList.remove('grid-cols-2');
@@ -1413,7 +1465,7 @@
         renderEditModalCategoryButtons('expense');
       } else if (isTransfer || isSettlement || isTeamPay) {
         subhead.innerText = isTransfer ? "แก้ไขรายการโอนเงิน" : isSettlement ? "แก้ไขรายการรับเงินคืน" : "แก้ไขรายการโอนให้ทีม";
-        categorySection.classList.add('hidden'); // ซ่อนหมวดหมู่เพราะแบบฟอร์มเดิมไม่มีหมวดหมู่
+        categorySection.classList.add('hidden');
         document.getElementById('edit-tx-amount').value = t.amount || 0;
       } else {
         subhead.innerText = "แก้ไขรายการ" + (t.type === 'income' ? 'รายรับ' : 'รายจ่าย');
@@ -1472,7 +1524,50 @@
         updatePayload.categoryName = catObj.name;
       }
 
-      if (t.kind === 'split') {
+      if (t.kind === 'transaction' && t.isInstallment) {
+        const tot = parseFloat(document.getElementById('edit-inst-total-amount').value);
+        const totalCount = parseInt(document.getElementById('edit-inst-total-count').value);
+        const currentCount = parseInt(document.getElementById('edit-inst-current-count').value);
+        const payDay = parseInt(document.getElementById('edit-inst-pay-day').value) || 1;
+
+        if (isNaN(tot) || tot <= 0 || totalCount < 2 || currentCount > totalCount) {
+          return alert("กรุณากรอกข้อมูลการผ่อนชำระให้ถูกต้อง");
+        }
+
+        const normalAmt = Math.floor((tot / totalCount) * 100) / 100;
+        const finalAmt = Math.round((tot - (normalAmt * (totalCount - 1))) * 100) / 100;
+        const currentPayAmt = (currentCount === totalCount) ? finalAmt : normalAmt;
+
+        updatePayload.amount = currentPayAmt;
+        updatePayload.myShare = currentPayAmt;
+        updatePayload.installmentCurrentCount = currentCount;
+        updatePayload.installmentTotalCount = totalCount;
+
+        if (catObj) {
+          updatePayload.categoriesBreakdown = [{ categoryId: catObj.id, categoryName: catObj.name, amount: currentPayAmt }];
+        }
+
+        // อัปเดตสัญญาผ่อนหลักใน installment_plans ด้วย
+        if (t.installmentPlanId) {
+          let tm = new Date(dateStr).getMonth() + 1, ty = new Date(dateStr).getFullYear(); 
+          if (tm > 11) { tm = 0; ty++; }
+          
+          await db.collection('users').doc(currentUser.uid).collection('installment_plans').doc(t.installmentPlanId).update({
+            totalAmount: tot,
+            totalCount: totalCount,
+            currentCount: currentCount,
+            normalAmount: normalAmt,
+            finalAmount: finalAmt,
+            payDay: payDay,
+            accountId: editSelectedAccountId,
+            categoryId: catObj?.id || t.categoryId,
+            categoryName: catObj?.name || t.categoryName,
+            status: currentCount >= totalCount ? 'completed' : 'active',
+            nextDueDate: currentCount >= totalCount ? null : new Date(ty, tm, Math.min(payDay, new Date(ty, tm + 1, 0).getDate())).toISOString().split('T')[0]
+          });
+        }
+
+      } else if (t.kind === 'split') {
         const tot = parseFloat(document.getElementById('edit-split-total-amount').value);
         const my = parseFloat(document.getElementById('edit-split-my-share').value);
 
@@ -1570,7 +1665,7 @@
 
     function renderSummaryAnalyticsUI() {
       const totBal = accountsList.reduce((s, a) => s + (a.balance || 0), 0);
-      document.getElementById('summary-current-balance').innerText = `คงเหลือรวม: ${userSettings.currency}${totBal.toLocaleString()}`;
+      document.getElementById('summary-current-balance').innerText = `คงเหลือรวม: ${totBal.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
 
       let totInc = 0, totExp = 0, catIncMap = {}, catExpMap = {};
       allTransactions.forEach(t => {
@@ -1585,8 +1680,8 @@
         else if (t.kind === 'settlement') { totInc += t.amount; catIncMap['รับคืนเงิน'] = (catIncMap['รับคืนเงิน'] || 0) + t.amount; }
       });
 
-      document.getElementById('lbl-ratio-exp').innerText = `${userSettings.currency}${totExp.toLocaleString()}`;
-      document.getElementById('lbl-ratio-inc').innerText = `${userSettings.currency}${totInc.toLocaleString()}`;
+      document.getElementById('lbl-ratio-exp').innerText = totExp.toLocaleString(undefined, {minimumFractionDigits: 2});
+      document.getElementById('lbl-ratio-inc').innerText = totInc.toLocaleString(undefined, {minimumFractionDigits: 2});
 
       const totalFlow = totInc + totExp;
       let expPct = totalFlow > 0 ? Math.round((totExp / totalFlow) * 1000) / 10 : 50, incPct = totalFlow > 0 ? Math.round((totInc / totalFlow) * 1000) / 10 : 50;
@@ -1651,8 +1746,8 @@
     
     function renderCashflowBar(net, max, fId, tId) {
       const f = document.getElementById(fId), t = document.getElementById(tId);
-      if(net>=0){ f.style.marginLeft='50%'; f.style.width=`${Math.min(50,(net/max)*50)}%`; f.className="h-full bg-emerald-500 rounded-r-full"; t.innerText=`+${userSettings.currency}${net.toLocaleString()}`; t.className="font-bold text-emerald-600"; }
-      else { const p=Math.min(50,(Math.abs(net)/max)*50); f.style.marginLeft=`${50-p}%`; f.style.width=`${p}%`; f.className="h-full bg-rose-500 rounded-l-full"; t.innerText=`-${userSettings.currency}${Math.abs(net).toLocaleString()}`; t.className="font-bold text-rose-600"; }
+      if(net>=0){ f.style.marginLeft='50%'; f.style.width=`${Math.min(50,(net/max)*50)}%`; f.className="h-full bg-emerald-500 rounded-r-full"; t.innerText=`+${net.toLocaleString(undefined, {minimumFractionDigits: 2})}`; t.className="font-bold text-emerald-600"; }
+      else { const p=Math.min(50,(Math.abs(net)/max)*50); f.style.marginLeft=`${50-p}%`; f.style.width=`${p}%`; f.className="h-full bg-rose-500 rounded-l-full"; t.innerText=`-${Math.abs(net).toLocaleString(undefined, {minimumFractionDigits: 2})}`; t.className="font-bold text-rose-600"; }
     }
     function updateEntryCurrentMonthCashFlowUI() { const {netFlow, inc, exp} = calculateCashflowForMonth(new Date().getFullYear(), new Date().getMonth()+1); renderCashflowBar(netFlow, Math.max(inc,exp,1), 'entry-cashflow-bar-fill', 'entry-cashflow-net-text'); }
     function openCashflowPopUpModal() { const d=new Date(); popupYear=d.getFullYear(); popupMonth=d.getMonth()+1; updatePopupCashflowUI(); document.getElementById('cashflow-modal').classList.remove('hidden'); }
@@ -1803,15 +1898,15 @@
         const accDisp = accObj ? `${accObj.name}` : '';
 
         if(t.kind==='transaction'){
-          let b=t.isReimburse ? (t.remainingPending>0?`<span class="text-[9px] bg-amber-100 text-amber-800 px-1 py-0.5 rounded ml-1">รอ ${t.remainingPending}</span>`:`<span class="text-[9px] bg-emerald-100 text-emerald-800 px-1 py-0.5 rounded ml-1">คืนครบ</span>`) : (t.isInstallment?`<span class="text-[9px] bg-indigo-100 text-indigo-800 px-1 py-0.5 rounded ml-1">ผ่อน</span>`:''); 
-          let breakdownText = t.categoriesBreakdown?.length > 1 ? `<div class="text-[9px] text-gray-400 mt-0.5 font-light">${t.categoriesBreakdown.map(sub => `${sub.categoryName}: ฿${sub.amount.toLocaleString()}`).join(' • ')}</div>` : '';
-          return `<div onclick="startEditingTransaction('${t.id}')" class="flex justify-between items-center p-2.5 bg-gray-50 border rounded-xl text-xs hover:bg-gray-100 cursor-pointer mb-1"><div class="flex flex-col"><span class="font-medium">${escapeHtml(t.note||'-')} ${b}</span><span class="text-[10px] text-gray-400">${accDisp} • [${t.categoryName}]</span>${breakdownText}</div><div class="flex items-center space-x-2"><span class="font-bold ${t.type==='income'?'text-emerald-600':'text-rose-600'}">${t.type==='income'?'+':'-'}${t.amount.toLocaleString()}</span><button onclick="event.stopPropagation(); deleteTx('${t.id}')" class="text-gray-300 hover:text-rose-500 font-bold px-1">✕</button></div></div>`;
+          let b=t.isReimburse ? (t.remainingPending>0?`<span class="text-[9px] bg-amber-100 text-amber-800 px-1 py-0.5 rounded ml-1">รอ ${t.remainingPending.toLocaleString()}</span>`:`<span class="text-[9px] bg-emerald-100 text-emerald-800 px-1 py-0.5 rounded ml-1">คืนครบ</span>`) : (t.isInstallment?`<span class="text-[9px] bg-indigo-100 text-indigo-800 px-1 py-0.5 rounded ml-1">ผ่อน (${t.installmentCurrentCount||1}/${t.installmentTotalCount||1})</span>`:''); 
+          let breakdownText = t.categoriesBreakdown?.length > 1 ? `<div class="text-[9px] text-gray-400 mt-0.5 font-light">${t.categoriesBreakdown.map(sub => `${sub.categoryName}: ${sub.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}`).join(' • ')}</div>` : '';
+          return `<div onclick="startEditingTransaction('${t.id}')" class="flex justify-between items-center p-2.5 bg-gray-50 border rounded-xl text-xs hover:bg-gray-100 cursor-pointer mb-1"><div class="flex flex-col"><span class="font-medium">${escapeHtml(t.note||'-')} ${b}</span><span class="text-[10px] text-gray-400">${accDisp} • [${t.categoryName}]</span>${breakdownText}</div><div class="flex items-center space-x-2"><span class="font-bold ${t.type==='income'?'text-emerald-600':'text-rose-600'}">${t.type==='income'?'+':'-'}${t.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</span><button onclick="event.stopPropagation(); deleteTx('${t.id}')" class="text-gray-300 hover:text-rose-500 font-bold px-1">✕</button></div></div>`;
         }
         if(t.kind==='split') {
-          const pendingText = t.remainingTeamPending > 0 ? `<span class="text-[9px] bg-purple-100 text-purple-800 px-1 py-0.5 rounded ml-1">ค้างทีม ฿${t.remainingTeamPending.toLocaleString()}</span>` : `<span class="text-[9px] bg-emerald-100 text-emerald-800 px-1 py-0.5 rounded ml-1">จ่ายทีมครบ</span>`;
-          return `<div onclick="startEditingTransaction('${t.id}')" class="flex justify-between items-center p-2.5 bg-purple-50/50 border border-purple-100 rounded-xl text-xs hover:bg-purple-100/60 cursor-pointer mb-1"><div class="flex flex-col"><span class="font-medium">รับแทนทีม (${accDisp}) ${pendingText}</span><span class="text-[10px] text-gray-400">${escapeHtml(t.note||'-')} (ส่วนเรา ฿${t.myShare.toLocaleString()})</span></div><div class="flex items-center space-x-2"><span class="font-bold text-purple-900">+${t.totalAmount.toLocaleString()}</span><button onclick="event.stopPropagation(); deleteTx('${t.id}')" class="text-gray-300 hover:text-rose-500 font-bold px-1">✕</button></div></div>`;
+          const pendingText = t.remainingTeamPending > 0 ? `<span class="text-[9px] bg-purple-100 text-purple-800 px-1 py-0.5 rounded ml-1">ค้างทีม ${t.remainingTeamPending.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>` : `<span class="text-[9px] bg-emerald-100 text-emerald-800 px-1 py-0.5 rounded ml-1">จ่ายทีมครบ</span>`;
+          return `<div onclick="startEditingTransaction('${t.id}')" class="flex justify-between items-center p-2.5 bg-purple-50/50 border border-purple-100 rounded-xl text-xs hover:bg-purple-100/60 cursor-pointer mb-1"><div class="flex flex-col"><span class="font-medium">รับแทนทีม (${accDisp}) ${pendingText}</span><span class="text-[10px] text-gray-400">${escapeHtml(t.note||'-')} (ส่วนเรา ${t.myShare.toLocaleString(undefined, {minimumFractionDigits: 2})})</span></div><div class="flex items-center space-x-2"><span class="font-bold text-purple-900">+${t.totalAmount.toLocaleString(undefined, {minimumFractionDigits: 2})}</span><button onclick="event.stopPropagation(); deleteTx('${t.id}')" class="text-gray-300 hover:text-rose-500 font-bold px-1">✕</button></div></div>`;
         }
-        return `<div onclick="startEditingTransaction('${t.id}')" class="flex justify-between items-center p-2.5 border rounded-xl text-xs hover:bg-gray-100 cursor-pointer mb-1 ${t.kind==='transfer'?'bg-blue-50/50 border-blue-100':t.kind==='team-pay'?'bg-teal-50/50 border-teal-100':'bg-amber-50/50 border-amber-100'}"><div class="flex flex-col"><span class="font-medium">${t.kind==='transfer'?`โอน: ${t.fromAccountName} ➔ ${t.toAccountName}`:t.kind==='team-pay'?`โอนให้ทีม (${accDisp})`:'รับเงินคืน'}</span><span class="text-[10px] text-gray-400">${escapeHtml(t.note||'-')}</span></div><div class="flex items-center space-x-2"><span class="font-bold">${t.kind==='transfer'||t.kind==='team-pay'?'-'+t.amount.toLocaleString():'+'+t.amount.toLocaleString()}</span><button onclick="event.stopPropagation(); deleteTx('${t.id}')" class="text-gray-300 hover:text-rose-500 font-bold px-1">✕</button></div></div>`;
+        return `<div onclick="startEditingTransaction('${t.id}')" class="flex justify-between items-center p-2.5 border rounded-xl text-xs hover:bg-gray-100 cursor-pointer mb-1 ${t.kind==='transfer'?'bg-blue-50/50 border-blue-100':t.kind==='team-pay'?'bg-teal-50/50 border-teal-100':'bg-amber-50/50 border-amber-100'}"><div class="flex flex-col"><span class="font-medium">${t.kind==='transfer'?`โอน: ${t.fromAccountName} ➔ ${t.toAccountName}`:t.kind==='team-pay'?`โอนให้ทีม (${accDisp})`:'รับเงินคืน'}</span><span class="text-[10px] text-gray-400">${escapeHtml(t.note||'-')}</span></div><div class="flex items-center space-x-2"><span class="font-bold">${t.kind==='transfer'||t.kind==='team-pay'?'-'+t.amount.toLocaleString(undefined, {minimumFractionDigits: 2}):'+'+t.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</span><button onclick="event.stopPropagation(); deleteTx('${t.id}')" class="text-gray-300 hover:text-rose-500 font-bold px-1">✕</button></div></div>`;
       }).join('')).join('');
     }
 
@@ -1836,8 +1931,8 @@
 
         applyHistoryFilters();
 
-        document.getElementById('total-pending-friend').innerText=`${userSettings.currency}${pFr.toLocaleString()}`;
-        document.getElementById('total-pending-team').innerText=`${userSettings.currency}${pTm.toLocaleString()}`;
+        document.getElementById('total-pending-friend').innerText = pFr.toLocaleString(undefined, {minimumFractionDigits: 2});
+        document.getElementById('total-pending-team').innerText = pTm.toLocaleString(undefined, {minimumFractionDigits: 2});
       });
     }
 
@@ -1936,7 +2031,7 @@
                 <span class="text-xs font-bold text-gray-800">${escapeHtml(a.name)}</span>
               </div>
               <div class="flex items-center space-x-2">
-                <span class="text-xs font-black text-gray-700">${userSettings.currency}${(a.balance || 0).toLocaleString()}</span>
+                <span class="text-xs font-black text-gray-700">${(a.balance || 0).toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
                 <span class="w-2.5 h-2.5 rounded-full ${theme.bgClass}"></span>
               </div>
             </div>
@@ -2139,7 +2234,6 @@
     }
 
     async function toggleAccountPin(id, isPinned) { try { await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).update({ isPinned: isPinned }); } catch (err) { alert(err.message); } }
-    async function autoSaveSettings() { userSettings.currency = document.getElementById('setting-currency').value; updateCurrencyUI(); await db.collection('users').doc(currentUser.uid).collection('settings').doc('config').set({currency: userSettings.currency}); }
     function escapeHtml(text) { return text ? text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : ''; }
   </script>
 </body>

@@ -40,7 +40,7 @@
       <div class="flex flex-col items-center">
         <div class="flex items-baseline space-x-1">
           <h1 class="text-xl font-black tracking-wider uppercase drop-shadow-sm">จดตังค์ BETA</h1>
-          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.36)</span>
+          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.37)</span>
         </div>
         <p class="text-[8px] text-emerald-100/80 tracking-tight font-light">by Phuthai Mananararuk & Gemini</p>
       </div>
@@ -1398,6 +1398,14 @@
 
       document.getElementById('lbl-edit-inst-norm').innerText = normalAmt.toLocaleString(undefined, {minimumFractionDigits: 2});
       document.getElementById('lbl-edit-inst-final').innerText = finalAmt.toLocaleString(undefined, {minimumFractionDigits: 2});
+
+      // อัปเดตข้อความบันทึกช่วยจำใน Modal ให้เปลี่ยนตัวเลขงวดตาม Real-time
+      const noteInput = document.getElementById('edit-tx-note');
+      if (noteInput && noteInput.value) {
+        if (/\(\d+\/\d+\)/.test(noteInput.value)) {
+          noteInput.value = noteInput.value.replace(/\(\d+\/\d+\)/, `(${curr}/${count})`);
+        }
+      }
     }
 
     function startEditingTransaction(id) {
@@ -1538,16 +1546,27 @@
         const finalAmt = Math.round((tot - (normalAmt * (totalCount - 1))) * 100) / 100;
         const currentPayAmt = (currentCount === totalCount) ? finalAmt : normalAmt;
 
+        // จัดการและซิงค์ข้อความบันทึกช่วยจำ
+        let updatedNote = noteStr;
+        if (/\(\d+\/\d+\)/.test(updatedNote)) {
+          updatedNote = updatedNote.replace(/\(\d+\/\d+\)/, `(${currentCount}/${totalCount})`);
+        } else if (updatedNote) {
+          updatedNote = `${updatedNote} (${currentCount}/${totalCount})`;
+        } else {
+          updatedNote = `ผ่อนชำระ (${currentCount}/${totalCount})`;
+        }
+
         updatePayload.amount = currentPayAmt;
         updatePayload.myShare = currentPayAmt;
         updatePayload.installmentCurrentCount = currentCount;
         updatePayload.installmentTotalCount = totalCount;
+        updatePayload.note = updatedNote;
 
         if (catObj) {
           updatePayload.categoriesBreakdown = [{ categoryId: catObj.id, categoryName: catObj.name, amount: currentPayAmt }];
         }
 
-        // อัปเดตสัญญาผ่อนหลักใน installment_plans ด้วย
+        // อัปเดตสัญญาผ่อนหลักใน installment_plans
         if (t.installmentPlanId) {
           let tm = new Date(dateStr).getMonth() + 1, ty = new Date(dateStr).getFullYear(); 
           if (tm > 11) { tm = 0; ty++; }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>จดตังค์ BETA (v1.29) - Dropdown Color Selector UI</title>
+  <title>จดตังค์ BETA (v1.30) - Swipe to Edit UI</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -20,6 +20,7 @@
       100% { opacity: 0; transform: scale(0.95); }
     }
     .animate-toast-check { animation: toastFade 0.3s ease-in-out forwards; }
+    .swipe-item-content { transition: transform 0.2s ease-out; }
   </style>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -39,7 +40,7 @@
       <div class="flex flex-col items-center">
         <div class="flex items-baseline space-x-1">
           <h1 class="text-xl font-black tracking-wider uppercase drop-shadow-sm">จดตังค์ BETA</h1>
-          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.29)</span>
+          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.30)</span>
         </div>
         <p class="text-[8px] text-emerald-100/80 tracking-tight font-light">by Phuthai Mananararuk & Gemini</p>
       </div>
@@ -297,7 +298,7 @@
         <div id="full-tx-list" class="space-y-2 overflow-y-auto pr-1 flex-1"><p class="text-center text-xs text-gray-400 py-6">กำลังโหลดประวัติ...</p></div>
       </section>
 
-      <!-- 4. SETTING VIEW (Harmonized & Dropdown Colors) -->
+      <!-- 4. SETTING VIEW (Clean Swipe-to-Edit Architecture) -->
       <section id="setting-view" class="hidden space-y-4 max-h-[620px] overflow-y-auto pr-1">
         <div class="border-b pb-2"><h2 class="text-xs font-bold text-gray-700 uppercase">Setting - ตั้งค่าระบบ</h2></div>
         <div class="space-y-1"><label class="block text-xs font-bold text-gray-700">สกุลเงินทั่วแอป</label><select id="setting-currency" onchange="autoSaveSettings()" class="w-full px-3 py-2 text-xs border rounded-xl bg-white"><option value="฿">บาท (฿)</option><option value="$">ดอลลาร์ ($)</option><option value="€">ยูโร (€)</option><option value="¥">เยน (¥)</option></select></div>
@@ -306,85 +307,33 @@
         <div class="space-y-2 border-t pt-3">
           <div class="flex justify-between items-center">
             <h3 class="text-xs font-bold text-gray-700 uppercase">จัดการบัญชีเงิน</h3>
-            <span class="text-[9px] text-gray-400 font-light">*กดปักหมุดเพื่อแสดงลัดในหน้าแบบฟอร์ม</span>
+            <span class="text-[9px] text-gray-400 font-light">*ปัดซ้ายเพื่อแก้ไข</span>
           </div>
           
-          <div id="accounts-settings-list" class="space-y-1.5"></div>
+          <div id="accounts-settings-list" class="space-y-2"></div>
           
-          <!-- ฟอร์มเพิ่มบัญชีใหม่ (Dropdown Colors) -->
-          <div class="flex flex-col space-y-1.5 p-2 bg-gray-50 rounded-xl border border-gray-200">
-            <div class="flex space-x-1">
-              <select id="new-acc-icon" class="px-1.5 py-1 text-xs border rounded bg-white">
-                <option value="-">-</option>
-                <option value="💵">💵</option>
-                <option value="🏛️">🏛️</option>
-                <option value="💳">💳</option>
-                <option value="📱">📱</option>
-                <option value="💰">💰</option>
-                <option value="📈">📈</option>
-              </select>
-              <input type="text" id="new-acc-name" placeholder="ชื่อบัญชีใหม่" class="flex-1 px-2 py-1 text-xs border rounded bg-white font-semibold">
-              <input type="text" id="new-acc-balance" readonly onclick="openCustomKeypad('new-acc-balance')" placeholder="ยอดเริ่มต้น" class="w-16 px-1.5 py-1 text-xs border rounded bg-white text-right font-bold cursor-pointer">
-            </div>
-            <div class="flex justify-between items-center pt-1 border-t border-gray-200">
-              <div id="new-acc-color-picker-container" class="flex items-center space-x-1"></div>
-              <button type="button" onclick="addNewAccount()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-bold transition shadow-2xs">+ เพิ่มบัญชี</button>
-            </div>
-          </div>
+          <button type="button" onclick="openNewAccountModal()" class="w-full py-2 bg-blue-50 border border-blue-200 text-blue-700 hover:bg-blue-100 rounded-xl text-xs font-bold transition shadow-2xs">+ เพิ่มบัญชีใหม่</button>
         </div>
 
         <!-- SECTION: จัดการหมวดหมู่ -->
         <div class="space-y-2 border-t pt-3">
-          <h3 class="text-xs font-bold text-gray-700 uppercase">จัดการหมวดหมู่</h3>
+          <div class="flex justify-between items-center">
+            <h3 class="text-xs font-bold text-gray-700 uppercase">จัดการหมวดหมู่</h3>
+            <span class="text-[9px] text-gray-400 font-light">*ปัดซ้ายเพื่อแก้ไข</span>
+          </div>
           
           <!-- หมวดหมู่รายจ่าย -->
           <div class="space-y-1.5">
             <p class="text-[11px] font-semibold text-rose-600">หมวดหมู่รายจ่าย</p>
-            <div id="expense-cats-list" class="space-y-1.5"></div>
-            
-            <div class="flex flex-col space-y-1.5 p-2 bg-rose-50/40 rounded-xl border border-rose-100">
-              <div class="flex space-x-1">
-                <select id="new-exp-cat-icon" class="px-1.5 py-1 text-xs border rounded bg-white">
-                  <option value="-">-</option>
-                  <option value="🍔">🍔</option>
-                  <option value="☕">☕</option>
-                  <option value="🚗">🚗</option>
-                  <option value="🏠">🏠</option>
-                  <option value="🛒">🛒</option>
-                  <option value="🎬">🎬</option>
-                  <option value="💡">💡</option>
-                </select>
-                <input type="text" id="new-exp-cat-name" placeholder="ชื่อหมวดหมู่รายจ่าย" class="flex-1 px-2 py-1 text-xs border rounded bg-white font-semibold">
-              </div>
-              <div class="flex justify-between items-center pt-1 border-t border-rose-100">
-                <div id="new-exp-cat-color-picker-container" class="flex items-center space-x-1"></div>
-                <button onclick="addNewCategory('expense')" class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-1 rounded text-xs font-bold transition shadow-2xs">+ เพิ่มหมวดหมู่</button>
-              </div>
-            </div>
+            <div id="expense-cats-list" class="space-y-2"></div>
+            <button type="button" onclick="openNewCategoryModal('expense')" class="w-full py-2 bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 rounded-xl text-xs font-bold transition shadow-2xs">+ เพิ่มหมวดหมู่รายจ่าย</button>
           </div>
           
           <!-- หมวดหมู่รายรับ -->
           <div class="space-y-1.5 border-t pt-2">
             <p class="text-[11px] font-semibold text-emerald-600">หมวดหมู่รายรับ</p>
-            <div id="income-cats-list" class="space-y-1.5"></div>
-            
-            <div class="flex flex-col space-y-1.5 p-2 bg-emerald-50/40 rounded-xl border border-emerald-100">
-              <div class="flex space-x-1">
-                <select id="new-inc-cat-icon" class="px-1.5 py-1 text-xs border rounded bg-white">
-                  <option value="-">-</option>
-                  <option value="💰">💰</option>
-                  <option value="💵">💵</option>
-                  <option value="📈">📈</option>
-                  <option value="🎁">🎁</option>
-                  <option value="💼">💼</option>
-                </select>
-                <input type="text" id="new-inc-cat-name" placeholder="ชื่อหมวดหมู่รายรับ" class="flex-1 px-2 py-1 text-xs border rounded bg-white font-semibold">
-              </div>
-              <div class="flex justify-between items-center pt-1 border-t border-emerald-100">
-                <div id="new-inc-cat-color-picker-container" class="flex items-center space-x-1"></div>
-                <button onclick="addNewCategory('income')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-xs font-bold transition shadow-2xs">+ เพิ่มหมวดหมู่</button>
-              </div>
-            </div>
+            <div id="income-cats-list" class="space-y-2"></div>
+            <button type="button" onclick="openNewCategoryModal('income')" class="w-full py-2 bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100 rounded-xl text-xs font-bold transition shadow-2xs">+ เพิ่มหมวดหมู่รายรับ</button>
           </div>
         </div>
 
@@ -406,6 +355,114 @@
 
     </main>
     <footer id="auth-status-bar" class="bg-gray-100 p-2 text-center text-[10px] text-gray-400 border-t border-gray-100">สถานะ: ยังไม่ได้เข้าสู่ระบบ</footer>
+  </div>
+
+  <!-- Account Edit / Create Pop-up Modal -->
+  <div id="account-edit-modal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-4 shadow-2xl relative">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h3 id="account-modal-title" class="text-xs font-bold text-gray-700 uppercase">แก้ไขบัญชี</h3>
+        <button type="button" onclick="closeAccountModal()" class="text-gray-400 font-bold text-lg px-2">✕</button>
+      </div>
+
+      <form id="account-modal-form" class="space-y-3">
+        <input type="hidden" id="modal-acc-id">
+        
+        <div>
+          <label class="block text-[11px] font-semibold text-gray-600 mb-1">ชื่อบัญชี</label>
+          <input type="text" id="modal-acc-name" placeholder="ชื่อบัญชี" required class="w-full px-3 py-2 text-xs border rounded-xl bg-white font-semibold">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[11px] font-semibold text-gray-600 mb-1">ไอคอน</label>
+            <select id="modal-acc-icon" class="w-full px-2 py-2 text-xs border rounded-xl bg-white">
+              <option value="-">-</option>
+              <option value="💵">💵 เงินสด</option>
+              <option value="🏛️">🏛️ ธนาคาร</option>
+              <option value="💳">💳 บัตเครดิต</option>
+              <option value="📱">📱 แอปพลิเคชัน</option>
+              <option value="💰">💰 ถุงเงิน</option>
+              <option value="📈">📈 การลงทุน</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-gray-600 mb-1">สีธีมประจำบัญชี</label>
+            <select id="modal-acc-color" class="w-full px-2 py-2 text-xs border rounded-xl bg-white font-medium"></select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-semibold text-gray-600 mb-1">ยอดเงินเริ่มต้น (<span class="currency-symbol">฿</span>)</label>
+          <input type="text" id="modal-acc-balance" readonly onclick="openCustomKeypad('modal-acc-balance')" placeholder="0.00" class="w-full px-3 py-2 text-xs border rounded-xl bg-white text-right font-bold cursor-pointer">
+        </div>
+
+        <!-- ปุ่มลบบัญชี (ข้อความสีแดง ไม่มีกรอบ) -->
+        <div id="modal-acc-delete-container" class="pt-2 text-center border-t border-gray-100">
+          <button type="button" onclick="confirmDeleteAccountFromModal()" class="text-xs font-semibold text-rose-600 hover:text-rose-800 transition">ลบบัญชี</button>
+        </div>
+
+        <div class="pt-2 flex space-x-2 border-t">
+          <button type="button" onclick="closeAccountModal()" class="w-1/2 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2.5 rounded-xl text-xs font-semibold">ยกเลิก</button>
+          <button type="submit" class="w-1/2 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl text-xs font-bold transition shadow-xs">เสร็จสิ้น</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Category Edit / Create Pop-up Modal -->
+  <div id="category-edit-modal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-4 shadow-2xl relative">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h3 id="category-modal-title" class="text-xs font-bold text-gray-700 uppercase">แก้ไขหมวดหมู่</h3>
+        <button type="button" onclick="closeCategoryModal()" class="text-gray-400 font-bold text-lg px-2">✕</button>
+      </div>
+
+      <form id="category-modal-form" class="space-y-3">
+        <input type="hidden" id="modal-cat-id">
+        <input type="hidden" id="modal-cat-type">
+        
+        <div>
+          <label class="block text-[11px] font-semibold text-gray-600 mb-1">ชื่อหมวดหมู่</label>
+          <input type="text" id="modal-cat-name" placeholder="ชื่อหมวดหมู่" required class="w-full px-3 py-2 text-xs border rounded-xl bg-white font-semibold">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[11px] font-semibold text-gray-600 mb-1">ไอคอน</label>
+            <select id="modal-cat-icon" class="w-full px-2 py-2 text-xs border rounded-xl bg-white">
+              <option value="-">-</option>
+              <option value="🍔">🍔 อาหาร</option>
+              <option value="☕">☕ กาแฟ</option>
+              <option value="🚗">🚗 เดินทาง</option>
+              <option value="🏠">🏠 บ้าน</option>
+              <option value="🛒">🛒 ช้อปปิ้ง</option>
+              <option value="🎬">🎬 บันเทิง</option>
+              <option value="💡">💡 ค่าน้ำไฟ</option>
+              <option value="💰">💰 รายรับทั่วไป</option>
+              <option value="💵">💵 เงินเดือน</option>
+              <option value="📈">📈 การลงทุน</option>
+              <option value="🎁">🎁 ของขวัญ</option>
+              <option value="💼">💼 ฟรีแลนซ์</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-gray-600 mb-1">สีธีมหมวดหมู่</label>
+            <select id="modal-cat-color" class="w-full px-2 py-2 text-xs border rounded-xl bg-white font-medium"></select>
+          </div>
+        </div>
+
+        <!-- ปุ่มลบหมวดหมู่ (ข้อความสีแดง ไม่มีกรอบ) -->
+        <div id="modal-cat-delete-container" class="pt-2 text-center border-t border-gray-100">
+          <button type="button" onclick="confirmDeleteCategoryFromModal()" class="text-xs font-semibold text-rose-600 hover:text-rose-800 transition">ลบหมวดหมู่</button>
+        </div>
+
+        <div class="pt-2 flex space-x-2 border-t">
+          <button type="button" onclick="closeCategoryModal()" class="w-1/2 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2.5 rounded-xl text-xs font-semibold">ยกเลิก</button>
+          <button type="submit" class="w-1/2 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl text-xs font-bold transition shadow-xs">เสร็จสิ้น</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <!-- Edit Transaction Modal -->
@@ -638,11 +695,6 @@
     let activeKeypadFieldId = null, pendingMultiCatTxPayload = null;
     let balanceChartInstance = null, incomePieInstance = null, expensePieInstance = null;
 
-    // Selected colors for create new items
-    let selectedNewAccColor = 'card';
-    let selectedNewExpCatColor = 'rose';
-    let selectedNewIncCatColor = 'emerald';
-
     // Account Color Themes
     const ACCOUNT_COLOR_THEMES = {
       card: { active: 'bg-slate-900 text-slate-100 border-slate-900 ring-2 ring-slate-400 shadow-md', inactive: 'bg-slate-100 text-slate-800 border-slate-300 hover:bg-slate-200', bgClass: 'bg-slate-800', name: '🖤 เทาดำ' },
@@ -834,13 +886,13 @@
         transferFromId = ensureValid(transferFromId);
         transferToId = (!transferToId || !accountsList.some(a => a.id === transferToId)) ? (accountsList.length > 1 ? accountsList[1].id : fallbackId) : transferToId;
 
-        renderAllAccountButtons(); renderSettingsAccounts(); renderNewAccountColorPicker(); populateHistoryFilterDropdowns();
+        renderAllAccountButtons(); renderSettingsAccounts(); populateHistoryFilterDropdowns();
         if (!views.summary.classList.contains('hidden')) renderSummaryAnalyticsUI();
       });
 
       unsubscribeCat = db.collection('users').doc(uid).collection('categories').orderBy('createdAt','asc').onSnapshot(snap => { 
         categoriesList = []; snap.forEach(d => categoriesList.push({ id: d.id, icon: '-', colorTheme: d.data().type==='expense'?'rose':'emerald', ...d.data() })); 
-        renderCategoryButtons(); renderSplitCategoryButtons(); renderInstCategoryButtons(); renderReimbCategoryButtons(); renderSettingsCategories(); renderNewCategoryColorPickers(); populateHistoryFilterDropdowns();
+        renderCategoryButtons(); renderSplitCategoryButtons(); renderInstCategoryButtons(); renderReimbCategoryButtons(); renderSettingsCategories(); populateHistoryFilterDropdowns();
         if (!views.summary.classList.contains('hidden')) renderSummaryAnalyticsUI();
       });
 
@@ -1755,160 +1807,252 @@
       } catch (err) { alert(err.message); } 
     }
 
-    // Dynamic Color Dropdown Builder Helper
-    function buildColorDropdownHTML(currentSelectedKey, themeMap, onchangeFnCall) {
-      return `
-        <select onchange="${onchangeFnCall}" class="px-1 py-0.5 text-[11px] border rounded bg-white font-medium">
-          ${Object.keys(themeMap).map(key => `
-            <option value="${key}" ${key === currentSelectedKey ? 'selected' : ''}>
-              ${themeMap[key].name}
-            </option>
-          `).join('')}
-        </select>
-      `;
+    // --- SWIPE TO REVEAL EDIT BUTTON HELPER ---
+    function attachSwipeGesture(elementId) {
+      const container = document.getElementById(elementId);
+      if (!container) return;
+      const content = container.querySelector('.swipe-item-content');
+      if (!content) return;
+
+      let startX = 0, currentX = 0, isSwiping = false;
+
+      function onTouchStart(e) { startX = e.touches ? e.touches[0].clientX : e.clientX; isSwiping = true; }
+      function onTouchMove(e) {
+        if (!isSwiping) return;
+        currentX = e.touches ? e.touches[0].clientX : e.clientX;
+        const diffX = currentX - startX;
+        if (diffX < -5) { content.style.transform = `translateX(-64px)`; } 
+        else if (diffX > 5) { content.style.transform = `translateX(0px)`; }
+      }
+      function onTouchEnd() { isSwiping = false; }
+
+      container.addEventListener('touchstart', onTouchStart, { passive: true });
+      container.addEventListener('touchmove', onTouchMove, { passive: true });
+      container.addEventListener('touchend', onTouchEnd, { passive: true });
+
+      container.addEventListener('mousedown', onTouchStart);
+      container.addEventListener('mousemove', onTouchMove);
+      container.addEventListener('mouseup', onTouchEnd);
     }
 
-    // Render Dropdown เลือกสีสำหรับฟอร์มสร้างรายการใหม่
-    function renderNewAccountColorPicker() {
-      const container = document.getElementById('new-acc-color-picker-container');
-      if (container) {
-        container.innerHTML = `
-          <span class="text-[10px] text-gray-500">สี:</span>
-          ${buildColorDropdownHTML(selectedNewAccColor, ACCOUNT_COLOR_THEMES, 'selectedNewAccColor=this.value')}
-        `;
-      }
-    }
+    // --- CLEAN RENDERERS FOR SETTING (SWIPE LIST) ---
+    function renderSettingsAccounts() {
+      const container = document.getElementById('accounts-settings-list');
+      if (!container) return;
 
-    function renderNewCategoryColorPickers() {
-      const expContainer = document.getElementById('new-exp-cat-color-picker-container');
-      if (expContainer) {
-        expContainer.innerHTML = `
-          <span class="text-[10px] text-gray-500">สี:</span>
-          ${buildColorDropdownHTML(selectedNewExpCatColor, CATEGORY_COLOR_THEMES, 'selectedNewExpCatColor=this.value')}
-        `;
-      }
-
-      const incContainer = document.getElementById('new-inc-cat-color-picker-container');
-      if (incContainer) {
-        incContainer.innerHTML = `
-          <span class="text-[10px] text-gray-500">สี:</span>
-          ${buildColorDropdownHTML(selectedNewIncCatColor, CATEGORY_COLOR_THEMES, 'selectedNewIncCatColor=this.value')}
-        `;
-      }
-    }
-
-    // Render Settings Accounts (Compact Horizontal Row with Color Dropdown)
-    function renderSettingsAccounts() { 
-      document.getElementById('accounts-settings-list').innerHTML = accountsList.map(a => `
-        <div class="flex justify-between items-center p-1.5 border rounded-xl text-xs bg-gray-50 space-x-1">
-          <div class="flex items-center space-x-1 flex-1">
-            <button onclick="toggleAccountPin('${a.id}', ${!a.isPinned})" class="px-1.5 py-0.5 rounded text-[9px] font-bold ${a.isPinned ? 'bg-amber-100 text-amber-800 border border-amber-200' : 'bg-gray-200 text-gray-600'}">${a.isPinned ? 'ปักหมุด' : 'ซ่อน'}</button>
-            <select onchange="updateAccountIcon('${a.id}', this.value)" class="px-1 py-0.5 text-[11px] border rounded bg-white">
-              <option value="-" ${a.icon==='-'?'selected':''}>-</option>
-              <option value="💵" ${a.icon==='💵'?'selected':''}>💵</option>
-              <option value="🏛️" ${a.icon==='🏛️'?'selected':''}>🏛️</option>
-              <option value="💳" ${a.icon==='💳'?'selected':''}>💳</option>
-              <option value="📱" ${a.icon==='📱'?'selected':''}>📱</option>
-              <option value="💰" ${a.icon==='💰'?'selected':''}>💰</option>
-              <option value="📈" ${a.icon==='📈'?'selected':''}>📈</option>
-            </select>
-            <input id="edit-acc-name-${a.id}" value="${escapeHtml(a.name)}" class="w-20 px-1.5 py-0.5 border rounded bg-white text-xs font-semibold">
+      container.innerHTML = accountsList.map(a => {
+        const theme = ACCOUNT_COLOR_THEMES[a.colorTheme] || ACCOUNT_COLOR_THEMES.card;
+        const iconDisp = (a.icon && a.icon !== '-') ? `${a.icon} ` : '';
+        return `
+          <div id="acc-item-${a.id}" class="relative overflow-hidden rounded-2xl bg-rose-600 shadow-2xs">
+            <div class="absolute inset-y-0 right-0 w-16 bg-blue-600 flex items-center justify-center">
+              <button type="button" onclick="openEditAccountModal('${a.id}')" class="w-full h-full text-white text-xs font-bold flex flex-col items-center justify-center space-y-0.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                <span>แก้ไข</span>
+              </button>
+            </div>
+            <div class="swipe-item-content relative bg-white p-3 border rounded-2xl flex justify-between items-center z-10 cursor-pointer">
+              <div class="flex items-center space-x-2">
+                <button type="button" onclick="toggleAccountPin('${a.id}', ${!a.isPinned})" class="px-2 py-0.5 rounded-lg text-[9px] font-bold transition ${a.isPinned ? 'bg-amber-100 text-amber-800 border border-amber-200' : 'bg-gray-100 text-gray-400'}">${a.isPinned ? 'ปักหมุด' : 'ซ่อน'}</button>
+                <span class="text-sm">${iconDisp}</span>
+                <span class="text-xs font-bold text-gray-800">${escapeHtml(a.name)}</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="text-xs font-black text-gray-700">${userSettings.currency}${(a.balance || 0).toLocaleString()}</span>
+                <span class="w-2.5 h-2.5 rounded-full ${theme.bgClass}"></span>
+              </div>
+            </div>
           </div>
-          <div class="flex items-center space-x-1">
-            ${buildColorDropdownHTML(a.colorTheme || 'card', ACCOUNT_COLOR_THEMES, `updateAccountColorTheme('${a.id}', this.value)`)}
-            <input type="text" id="edit-acc-${a.id}" readonly onclick="openCustomKeypad('edit-acc-${a.id}')" value="${a.initialBalance || 0}" class="w-12 px-1 py-0.5 border rounded bg-white cursor-pointer text-right font-bold">
-            <button onclick="updateAccountDetails('${a.id}')" class="bg-blue-600 text-white px-1.5 py-0.5 rounded font-bold">✓</button>
-            ${!a.isDefault ? `<button onclick="deleteAccount('${a.id}')" class="text-rose-500 font-bold px-1">✕</button>` : ''}
-          </div>
-        </div>
-      `).join(''); 
+        `;
+      }).join('');
+
+      accountsList.forEach(a => attachSwipeGesture(`acc-item-${a.id}`));
     }
 
-    // Render Settings Categories (Compact Horizontal Row with Color Dropdown)
-    function renderSettingsCategories() { 
+    function renderSettingsCategories() {
       ['expense', 'income'].forEach(type => {
-        document.getElementById(`${type}-cats-list`).innerHTML = categoriesList.filter(c => c.type === type).map(c => `
-          <div class="flex justify-between items-center p-1.5 border rounded-xl text-xs bg-gray-50 space-x-1">
-            <div class="flex items-center space-x-1 flex-1">
-              <select onchange="updateCategoryIcon('${c.id}', this.value)" class="px-1 py-0.5 text-[11px] border rounded bg-white">
-                <option value="-" ${c.icon==='-'||!c.icon?'selected':''}>-</option>
-                <option value="🍔" ${c.icon==='🍔'?'selected':''}>🍔</option>
-                <option value="☕" ${c.icon==='☕'?'selected':''}>☕</option>
-                <option value="🚗" ${c.icon==='🚗'?'selected':''}>🚗</option>
-                <option value="🏠" ${c.icon==='🏠'?'selected':''}>🏠</option>
-                <option value="🛒" ${c.icon==='🛒'?'selected':''}>🛒</option>
-                <option value="🎬" ${c.icon==='🎬'?'selected':''}>🎬</option>
-                <option value="💡" ${c.icon==='💡'?'selected':''}>💡</option>
-                <option value="💰" ${c.icon==='💰'?'selected':''}>💰</option>
-                <option value="💵" ${c.icon==='💵'?'selected':''}>💵</option>
-                <option value="📈" ${c.icon==='📈'?'selected':''}>📈</option>
-                <option value="🎁" ${c.icon==='🎁'?'selected':''}>🎁</option>
-                <option value="💼" ${c.icon==='💼'?'selected':''}>💼</option>
-              </select>
-              <input id="edit-cat-${c.id}" value="${escapeHtml(c.name)}" class="flex-1 min-w-[70px] px-1.5 py-0.5 border rounded bg-white text-xs font-semibold">
+        const container = document.getElementById(`${type}-cats-list`);
+        if (!container) return;
+
+        const filtered = categoriesList.filter(c => c.type === type);
+        container.innerHTML = filtered.map(c => {
+          const theme = CATEGORY_COLOR_THEMES[c.colorTheme] || (type==='expense'?CATEGORY_COLOR_THEMES.rose:CATEGORY_COLOR_THEMES.emerald);
+          const iconDisp = (c.icon && c.icon !== '-') ? `${c.icon} ` : '';
+          return `
+            <div id="cat-item-${c.id}" class="relative overflow-hidden rounded-2xl bg-rose-600 shadow-2xs">
+              <div class="absolute inset-y-0 right-0 w-16 bg-blue-600 flex items-center justify-center">
+                <button type="button" onclick="openEditCategoryModal('${c.id}')" class="w-full h-full text-white text-xs font-bold flex flex-col items-center justify-center space-y-0.5">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                  <span>แก้ไข</span>
+                </button>
+              </div>
+              <div class="swipe-item-content relative bg-white p-3 border rounded-2xl flex justify-between items-center z-10 cursor-pointer">
+                <div class="flex items-center space-x-2">
+                  <span class="text-sm">${iconDisp}</span>
+                  <span class="text-xs font-bold text-gray-800">${escapeHtml(c.name)}</span>
+                </div>
+                <span class="w-2.5 h-2.5 rounded-full ${theme.bgClass}"></span>
+              </div>
             </div>
-            <div class="flex items-center space-x-1">
-              ${buildColorDropdownHTML(c.colorTheme || (type==='expense'?'rose':'emerald'), CATEGORY_COLOR_THEMES, `updateCategoryColorTheme('${c.id}', this.value)`)}
-              <button onclick="updateCategoryDetails('${c.id}')" class="bg-blue-600 text-white px-1.5 py-0.5 rounded font-bold">✓</button>
-              <button onclick="deleteCategory('${c.id}')" class="text-rose-500 font-bold px-1">✕</button>
-            </div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
+
+        filtered.forEach(c => attachSwipeGesture(`cat-item-${c.id}`));
       });
     }
 
-    async function toggleAccountPin(id, isPinned) { try { await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).update({ isPinned: isPinned }); } catch (err) { alert(err.message); } }
-    
-    async function updateAccountIcon(id, newIcon) { try { await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).update({ icon: newIcon }); triggerSuccessToast(); } catch (err) { alert(err.message); } }
-    async function updateAccountColorTheme(id, newColorKey) { try { await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).update({ colorTheme: newColorKey }); triggerSuccessToast(); } catch (err) { alert(err.message); } }
-    
-    async function updateCategoryIcon(id, newIcon) { try { await db.collection('users').doc(currentUser.uid).collection('categories').doc(id).update({ icon: newIcon }); triggerSuccessToast(); } catch (err) { alert(err.message); } }
-    async function updateCategoryColorTheme(id, newColorKey) { try { await db.collection('users').doc(currentUser.uid).collection('categories').doc(id).update({ colorTheme: newColorKey }); triggerSuccessToast(); } catch (err) { alert(err.message); } }
-
-    async function addNewAccount() { 
-      const n=document.getElementById('new-acc-name').value.trim(), b=parseFloat(document.getElementById('new-acc-balance').value)||0;
-      const ic=document.getElementById('new-acc-icon').value, col=selectedNewAccColor || 'card';
-      if(!n)return alert("ระบุชื่อบัญชี"); 
-      await db.collection('users').doc(currentUser.uid).collection('accounts').add({name:n, icon:ic, colorTheme:col, initialBalance:b, isDefault:false, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp()}); 
-      document.getElementById('new-acc-name').value=''; document.getElementById('new-acc-balance').value=''; 
-      triggerSuccessToast();
-    }
-
-    async function updateAccountDetails(id) { 
-      const newName = document.getElementById(`edit-acc-name-${id}`).value.trim(); 
-      const newInit = parseFloat(document.getElementById(`edit-acc-${id}`).value) || 0;
-      if (!newName) return alert("กรุณาระบุชื่อบัญชี"); 
-      try { 
-        await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).update({ name: newName, initialBalance: newInit }); 
-        triggerSuccessToast(); 
-      } catch (err) { alert(err.message); } 
-    }
-
-    async function deleteAccount(id) { if(confirm('ลบ?')) await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).delete(); }
-    
-    async function addNewCategory(t) { 
-      const nameInputId = t==='expense'?'new-exp-cat-name':'new-inc-cat-name';
-      const iconSelectId = t==='expense'?'new-exp-cat-icon':'new-inc-cat-icon';
-      const n = document.getElementById(nameInputId).value.trim(); 
-      const ic = document.getElementById(iconSelectId).value;
-      const colorTheme = t==='expense'?selectedNewExpCatColor:selectedNewIncCatColor;
-      if(!n) return alert("กรุณาระบุชื่อหมวดหมู่"); 
+    // --- ACCOUNT POP-UP MODAL LOGIC ---
+    function openNewAccountModal() {
+      document.getElementById('account-modal-title').innerText = 'เพิ่มบัญชีใหม่';
+      document.getElementById('modal-acc-id').value = '';
+      document.getElementById('modal-acc-name').value = '';
+      document.getElementById('modal-acc-icon').value = '-';
+      document.getElementById('modal-acc-balance').value = '0';
+      document.getElementById('modal-acc-delete-container').classList.add('hidden');
       
-      await db.collection('users').doc(currentUser.uid).collection('categories').add({ name:n, type:t, icon:ic, colorTheme:colorTheme, createdAt: firebase.firestore.FieldValue.serverTimestamp() }); 
-      document.getElementById(nameInputId).value=''; 
-      triggerSuccessToast();
+      populateColorSelect('modal-acc-color', ACCOUNT_COLOR_THEMES, 'card');
+      document.getElementById('account-edit-modal').classList.remove('hidden');
     }
 
-    async function updateCategoryDetails(id) { 
-      const newName = document.getElementById(`edit-cat-${id}`).value.trim();
-      if (!newName) return alert("กรุณาระบุชื่อหมวดหมู่");
+    function openEditAccountModal(id) {
+      const acc = accountsList.find(a => a.id === id);
+      if (!acc) return;
+
+      document.getElementById('account-modal-title').innerText = 'แก้ไขบัญชี';
+      document.getElementById('modal-acc-id').value = id;
+      document.getElementById('modal-acc-name').value = acc.name || '';
+      document.getElementById('modal-acc-icon').value = acc.icon || '-';
+      document.getElementById('modal-acc-balance').value = acc.initialBalance || 0;
+      
+      const delContainer = document.getElementById('modal-acc-delete-container');
+      if (acc.isDefault) delContainer.classList.add('hidden');
+      else delContainer.classList.remove('hidden');
+
+      populateColorSelect('modal-acc-color', ACCOUNT_COLOR_THEMES, acc.colorTheme || 'card');
+      document.getElementById('account-edit-modal').classList.remove('hidden');
+    }
+
+    function closeAccountModal() { document.getElementById('account-edit-modal').classList.add('hidden'); }
+
+    document.getElementById('account-modal-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('modal-acc-id').value;
+      const name = document.getElementById('modal-acc-name').value.trim();
+      const icon = document.getElementById('modal-acc-icon').value;
+      const color = document.getElementById('modal-acc-color').value;
+      const initBal = parseFloat(document.getElementById('modal-acc-balance').value) || 0;
+
+      if (!name) return alert("กรุณาระบุชื่อบัญชี");
+
       try {
-        await db.collection('users').doc(currentUser.uid).collection('categories').doc(id).update({ name: newName });
+        if (id) {
+          await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).update({
+            name: name, icon: icon, colorTheme: color, initialBalance: initBal
+          });
+        } else {
+          await db.collection('users').doc(currentUser.uid).collection('accounts').add({
+            name: name, icon: icon, colorTheme: color, initialBalance: initBal, isDefault: false, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        }
         triggerSuccessToast();
+        closeAccountModal();
       } catch (err) { alert(err.message); }
+    });
+
+    async function confirmDeleteAccountFromModal() {
+      const id = document.getElementById('modal-acc-id').value;
+      if (!id) return;
+      const acc = accountsList.find(a => a.id === id);
+      if (acc?.isDefault) return alert("ไม่สามารถลบบัญชีหลักของระบบได้");
+
+      if (confirm(`คุณแน่ใจหรือว่าต้องการลบบัญชี "${acc?.name}" ?`)) {
+        try {
+          await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).delete();
+          triggerSuccessToast();
+          closeAccountModal();
+        } catch (err) { alert(err.message); }
+      }
     }
 
-    async function deleteCategory(id) { if(confirm('ลบ?')) await db.collection('users').doc(currentUser.uid).collection('categories').doc(id).delete(); }
+    // --- CATEGORY POP-UP MODAL LOGIC ---
+    function openNewCategoryModal(type) {
+      document.getElementById('category-modal-title').innerText = `เพิ่มหมวดหมู่${type==='expense'?'รายจ่าย':'รายรับ'}`;
+      document.getElementById('modal-cat-id').value = '';
+      document.getElementById('modal-cat-type').value = type;
+      document.getElementById('modal-cat-name').value = '';
+      document.getElementById('modal-cat-icon').value = '-';
+      document.getElementById('modal-cat-delete-container').classList.add('hidden');
+
+      populateColorSelect('modal-cat-color', CATEGORY_COLOR_THEMES, type==='expense'?'rose':'emerald');
+      document.getElementById('category-edit-modal').classList.remove('hidden');
+    }
+
+    function openEditCategoryModal(id) {
+      const cat = categoriesList.find(c => c.id === id);
+      if (!cat) return;
+
+      document.getElementById('category-modal-title').innerText = 'แก้ไขหมวดหมู่';
+      document.getElementById('modal-cat-id').value = id;
+      document.getElementById('modal-cat-type').value = cat.type;
+      document.getElementById('modal-cat-name').value = cat.name || '';
+      document.getElementById('modal-cat-icon').value = cat.icon || '-';
+      document.getElementById('modal-cat-delete-container').classList.remove('hidden');
+
+      populateColorSelect('modal-cat-color', CATEGORY_COLOR_THEMES, cat.colorTheme || (cat.type==='expense'?'rose':'emerald'));
+      document.getElementById('category-edit-modal').classList.remove('hidden');
+    }
+
+    function closeCategoryModal() { document.getElementById('category-edit-modal').classList.add('hidden'); }
+
+    document.getElementById('category-modal-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('modal-cat-id').value;
+      const type = document.getElementById('modal-cat-type').value;
+      const name = document.getElementById('modal-cat-name').value.trim();
+      const icon = document.getElementById('modal-cat-icon').value;
+      const color = document.getElementById('modal-cat-color').value;
+
+      if (!name) return alert("กรุณาระบุชื่อหมวดหมู่");
+
+      try {
+        if (id) {
+          await db.collection('users').doc(currentUser.uid).collection('categories').doc(id).update({
+            name: name, icon: icon, colorTheme: color
+          });
+        } else {
+          await db.collection('users').doc(currentUser.uid).collection('categories').add({
+            name: name, type: type, icon: icon, colorTheme: color, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        }
+        triggerSuccessToast();
+        closeCategoryModal();
+      } catch (err) { alert(err.message); }
+    });
+
+    async function confirmDeleteCategoryFromModal() {
+      const id = document.getElementById('modal-cat-id').value;
+      if (!id) return;
+      const cat = categoriesList.find(c => c.id === id);
+
+      if (confirm(`คุณแน่ใจหรือว่าต้องการลบหมวดหมู่ "${cat?.name}" ?`)) {
+        try {
+          await db.collection('users').doc(currentUser.uid).collection('categories').doc(id).delete();
+          triggerSuccessToast();
+          closeCategoryModal();
+        } catch (err) { alert(err.message); }
+      }
+    }
+
+    function populateColorSelect(selectId, themeMap, selectedValue) {
+      const select = document.getElementById(selectId);
+      select.innerHTML = Object.keys(themeMap).map(key => `
+        <option value="${key}" ${key === selectedValue ? 'selected' : ''}>
+          ${themeMap[key].name}
+        </option>
+      `).join('');
+    }
+
+    async function toggleAccountPin(id, isPinned) { try { await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).update({ isPinned: isPinned }); } catch (err) { alert(err.message); } }
     async function autoSaveSettings() { userSettings.currency = document.getElementById('setting-currency').value; updateCurrencyUI(); await db.collection('users').doc(currentUser.uid).collection('settings').doc('config').set({currency: userSettings.currency}); }
     function escapeHtml(text) { return text ? text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : ''; }
   </script>

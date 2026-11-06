@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>จดตังค์ BETA (v1.24) - Visual Account System</title>
+  <title>จดตังค์ BETA (v1.26) - Preset Notes System</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -39,7 +39,7 @@
       <div class="flex flex-col items-center">
         <div class="flex items-baseline space-x-1">
           <h1 class="text-xl font-black tracking-wider uppercase drop-shadow-sm">จดตังค์ BETA</h1>
-          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.24)</span>
+          <span class="text-[9px] font-medium text-emerald-200 tracking-tight">(v1.26)</span>
         </div>
         <p class="text-[8px] text-emerald-100/80 tracking-tight font-light">by Phuthai Mananararuk & Gemini</p>
       </div>
@@ -110,7 +110,13 @@
               <div><label class="block text-[11px] text-gray-500 mb-1">จำนวนเงิน (<span class="currency-symbol">฿</span>)</label><input type="text" id="tx-amount" readonly onclick="openCustomKeypad('tx-amount')" placeholder="0.00" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer"></div>
               <div><label class="block text-[11px] text-gray-500 mb-1">วันที่</label><input type="date" id="tx-date" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
             </div>
-            <div><label class="block text-[11px] text-gray-500 mb-1">บันทึกช่วยจำ (ไม่บังคับ)</label><input type="text" id="tx-note" placeholder="เช่น ค่าอาหาร, ซื้อของ" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
+            
+            <div>
+              <label class="block text-[11px] text-gray-500 mb-1">บันทึกช่วยจำ (ไม่บังคับ)</label>
+              <!-- Text-only Subtle Preset Hints (ไม่มีกรอบ) -->
+              <div class="entry-preset-notes-container flex flex-wrap gap-x-2 gap-y-0.5 mb-1 text-[11px]"></div>
+              <input type="text" id="tx-note" placeholder="เช่น ค่าอาหาร, ซื้อของ" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white">
+            </div>
             <button type="submit" id="btn-submit-tx-form" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-xl text-xs shadow-xs transition mt-1">+ บันทึกรายการ</button>
           </form>
 
@@ -124,7 +130,11 @@
               <div><label class="block text-[11px] text-gray-500 mb-1">จำนวนเงิน (<span class="currency-symbol">฿</span>)</label><input type="text" id="tr-amount" readonly onclick="openCustomKeypad('tr-amount')" placeholder="0.00" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer"></div>
               <div><label class="block text-[11px] text-gray-500 mb-1">วันที่</label><input type="date" id="tr-date" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
             </div>
-            <div><label class="block text-[11px] text-gray-500 mb-1">บันทึกช่วยจำ</label><input type="text" id="tr-note" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
+            <div>
+              <label class="block text-[11px] text-gray-500 mb-1">บันทึกช่วยจำ</label>
+              <div class="entry-preset-notes-container flex flex-wrap gap-x-2 gap-y-0.5 mb-1 text-[11px]"></div>
+              <input type="text" id="tr-note" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white">
+            </div>
             <button type="submit" id="btn-submit-transfer-form" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-xl text-xs shadow-xs transition">บันทึกการโอนเงิน</button>
           </form>
 
@@ -137,7 +147,11 @@
               <div><label class="block text-[11px] text-gray-600 mb-1">วันที่</label><input type="date" id="settle-date" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
             </div>
             <div><label class="block text-[11px] text-gray-600 mb-1">รายการที่รอคืน (ติ๊กเลือก)</label><div id="pending-items-container" class="space-y-1 max-h-32 overflow-y-auto pr-1 border bg-white p-2 rounded-xl"></div></div>
-            <div><label class="block text-[11px] text-gray-600 mb-1">บันทึกช่วยจำ</label><input type="text" id="settle-note" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
+            <div>
+              <label class="block text-[11px] text-gray-600 mb-1">บันทึกช่วยจำ</label>
+              <div class="entry-preset-notes-container flex flex-wrap gap-x-2 gap-y-0.5 mb-1 text-[11px]"></div>
+              <input type="text" id="settle-note" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white">
+            </div>
             <button type="submit" id="btn-submit-settle-form" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-2 rounded-xl text-xs shadow-xs transition">ยืนยันรับเงินคืน</button>
           </form>
 
@@ -154,7 +168,11 @@
               <div><label class="block text-[11px] text-purple-900 mb-1">หมวดหมู่รายรับเรา</label><div id="split-category-buttons"></div></div>
               <div><label class="block text-[11px] text-purple-900 mb-1">วันที่</label><input type="date" id="split-date" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
             </div>
-            <div><label class="block text-[11px] text-purple-900 mb-1">บันทึกช่วยจำ</label><input type="text" id="split-note" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
+            <div>
+              <label class="block text-[11px] text-purple-900 mb-1">บันทึกช่วยจำ</label>
+              <div class="entry-preset-notes-container flex flex-wrap gap-x-2 gap-y-0.5 mb-1 text-[11px]"></div>
+              <input type="text" id="split-note" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white">
+            </div>
             <button type="submit" id="btn-submit-split-form" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 rounded-xl text-xs shadow-xs transition">บันทึกรับเงินแทน</button>
           </form>
 
@@ -165,17 +183,22 @@
             <div><label class="block text-[11px] text-indigo-900 mb-1">เลือกหมวดหมู่รายจ่าย</label><div id="inst-category-buttons"></div></div>
             <div class="grid grid-cols-2 gap-2">
               <div><label class="block text-[11px] text-indigo-900 mb-1">ยอดรวมเต็ม (<span class="currency-symbol">฿</span>)</label><input type="text" id="inst-total-amount" readonly onclick="openCustomKeypad('inst-total-amount')" required oninput="updateDedicatedInstMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white cursor-pointer"></div>
-              <div><label class="block text-[11px] text-indigo-900 mb-1">จำนวนงวดทั้งหมด</label><input type="number" id="inst-count" min="2" max="120" value="3" required oninput="updateDedicatedInstMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
+              <div><label class="block text-[11px] text-indigo-900 mb-1">จำนวนงวดทั้งหมด</label><input type="number" id="inst-count" min="2" max="120" value="10" required oninput="updateDedicatedInstMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
             </div>
             <div class="grid grid-cols-2 gap-2">
+              <div><label class="block text-[11px] text-indigo-900 mb-1">เริ่มบันทึกที่งวดที่</label><input type="number" id="inst-start-count" min="1" max="120" value="1" required oninput="updateDedicatedInstMath()" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
               <div><label class="block text-[11px] text-indigo-900 mb-1">ตัดเงินทุกวันที่</label><input type="number" id="inst-day" min="1" max="31" value="1" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
-              <div><label class="block text-[11px] text-indigo-900 mb-1">วันที่เริ่มสัญญา</label><input type="date" id="inst-date" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
             </div>
+            <div><label class="block text-[11px] text-indigo-900 mb-1">วันที่เริ่มสัญญา</label><input type="date" id="inst-date" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
             <div class="bg-white p-2 rounded-xl border border-indigo-200 text-[10px] space-y-0.5 text-indigo-800">
-              <div class="flex justify-between font-medium"><span>งวดทั่วไป (1 - <span id="lbl-ded-inst-cnt">2</span>):</span><b id="lbl-ded-inst-norm">฿0.00</b></div>
+              <div class="flex justify-between font-medium"><span>งวดทั่วไป (1 - <span id="lbl-ded-inst-cnt">9</span>):</span><b id="lbl-ded-inst-norm">฿0.00</b></div>
               <div class="flex justify-between font-medium text-indigo-950"><span>งวดสุดท้าย:</span><b id="lbl-ded-inst-final">฿0.00</b></div>
             </div>
-            <div><label class="block text-[11px] text-indigo-900 mb-1">ชื่อสัญญา / บันทึกช่วยจำ</label><input type="text" id="inst-note" placeholder="เช่น ผ่อนโทรศัพท์" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
+            <div>
+              <label class="block text-[11px] text-indigo-900 mb-1">ชื่อสัญญา / บันทึกช่วยจำ</label>
+              <div class="entry-preset-notes-container flex flex-wrap gap-x-2 gap-y-0.5 mb-1 text-[11px]"></div>
+              <input type="text" id="inst-note" placeholder="เช่น ผ่อนโทรศัพท์" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white">
+            </div>
             <button type="submit" id="btn-submit-installment-form" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded-xl text-xs shadow-xs transition">สร้างสัญญาผ่อนชำระ</button>
           </form>
 
@@ -190,7 +213,11 @@
             </div>
             <div class="bg-white p-2 rounded-xl border border-amber-200 flex justify-between items-center text-xs"><span class="text-amber-800">ส่วนของเพื่อน (รอคืน):</span><b id="lbl-ded-reimb-friend" class="text-amber-950 text-sm">฿0.00</b></div>
             <div><label class="block text-[11px] text-amber-900 mb-1">วันที่</label><input type="date" id="reimb-date" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
-            <div><label class="block text-[11px] text-amber-900 mb-1">บันทึกช่วยจำ</label><input type="text" id="reimb-note" placeholder="เช่น ค่าอาหารมื้อเย็นสำรองจ่ายไปก่อน" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
+            <div>
+              <label class="block text-[11px] text-amber-900 mb-1">บันทึกช่วยจำ</label>
+              <div class="entry-preset-notes-container flex flex-wrap gap-x-2 gap-y-0.5 mb-1 text-[11px]"></div>
+              <input type="text" id="reimb-note" placeholder="เช่น ค่าอาหารมื้อเย็นสำรองจ่ายไปก่อน" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white">
+            </div>
             <button type="submit" id="btn-submit-reimburse-form" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-2 rounded-xl text-xs shadow-xs transition">บันทึกสำรองจ่าย</button>
           </form>
 
@@ -203,7 +230,11 @@
               <div><label class="block text-[11px] text-teal-900 mb-1">วันที่</label><input type="date" id="team-pay-date" required class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
             </div>
             <div><label class="block text-[11px] text-teal-900 mb-1">รายการค้างจ่ายทีมงาน (ติ๊กเลือก)</label><div id="pending-team-items-container" class="space-y-1 max-h-32 overflow-y-auto pr-1 border bg-white p-2 rounded-xl"></div></div>
-            <div><label class="block text-[11px] text-teal-900 mb-1">บันทึกช่วยจำ</label><input type="text" id="team-pay-note" placeholder="เช่น โอนจ่ายค่าตัดต่อโปรเจกต์คุณบี" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white"></div>
+            <div>
+              <label class="block text-[11px] text-teal-900 mb-1">บันทึกช่วยจำ</label>
+              <div class="entry-preset-notes-container flex flex-wrap gap-x-2 gap-y-0.5 mb-1 text-[11px]"></div>
+              <input type="text" id="team-pay-note" placeholder="เช่น โอนจ่ายค่าตัดต่อโปรเจกต์คุณบี" class="w-full px-2 py-1.5 text-xs border rounded-xl bg-white">
+            </div>
             <button type="submit" id="btn-submit-team-pay-form" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 rounded-xl text-xs shadow-xs transition">ยืนยันการโอนให้ทีม</button>
           </form>
         </div>
@@ -275,7 +306,7 @@
       <!-- 4. SETTING VIEW -->
       <section id="setting-view" class="hidden space-y-4 max-h-[620px] overflow-y-auto pr-1">
         <div class="border-b pb-2"><h2 class="text-xs font-bold text-gray-700 uppercase">Setting - ตั้งค่าระบบ</h2></div>
-        <div class="space-y-1"><label class="block text-xs font-bold text-gray-700">สกุลเงินทั่วแอป</label><select id="setting-currency" onchange="autoSaveSettings()" class="w-full px-3 py-2 text-xs border rounded-xl bg-white"><option value="฿">บาท (฿)</option><option value="$">ดอลลาร์ ($)</option><option value="€">เยน (€)</option><option value="¥">เยน (¥)</option></select></div>
+        <div class="space-y-1"><label class="block text-xs font-bold text-gray-700">สกุลเงินทั่วแอป</label><select id="setting-currency" onchange="autoSaveSettings()" class="w-full px-3 py-2 text-xs border rounded-xl bg-white"><option value="฿">บาท (฿)</option><option value="$">ดอลลาร์ ($)</option><option value="€">ยูโร (€)</option><option value="¥">เยน (¥)</option></select></div>
         
         <div class="space-y-2 border-t pt-3">
           <div class="flex justify-between items-center">
@@ -315,10 +346,60 @@
         </div>
 
         <div class="space-y-2 border-t pt-3">
-          <h3 class="text-xs font-bold text-gray-700 uppercase">จัดการหมวดหมู่</h3>
-          <div class="grid grid-cols-2 gap-2">
-            <div class="space-y-1.5"><p class="text-[11px] font-semibold text-rose-600">รายจ่าย</p><div id="expense-cats-list" class="space-y-1"></div><div class="flex space-x-1"><input type="text" id="new-exp-cat-name" class="w-full px-1.5 py-1 text-xs border rounded bg-white"><button onclick="addNewCategory('expense')" class="bg-rose-600 text-white px-2 py-1 rounded text-xs">+</button></div></div>
-            <div class="space-y-1.5"><p class="text-[11px] font-semibold text-emerald-600">รายรับ</p><div id="income-cats-list" class="space-y-1"></div><div class="flex space-x-1"><input type="text" id="new-inc-cat-name" class="w-full px-1.5 py-1 text-xs border rounded bg-white"><button onclick="addNewCategory('income')" class="bg-emerald-600 text-white px-2 py-1 rounded text-xs">+</button></div></div>
+          <h3 class="text-xs font-bold text-gray-700 uppercase">จัดการหมวดหมู่ (สีป้าย)</h3>
+          <div class="grid grid-cols-1 gap-3">
+            <div class="space-y-1.5">
+              <p class="text-[11px] font-semibold text-rose-600">หมวดหมู่รายจ่าย</p>
+              <div id="expense-cats-list" class="space-y-1.5"></div>
+              <div class="flex space-x-1 pt-1">
+                <input type="text" id="new-exp-cat-name" placeholder="ชื่อหมวดหมู่ใหม่" class="flex-1 px-2 py-1 text-xs border rounded bg-white">
+                <select id="new-exp-cat-color" class="px-1 py-1 text-xs border rounded bg-white">
+                  <option value="rose">ชมพู/แดง</option>
+                  <option value="orange">ส้ม</option>
+                  <option value="amber">เหลืองทอง</option>
+                  <option value="emerald">เขียว</option>
+                  <option value="sky">ฟ้า</option>
+                  <option value="indigo">น้ำเงิน</option>
+                  <option value="purple">ม่วง</option>
+                  <option value="slate">เทา</option>
+                </select>
+                <button onclick="addNewCategory('expense')" class="bg-rose-600 text-white px-2.5 py-1 rounded text-xs font-bold">+</button>
+              </div>
+            </div>
+            
+            <div class="space-y-1.5 border-t pt-2">
+              <p class="text-[11px] font-semibold text-emerald-600">หมวดหมู่รายรับ</p>
+              <div id="income-cats-list" class="space-y-1.5"></div>
+              <div class="flex space-x-1 pt-1">
+                <input type="text" id="new-inc-cat-name" placeholder="ชื่อหมวดหมู่ใหม่" class="flex-1 px-2 py-1 text-xs border rounded bg-white">
+                <select id="new-inc-cat-color" class="px-1 py-1 text-xs border rounded bg-white">
+                  <option value="emerald">เขียว</option>
+                  <option value="sky">ฟ้า</option>
+                  <option value="indigo">น้ำเงิน</option>
+                  <option value="purple">ม่วง</option>
+                  <option value="amber">เหลืองทอง</option>
+                  <option value="orange">ส้ม</option>
+                  <option value="rose">ชมพู/แดง</option>
+                  <option value="slate">เทา</option>
+                </select>
+                <button onclick="addNewCategory('income')" class="bg-emerald-600 text-white px-2.5 py-1 rounded text-xs font-bold">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section จัดการบันทึกช่วยจำ (Preset Notes) -->
+        <div class="space-y-2 border-t pt-3">
+          <div class="flex justify-between items-center">
+            <h3 class="text-xs font-bold text-gray-700 uppercase">จัดการบันทึกช่วยจำด่วน (Preset Notes)</h3>
+            <span class="text-[9px] text-gray-400 font-light">*คำช่วยพิมพ์ในหน้าบันทึก</span>
+          </div>
+          
+          <div id="preset-notes-list" class="flex flex-wrap gap-1.5 min-h-[32px] p-2.5 bg-gray-50 border rounded-2xl"></div>
+          
+          <div class="flex space-x-1 pt-1">
+            <input type="text" id="new-preset-note-input" placeholder="เพิ่มคำด่วน เช่น ข้าวมันไก่, กาแฟ" class="flex-1 px-2.5 py-1.5 text-xs border rounded-xl bg-white">
+            <button type="button" onclick="addNewPresetNote()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-xs">+ เพิ่ม</button>
           </div>
         </div>
       </section>
@@ -492,9 +573,9 @@
     const auth = firebase.auth(), db = firebase.firestore();
     db.enablePersistence().catch(err => console.warn(err.code));
 
-    let currentUser = null, unsubscribeTx = null, unsubscribeAcc = null, unsubscribeCat = null, unsubscribeInst = null;
+    let currentUser = null, unsubscribeTx = null, unsubscribeAcc = null, unsubscribeCat = null, unsubscribeInst = null, unsubscribePresetNotes = null;
     let userSettings = { currency: '฿' };
-    let accountsList = [], categoriesList = [], allTransactions = [], activeInstallmentPlans = [];
+    let accountsList = [], categoriesList = [], allTransactions = [], activeInstallmentPlans = [], presetNotesList = [];
     
     let editingTxId = null;
 
@@ -508,7 +589,7 @@
     let activeKeypadFieldId = null, pendingMultiCatTxPayload = null;
     let balanceChartInstance = null, incomePieInstance = null, expensePieInstance = null;
 
-    // Account Color Theme Classes Mapping
+    // Account Color Theme Mapping
     const ACCOUNT_COLOR_THEMES = {
       kbank: { active: 'bg-emerald-700 text-white border-emerald-700 ring-2 ring-emerald-300 shadow-md', inactive: 'bg-emerald-50 text-emerald-900 border-emerald-200 hover:bg-emerald-100' },
       scb: { active: 'bg-purple-700 text-white border-purple-700 ring-2 ring-purple-300 shadow-md', inactive: 'bg-purple-50 text-purple-900 border-purple-200 hover:bg-purple-100' },
@@ -518,6 +599,18 @@
       ttb: { active: 'bg-orange-600 text-white border-orange-600 ring-2 ring-orange-300 shadow-md', inactive: 'bg-orange-50 text-orange-950 border-orange-200 hover:bg-orange-100' },
       card: { active: 'bg-slate-900 text-slate-100 border-slate-900 ring-2 ring-slate-400 shadow-md', inactive: 'bg-slate-100 text-slate-800 border-slate-300 hover:bg-slate-200' },
       cash: { active: 'bg-teal-600 text-white border-teal-600 ring-2 ring-teal-300 shadow-md', inactive: 'bg-teal-50 text-teal-900 border-teal-200 hover:bg-teal-100' }
+    };
+
+    // Category Color Theme Mapping
+    const CATEGORY_COLOR_THEMES = {
+      rose: { active: 'bg-rose-600 text-white border-rose-600 shadow-xs', inactive: 'bg-rose-50 text-rose-800 border-rose-200 hover:bg-rose-100', hex: '#f43f5e' },
+      orange: { active: 'bg-orange-500 text-white border-orange-500 shadow-xs', inactive: 'bg-orange-50 text-orange-900 border-orange-200 hover:bg-orange-100', hex: '#f97316' },
+      amber: { active: 'bg-amber-500 text-amber-950 border-amber-500 shadow-xs font-bold', inactive: 'bg-amber-50 text-amber-900 border-amber-200 hover:bg-amber-100', hex: '#f59e0b' },
+      emerald: { active: 'bg-emerald-600 text-white border-emerald-600 shadow-xs', inactive: 'bg-emerald-50 text-emerald-900 border-emerald-200 hover:bg-emerald-100', hex: '#10b981' },
+      sky: { active: 'bg-sky-500 text-white border-sky-500 shadow-xs', inactive: 'bg-sky-50 text-sky-900 border-sky-200 hover:bg-sky-100', hex: '#06b6d4' },
+      indigo: { active: 'bg-indigo-600 text-white border-indigo-600 shadow-xs', inactive: 'bg-indigo-50 text-indigo-900 border-indigo-200 hover:bg-indigo-100', hex: '#6366f1' },
+      purple: { active: 'bg-purple-600 text-white border-purple-600 shadow-xs', inactive: 'bg-purple-50 text-purple-900 border-purple-200 hover:bg-purple-100', hex: '#8b5cf6' },
+      slate: { active: 'bg-slate-700 text-white border-slate-700 shadow-xs', inactive: 'bg-slate-100 text-slate-800 border-slate-300 hover:bg-slate-200', hex: '#64748b' }
     };
 
     let historyFilterState = {
@@ -601,7 +694,7 @@
       } catch (err) { alert(err.message); }
     });
 
-    logoutBtn.addEventListener('click', async () => { [unsubscribeTx, unsubscribeAcc, unsubscribeCat, unsubscribeInst].forEach(u => u && u()); await auth.signOut(); });
+    logoutBtn.addEventListener('click', async () => { [unsubscribeTx, unsubscribeAcc, unsubscribeCat, unsubscribeInst, unsubscribePresetNotes].forEach(u => u && u()); await auth.signOut(); });
     openSettingsBtn.addEventListener('click', () => goToView('setting'));
     auth.onAuthStateChanged(async user => { 
       if (user && (user.providerData.some(p => p.providerId !== 'password') || user.emailVerified)) { 
@@ -625,8 +718,8 @@
 
         const catSnap = await db.collection('users').doc(uid).collection('categories').limit(1).get();
         if (catSnap.empty) {
-          batch.set(db.collection('users').doc(uid).collection('categories').doc(), { name: 'ทั่วไป', type: 'expense', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-          batch.set(db.collection('users').doc(uid).collection('categories').doc(), { name: 'ทั่วไป', type: 'income', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+          batch.set(db.collection('users').doc(uid).collection('categories').doc(), { name: 'ทั่วไป', type: 'expense', colorTheme: 'rose', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+          batch.set(db.collection('users').doc(uid).collection('categories').doc(), { name: 'ทั่วไป', type: 'income', colorTheme: 'emerald', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
         }
         await batch.commit();
       }
@@ -655,7 +748,7 @@
 
     // Initial Data Fetch
     async function initUserData(uid) {
-      [unsubscribeAcc, unsubscribeCat, unsubscribeTx, unsubscribeInst].forEach(u => u && u());
+      [unsubscribeAcc, unsubscribeCat, unsubscribeTx, unsubscribeInst, unsubscribePresetNotes].forEach(u => u && u());
 
       const now = new Date();
       const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
@@ -700,14 +793,91 @@
       });
 
       unsubscribeCat = db.collection('users').doc(uid).collection('categories').orderBy('createdAt','asc').onSnapshot(snap => { 
-        categoriesList = []; snap.forEach(d => categoriesList.push({ id: d.id, ...d.data() })); 
+        categoriesList = []; snap.forEach(d => categoriesList.push({ id: d.id, colorTheme: d.data().type==='expense'?'rose':'emerald', ...d.data() })); 
         renderCategoryButtons(); renderSplitCategoryButtons(); renderInstCategoryButtons(); renderReimbCategoryButtons(); renderSettingsCategories(); populateHistoryFilterDropdowns();
         if (!views.summary.classList.contains('hidden')) renderSummaryAnalyticsUI();
       });
-      loadTransactionsRealtime(uid); loadInstallmentPlansRealtime(uid); goToView('entry');
+
+      loadPresetNotesRealtime(uid);
+      loadTransactionsRealtime(uid); 
+      loadInstallmentPlansRealtime(uid); 
+      goToView('entry');
     }
 
     function updateCurrencyUI() { document.querySelectorAll('.currency-symbol').forEach(el => el.innerText = userSettings.currency); }
+
+    // Preset Notes Operations (Text-Only Subtle Hints)
+    function loadPresetNotesRealtime(uid) {
+      unsubscribePresetNotes = db.collection('users').doc(uid).collection('settings').doc('preset_notes').onSnapshot(doc => {
+        if (doc.exists) {
+          presetNotesList = doc.data().notes || [];
+        } else {
+          presetNotesList = ['ข้าวมันไก่', 'กาแฟ', 'เติมน้ำมัน', 'ของใช้', 'สำรองจ่าย'];
+          db.collection('users').doc(uid).collection('settings').doc('preset_notes').set({ notes: presetNotesList });
+        }
+        renderSettingsPresetNotes();
+        renderEntryPresetNotes();
+      });
+    }
+
+    function renderSettingsPresetNotes() {
+      const container = document.getElementById('preset-notes-list');
+      if (!presetNotesList.length) {
+        container.innerHTML = `<span class="text-[11px] text-gray-400 italic">ยังไม่มีคำด่วนที่บันทึกไว้</span>`;
+        return;
+      }
+      container.innerHTML = presetNotesList.map((text, idx) => `
+        <span class="inline-flex items-center space-x-1 bg-white border border-gray-300 text-gray-700 px-2 py-1 rounded-lg text-xs shadow-2xs font-medium">
+          <span>${escapeHtml(text)}</span>
+          <button type="button" onclick="deletePresetNote(${idx})" class="text-rose-400 hover:text-rose-600 font-bold ml-1">✕</button>
+        </span>
+      `).join('');
+    }
+
+    async function addNewPresetNote() {
+      const input = document.getElementById('new-preset-note-input');
+      const text = input.value.trim();
+      if (!text) return alert("กรุณากรอกคำที่ต้องการบันทึก");
+      if (presetNotesList.includes(text)) return alert("มีคำนี้อยู่แล้ว");
+
+      presetNotesList.push(text);
+      await db.collection('users').doc(currentUser.uid).collection('settings').doc('preset_notes').set({ notes: presetNotesList });
+      input.value = '';
+      triggerSuccessToast();
+    }
+
+    async function deletePresetNote(idx) {
+      presetNotesList.splice(idx, 1);
+      await db.collection('users').doc(currentUser.uid).collection('settings').doc('preset_notes').set({ notes: presetNotesList });
+    }
+
+    // Render Text-Only Subtle Preset Hints (+คำ)
+    function renderEntryPresetNotes() {
+      const containers = document.querySelectorAll('.entry-preset-notes-container');
+      containers.forEach(container => {
+        if (!presetNotesList.length) {
+          container.innerHTML = '';
+          return;
+        }
+        container.innerHTML = presetNotesList.map(text => `
+          <button type="button" onclick="appendNoteText('${escapeHtml(text)}')" class="text-emerald-700/80 hover:text-emerald-900 font-normal transition hover:scale-105 active:scale-95 inline-block cursor-pointer">
+            +${escapeHtml(text)}
+          </button>
+        `).join('');
+      });
+    }
+
+    function appendNoteText(textToAppend) {
+      const activeNoteInput = document.querySelector('#entry-view form:not(.hidden) input[id$="-note"]');
+      if (!activeNoteInput) return;
+
+      const currentVal = activeNoteInput.value.trim();
+      if (!currentVal) {
+        activeNoteInput.value = textToAppend;
+      } else {
+        activeNoteInput.value = `${currentVal} ${textToAppend}`;
+      }
+    }
 
     // Re-tap Mode Switching
     function handleModeClick(mode) {
@@ -768,12 +938,23 @@
 
     // Math Helpers
     function updateDedicatedInstMath() {
-      const tot = parseFloat(document.getElementById('inst-total-amount').value) || 0, count = parseInt(document.getElementById('inst-count').value) || 1;
-      const normalAmt = Math.floor((tot / count) * 100) / 100, finalAmt = Math.round((tot - (normalAmt * (count - 1))) * 100) / 100;
+      const tot = parseFloat(document.getElementById('inst-total-amount').value) || 0;
+      const count = parseInt(document.getElementById('inst-count').value) || 1;
+      let startCount = parseInt(document.getElementById('inst-start-count').value) || 1;
+
+      if (startCount > count) {
+        startCount = count;
+        document.getElementById('inst-start-count').value = count;
+      }
+
+      const normalAmt = Math.floor((tot / count) * 100) / 100;
+      const finalAmt = Math.round((tot - (normalAmt * (count - 1))) * 100) / 100;
+
       document.getElementById('lbl-ded-inst-cnt').innerText = count > 1 ? (count - 1) : 1;
       document.getElementById('lbl-ded-inst-norm').innerText = `${userSettings.currency}${normalAmt.toLocaleString()}`;
       document.getElementById('lbl-ded-inst-final').innerText = `${userSettings.currency}${finalAmt.toLocaleString()}`;
     }
+
     function updateDedicatedReimbMath() {
       const tot = parseFloat(document.getElementById('reimb-total-amount').value) || 0, my = parseFloat(document.getElementById('reimb-my-share').value) || 0;
       document.getElementById('lbl-ded-reimb-friend').innerText = `${userSettings.currency}${Math.max(0, tot - my).toLocaleString()}`;
@@ -793,11 +974,13 @@
       const container = document.getElementById('multi-cat-select-grid'), expCats = categoriesList.filter(c => c.type === 'expense');
       container.innerHTML = expCats.map(cat => {
         const isSel = selectedCategoryIds.includes(cat.id);
-        return `<button type="button" onclick="toggleCategorySelection('${cat.id}')" class="p-2.5 rounded-2xl text-xs font-semibold border text-center transition flex items-center justify-between ${isSel ? 'bg-rose-600 text-white border-rose-600 shadow-xs' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'}"><span class="truncate">${escapeHtml(cat.name)}</span>${isSel ? '<span class="font-bold">✓</span>' : ''}</button>`;
+        const theme = CATEGORY_COLOR_THEMES[cat.colorTheme] || CATEGORY_COLOR_THEMES.rose;
+        const styleClass = isSel ? theme.active : theme.inactive;
+        return `<button type="button" onclick="toggleCategorySelection('${cat.id}')" class="p-2.5 rounded-2xl text-xs font-semibold border text-center transition flex items-center justify-between ${styleClass}"><span class="truncate">${escapeHtml(cat.name)}</span>${isSel ? '<span class="font-bold">✓</span>' : ''}</button>`;
       }).join('');
     }
 
-    // Visual Account Selector Renderer (Color Coding & Icons System)
+    // Visual Account Selector Renderer
     function renderAccountPinnedSelector(selectedId, setGlobalVarFnName) {
       let pinned = accountsList.filter(i => i.isPinned);
       if (!pinned.length && accountsList.length) pinned = [accountsList[0]];
@@ -852,7 +1035,7 @@
       document.getElementById('team-pay-account-buttons').innerHTML = renderAccountPinnedSelector(selectedTeamPayAccountId, 'selectedTeamPayAccountId');
     }
 
-    // Category Selector Renderer
+    // Dynamic Category Selector Renderer (With Colors)
     function getMostRecentCategories(type) {
       const filteredCats = categoriesList.filter(c => c.type === type), recentIds = [];
       allTransactions.forEach(t => {
@@ -877,7 +1060,10 @@
         let html = `<div class="flex flex-wrap gap-1 items-center">`;
         recentList.forEach(i => {
           const isSelected = selectedCategoryIds.includes(i.id);
-          html += `<button type="button" onclick="selectedCategoryIds=['${i.id}']; renderCategoryButtons();" class="px-2.5 py-1 rounded-xl text-xs font-semibold transition border ${isSelected ? 'bg-rose-600 text-white border-rose-600 shadow-xs' : 'bg-white text-gray-700 border-gray-200'}">${escapeHtml(i.name)}${isSelected && selectedCategoryIds.length > 1 ? ' ✓' : ''}</button>`;
+          const theme = CATEGORY_COLOR_THEMES[i.colorTheme] || CATEGORY_COLOR_THEMES.rose;
+          const styleClass = isSelected ? theme.active : theme.inactive;
+
+          html += `<button type="button" onclick="selectedCategoryIds=['${i.id}']; renderCategoryButtons();" class="px-2.5 py-1 rounded-xl text-xs font-semibold transition border ${styleClass}">${escapeHtml(i.name)}${isSelected && selectedCategoryIds.length > 1 ? ' ✓' : ''}</button>`;
         });
         const nonRecentSelected = c.filter(i => !recentList.some(r => r.id === i.id) && selectedCategoryIds.includes(i.id));
         const extraLabel = nonRecentSelected.length > 0 ? `${nonRecentSelected.map(x=>x.name).join(', ')} ✓` : `+`;
@@ -891,7 +1077,10 @@
         let html = `<div class="flex flex-wrap gap-1 items-center">`;
         recentList.forEach(i => {
           const isSel = i.id === selectedCategoryId;
-          html += `<button type="button" onclick="selectedCategoryId='${i.id}'; renderCategoryButtons();" class="px-2.5 py-1 rounded-xl text-xs font-semibold transition border ${isSel ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs' : 'bg-white text-gray-700 border-gray-200'}">${escapeHtml(i.name)}</button>`;
+          const theme = CATEGORY_COLOR_THEMES[i.colorTheme] || CATEGORY_COLOR_THEMES.emerald;
+          const styleClass = isSel ? theme.active : theme.inactive;
+
+          html += `<button type="button" onclick="selectedCategoryId='${i.id}'; renderCategoryButtons();" class="px-2.5 py-1 rounded-xl text-xs font-semibold transition border ${styleClass}">${escapeHtml(i.name)}</button>`;
         });
         const isNonRecentSelected = !recentList.some(r => r.id === selectedCategoryId);
         const selectedObj = c.find(x => x.id === selectedCategoryId);
@@ -913,17 +1102,23 @@
       container.innerHTML = c.map(item => {
         const isSelected = currentTxType === 'expense' ? selectedCategoryIds.includes(item.id) : item.id === selectedCategoryId;
         const clickFn = currentTxType === 'expense' ? `selectedCategoryIds=['${item.id}']; renderCategoryButtons(); closeSelectorModal();` : `selectedCategoryId='${item.id}'; renderCategoryButtons(); closeSelectorModal();`;
-        const activeStyle = currentTxType === 'expense' ? 'bg-rose-600 text-white border-rose-600 shadow-xs' : 'bg-emerald-600 text-white border-emerald-600 shadow-xs';
-        return `<button type="button" onclick="${clickFn}" class="p-2.5 rounded-2xl text-xs font-semibold border text-center transition flex items-center justify-between ${isSelected ? activeStyle : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'}"><span class="truncate">${escapeHtml(item.name)}</span>${isSelected && currentTxType==='expense' ? '<span>✓</span>' : ''}</button>`;
+        const theme = CATEGORY_COLOR_THEMES[item.colorTheme] || (currentTxType==='expense'?CATEGORY_COLOR_THEMES.rose:CATEGORY_COLOR_THEMES.emerald);
+        const styleClass = isSelected ? theme.active : theme.inactive;
+
+        return `<button type="button" onclick="${clickFn}" class="p-2.5 rounded-2xl text-xs font-semibold border text-center transition flex items-center justify-between ${styleClass}"><span class="truncate">${escapeHtml(item.name)}</span>${isSelected && currentTxType==='expense' ? '<span>✓</span>' : ''}</button>`;
       }).join('');
     }
 
-    function genBtns(list, selId, cb, act, nor) {
-      return list.map(i=>`<button type="button" onclick="${cb}='${i.id}'; ${cb.includes('InstCat')?'renderInstCategoryButtons()':cb.includes('ReimbCat')?'renderReimbCategoryButtons()':'renderSplitCategoryButtons()'}" class="px-2.5 py-1 rounded-xl text-xs font-semibold transition border ${i.id===selId?act:nor}">${escapeHtml(i.name)}</button>`).join('');
+    function genBtns(list, selId, cb) {
+      return list.map(i => {
+        const theme = CATEGORY_COLOR_THEMES[i.colorTheme] || CATEGORY_COLOR_THEMES.purple;
+        const styleClass = i.id === selId ? theme.active : theme.inactive;
+        return `<button type="button" onclick="${cb}='${i.id}'; ${cb.includes('InstCat')?'renderInstCategoryButtons()':cb.includes('ReimbCat')?'renderReimbCategoryButtons()':'renderSplitCategoryButtons()'}" class="px-2.5 py-1 rounded-xl text-xs font-semibold transition border ${styleClass}">${escapeHtml(i.name)}</button>`;
+      }).join('');
     }
-    function renderSplitCategoryButtons() { const c=categoriesList.filter(x=>x.type==='income'); if(!selectedSplitCategoryId||!c.some(x=>x.id===selectedSplitCategoryId))if(c.length)selectedSplitCategoryId=c[0].id; document.getElementById('split-category-buttons').innerHTML=genBtns(c,selectedSplitCategoryId,'selectedSplitCategoryId','bg-purple-600 text-white border-purple-600 shadow-xs','bg-white text-gray-700 border-gray-200'); }
-    function renderInstCategoryButtons() { const c=categoriesList.filter(x=>x.type==='expense'); if(!selectedInstCategoryId||!c.some(x=>x.id===selectedInstCategoryId))if(c.length)selectedInstCategoryId=c[0].id; document.getElementById('inst-category-buttons').innerHTML=genBtns(c,selectedInstCategoryId,'selectedInstCategoryId','bg-indigo-600 text-white border-indigo-600 shadow-xs','bg-white text-gray-700 border-gray-200'); }
-    function renderReimbCategoryButtons() { const c=categoriesList.filter(x=>x.type==='expense'); if(!selectedReimbCategoryId||!c.some(x=>x.id===selectedReimbCategoryId))if(c.length)selectedReimbCategoryId=c[0].id; document.getElementById('reimb-category-buttons').innerHTML=genBtns(c,selectedReimbCategoryId,'selectedReimbCategoryId','bg-amber-600 text-white border-amber-600 shadow-xs','bg-white text-gray-700 border-gray-200'); }
+    function renderSplitCategoryButtons() { const c=categoriesList.filter(x=>x.type==='income'); if(!selectedSplitCategoryId||!c.some(x=>x.id===selectedSplitCategoryId))if(c.length)selectedSplitCategoryId=c[0].id; document.getElementById('split-category-buttons').innerHTML=genBtns(c,selectedSplitCategoryId,'selectedSplitCategoryId'); }
+    function renderInstCategoryButtons() { const c=categoriesList.filter(x=>x.type==='expense'); if(!selectedInstCategoryId||!c.some(x=>x.id===selectedInstCategoryId))if(c.length)selectedInstCategoryId=c[0].id; document.getElementById('inst-category-buttons').innerHTML=genBtns(c,selectedInstCategoryId,'selectedInstCategoryId'); }
+    function renderReimbCategoryButtons() { const c=categoriesList.filter(x=>x.type==='expense'); if(!selectedReimbCategoryId||!c.some(x=>x.id===selectedReimbCategoryId))if(c.length)selectedReimbCategoryId=c[0].id; document.getElementById('reimb-category-buttons').innerHTML=genBtns(c,selectedReimbCategoryId,'selectedReimbCategoryId'); }
     function closeSelectorModal() { document.getElementById('selector-modal').classList.add('hidden'); }
 
     function renderTransferButtons() { 
@@ -1018,22 +1213,27 @@
 
     document.getElementById('installment-form').addEventListener('submit', async (e) => {
       e.preventDefault(); if(!currentUser||!selectedInstAccountId||!selectedInstCategoryId)return alert("เลือกบัญชีและหมวดหมู่");
-      const amt=parseFloat(document.getElementById('inst-total-amount').value), c=parseInt(document.getElementById('inst-count').value)||2, p=parseInt(document.getElementById('inst-day').value)||1;
-      const d=document.getElementById('inst-date').value, n=document.getElementById('inst-note').value.trim(), cat=categoriesList.find(x=>x.id===selectedInstCategoryId);
-      if(isNaN(amt)||amt<=0||c<2)return alert("กรอกข้อมูลการผ่อนให้ถูกต้อง (อย่างน้อย 2 งวด)");
+      const amt=parseFloat(document.getElementById('inst-total-amount').value), totalCount=parseInt(document.getElementById('inst-count').value)||2, startCount=parseInt(document.getElementById('inst-start-count').value)||1, payDay=parseInt(document.getElementById('inst-day').value)||1;
+      const dateStr=document.getElementById('inst-date').value, noteStr=document.getElementById('inst-note').value.trim(), cat=categoriesList.find(x=>x.id===selectedInstCategoryId);
       
-      const nAmt=Math.floor((amt/c)*100)/100, fAmt=(c===1)?amt:nAmt;
+      if(isNaN(amt)||amt<=0||totalCount<2)return alert("กรอกข้อมูลการผ่อนให้ถูกต้อง (อย่างน้อย 2 งวด)");
+      if(startCount > totalCount)return alert("งวดเริ่มต้นต้องไม่เกินจำนวนงวดทั้งหมด");
+
+      const normalAmt=Math.floor((amt/totalCount)*100)/100, finalAmt=Math.round((amt-(normalAmt*(totalCount-1)))*100)/100;
+      const currentPayAmt = (startCount === totalCount) ? finalAmt : normalAmt;
+
       try {
         if (editingTxId) {
-          await db.collection('users').doc(currentUser.uid).collection('transactions').doc(editingTxId).update({ amount: fAmt, myShare: fAmt, note: `${n||'ผ่อนชำระ'}`, date: d, accountId: selectedInstAccountId, categoryId: selectedInstCategoryId, categoryName: cat?.name||'' });
+          await db.collection('users').doc(currentUser.uid).collection('transactions').doc(editingTxId).update({ amount: currentPayAmt, myShare: currentPayAmt, note: `${noteStr||'ผ่อนชำระ'} (${startCount}/${totalCount})`, date: dateStr, accountId: selectedInstAccountId, categoryId: selectedInstCategoryId, categoryName: cat?.name||'' });
         } else {
-          const b=db.batch(), ref=db.collection('users').doc(currentUser.uid).collection('installment_plans').doc();
-          let tm=new Date(d).getMonth()+1, ty=new Date(d).getFullYear(); if(tm>11){tm=0;ty++;}
-          b.set(ref, {title:n||cat?.name||'ผ่อนชำระ',totalAmount:amt,totalCount:c,currentCount:1,normalAmount:nAmt,finalAmount:(Math.round((amt-(nAmt*(c-1)))*100)/100),payDay:p,status:'active',accountId:selectedInstAccountId,categoryId:selectedInstCategoryId,categoryName:cat?.name||'',startDate:d,nextDueDate:new Date(ty,tm,Math.min(p,new Date(ty,tm+1,0).getDate())).toISOString().split('T')[0],createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-          b.set(db.collection('users').doc(currentUser.uid).collection('transactions').doc(), {kind:'transaction',type:'expense',amount:fAmt,myShare:fAmt,friendShare:0,remainingPending:0,isReimburse:false,isInstallment:true,installmentPlanId:ref.id,installmentCurrentCount:1,installmentTotalCount:c,note:`${n||'ผ่อนชำระ'} (1/${c})`,date:d,accountId:selectedInstAccountId,categoryId:selectedInstCategoryId,categoryName:cat?.name||'',categoriesBreakdown:[{categoryId:cat?.id||'',categoryName:cat?.name||'',amount:fAmt}],createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-          await b.commit();
+          const batch=db.batch(), planRef=db.collection('users').doc(currentUser.uid).collection('installment_plans').doc();
+          let tm=new Date(dateStr).getMonth()+1, ty=new Date(dateStr).getFullYear(); if(tm>11){tm=0;ty++;}
+          
+          batch.set(planRef, { title:noteStr||cat?.name||'ผ่อนชำระ', totalAmount:amt, totalCount:totalCount, startCount:startCount, currentCount:startCount, normalAmount:normalAmt, finalAmount:finalAmt, payDay:payDay, status:startCount>=totalCount?'completed':'active', accountId:selectedInstAccountId, categoryId:selectedInstCategoryId, categoryName:cat?.name||'', startDate:dateStr, nextDueDate:startCount>=totalCount?null:new Date(ty,tm,Math.min(payDay,new Date(ty,tm+1,0).getDate())).toISOString().split('T')[0], createdAt:firebase.firestore.FieldValue.serverTimestamp() });
+          batch.set(db.collection('users').doc(currentUser.uid).collection('transactions').doc(), { kind:'transaction', type:'expense', amount:currentPayAmt, myShare:currentPayAmt, friendShare:0, remainingPending:0, isReimburse:false, isInstallment:true, installmentPlanId:planRef.id, installmentCurrentCount:startCount, installmentTotalCount:totalCount, note:`${noteStr||'ผ่อนชำระ'} (${startCount}/${totalCount})`, date:dateStr, accountId:selectedInstAccountId, categoryId:selectedInstCategoryId, categoryName:cat?.name||'', categoriesBreakdown:[{categoryId:cat?.id||'', categoryName:cat?.name||'', amount:currentPayAmt}], createdAt:firebase.firestore.FieldValue.serverTimestamp() });
+          await batch.commit();
         }
-        triggerSuccessToast(); cancelEditingMode(); document.getElementById('inst-total-amount').value=''; document.getElementById('inst-note').value=''; switchEntryMode('expense');
+        triggerSuccessToast(); cancelEditingMode(); document.getElementById('inst-total-amount').value=''; document.getElementById('inst-start-count').value='1'; document.getElementById('inst-note').value=''; switchEntryMode('expense');
       } catch(err){alert(err.message);}
     });
 
@@ -1152,8 +1352,30 @@
         document.getElementById('lbl-total-active-inst').innerText = `${activeInstallmentPlans.filter(p=>p.status==='active').length} รายการ`;
         const c = document.getElementById('installment-tracker-container'); c.innerHTML='';
         activeInstallmentPlans.filter(p=>p.status==='active').forEach(plan => {
-          const acc = accountsList.find(a=>a.id===plan.accountId)?.name||'บัญชี', pct = Math.min(100, Math.round((plan.currentCount/plan.totalCount)*100));
-          c.innerHTML += `<div class="bg-indigo-50/70 border border-indigo-100 p-3 rounded-2xl space-y-2 text-xs shadow-xs"><div class="flex justify-between"><div><h4 class="font-bold text-indigo-950">${escapeHtml(plan.title)}</h4><p class="text-[10px] text-indigo-500">${acc} • [${escapeHtml(plan.categoryName)}]</p></div><span class="text-[10px] font-bold text-indigo-700 bg-white px-2 py-0.5 rounded-lg border">${plan.currentCount}/${plan.totalCount} (${pct}%)</span></div><div class="w-full h-2 bg-indigo-200/80 rounded-full"><div class="h-full bg-indigo-600" style="width:${pct}%"></div></div><div class="flex justify-between items-center text-[10px] pt-1"><span class="text-indigo-700">งวดถัดไป: ${plan.nextDueDate||'ครบแล้ว'}</span><button onclick="db.collection('users').doc('${currentUser.uid}').collection('installment_plans').doc('${plan.id}').update({status:'cancelled'})" class="text-rose-400 underline">ยกเลิกสัญญา</button></div></div>`;
+          const acc = accountsList.find(a=>a.id===plan.accountId)?.name||'บัญชี';
+          const currentCount = plan.currentCount || 1, totalCount = plan.totalCount || 1;
+          const pct = Math.min(100, Math.round((currentCount / totalCount) * 100));
+
+          c.innerHTML += `
+            <div class="bg-indigo-50/70 border border-indigo-100 p-3 rounded-2xl space-y-2 text-xs shadow-xs">
+              <div class="flex justify-between">
+                <div>
+                  <h4 class="font-bold text-indigo-950">${escapeHtml(plan.title)}</h4>
+                  <p class="text-[10px] text-indigo-500">${acc} • [${escapeHtml(plan.categoryName)}]</p>
+                </div>
+                <span class="text-[10px] font-bold text-indigo-700 bg-white px-2 py-0.5 rounded-lg border">
+                  ${currentCount}/${totalCount} (${pct}%)
+                </span>
+              </div>
+              <div class="w-full h-2 bg-indigo-200/80 rounded-full">
+                <div class="h-full bg-indigo-600 rounded-full" style="width:${pct}%"></div>
+              </div>
+              <div class="flex justify-between items-center text-[10px] pt-1">
+                <span class="text-indigo-700">งวดถัดไป: ${plan.nextDueDate||'ครบแล้ว'}</span>
+                <button onclick="db.collection('users').doc('${currentUser.uid}').collection('installment_plans').doc('${plan.id}').update({status:'cancelled'})" class="text-rose-400 underline">ยกเลิกสัญญา</button>
+              </div>
+            </div>
+          `;
         });
       });
     }
@@ -1184,8 +1406,8 @@
       document.getElementById('pct-ratio-exp').innerText = `${expPct}%`; document.getElementById('pct-ratio-inc').innerText = `${incPct}%`;
 
       renderDailyBalanceLineChart(totBal);
-      renderCategoryPieChart('incomePieChart', catIncMap, incomePieInstance, inst => incomePieInstance = inst);
-      renderCategoryPieChart('expensePieChart', catExpMap, expensePieInstance, inst => expensePieInstance = inst);
+      renderCategoryPieChart('incomePieChart', catIncMap, incomePieInstance, inst => incomePieInstance = inst, 'income');
+      renderCategoryPieChart('expensePieChart', catExpMap, expensePieInstance, inst => expensePieInstance = inst, 'expense');
     }
 
     function renderDailyBalanceLineChart(currentTotalBalance) {
@@ -1212,12 +1434,19 @@
       });
     }
 
-    function renderCategoryPieChart(canvasId, catMap, existingInstance, setInstanceCb) {
+    function renderCategoryPieChart(canvasId, catMap, existingInstance, setInstanceCb, type) {
       const labels = Object.keys(catMap), data = Object.values(catMap), ctx = document.getElementById(canvasId).getContext('2d');
       if (existingInstance) existingInstance.destroy();
+      
+      const pieColors = labels.map(name => {
+        const cat = categoriesList.find(c => c.name === name && c.type === type);
+        if (cat && CATEGORY_COLOR_THEMES[cat.colorTheme]) return CATEGORY_COLOR_THEMES[cat.colorTheme].hex;
+        return type === 'expense' ? '#f43f5e' : '#10b981';
+      });
+
       const newInst = new Chart(ctx, {
         type: 'pie',
-        data: { labels: labels.length ? labels : ['ไม่มีข้อมูล'], datasets: [{ data: data.length ? data : [1], backgroundColor: data.length ? ['#f43f5e', '#10b981', '#6366f1', '#f59e0b', '#8b5cf6', '#06b6d4', '#ec4899', '#84cc16'].slice(0, labels.length) : ['#e5e7eb'] }] },
+        data: { labels: labels.length ? labels : ['ไม่มีข้อมูล'], datasets: [{ data: data.length ? data : [1], backgroundColor: data.length ? pieColors : ['#e5e7eb'] }] },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
       });
       setInstanceCb(newInst);
@@ -1575,9 +1804,22 @@
     function renderSettingsCategories() { 
       ['expense', 'income'].forEach(type => {
         document.getElementById(`${type}-cats-list`).innerHTML = categoriesList.filter(c => c.type === type).map(c => `
-          <div class="flex justify-between items-center p-1 border rounded text-xs bg-gray-50">
-            <input id="edit-cat-${c.id}" value="${escapeHtml(c.name)}" class="w-20 px-1 border rounded bg-white text-xs">
-            <div class="flex"><button onclick="updateCategoryName('${c.id}')" class="text-blue-600 px-1">✓</button><button onclick="deleteCategory('${c.id}')" class="text-rose-500 px-1">✕</button></div>
+          <div class="flex justify-between items-center p-1.5 border rounded-xl text-xs bg-gray-50 space-x-1">
+            <input id="edit-cat-${c.id}" value="${escapeHtml(c.name)}" class="flex-1 px-1.5 py-0.5 border rounded bg-white text-xs font-semibold">
+            <select id="edit-cat-color-${c.id}" class="px-1 py-0.5 text-[11px] border rounded bg-white">
+              <option value="rose" ${c.colorTheme==='rose'?'selected':''}>ชมพู/แดง</option>
+              <option value="orange" ${c.colorTheme==='orange'?'selected':''}>ส้ม</option>
+              <option value="amber" ${c.colorTheme==='amber'?'selected':''}>เหลืองทอง</option>
+              <option value="emerald" ${c.colorTheme==='emerald'?'selected':''}>เขียว</option>
+              <option value="sky" ${c.colorTheme==='sky'?'selected':''}>ฟ้า</option>
+              <option value="indigo" ${c.colorTheme==='indigo'?'selected':''}>น้ำเงิน</option>
+              <option value="purple" ${c.colorTheme==='purple'?'selected':''}>ม่วง</option>
+              <option value="slate" ${c.colorTheme==='slate'?'selected':''}>เทา</option>
+            </select>
+            <div class="flex items-center space-x-0.5">
+              <button onclick="updateCategoryDetails('${c.id}')" class="bg-blue-600 text-white px-1.5 py-0.5 rounded font-bold">✓</button>
+              <button onclick="deleteCategory('${c.id}')" class="text-rose-500 font-bold px-1">✕</button>
+            </div>
           </div>
         `).join('');
       });
@@ -1604,8 +1846,27 @@
       } catch (err) { alert(err.message); } 
     }
     async function deleteAccount(id) { if(confirm('ลบ?')) await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).delete(); }
-    async function addNewCategory(t) { const i=t==='expense'?'new-exp-cat-name':'new-inc-cat-name', n=document.getElementById(i).value; if(!n)return; await db.collection('users').doc(currentUser.uid).collection('categories').add({name:n, type:t, createdAt: firebase.firestore.FieldValue.serverTimestamp()}); document.getElementById(i).value=''; }
-    async function updateCategoryName(id) { await db.collection('users').doc(currentUser.uid).collection('categories').doc(id).update({name: document.getElementById(`edit-cat-${id}`).value}); }
+    
+    async function addNewCategory(t) { 
+      const i = t==='expense'?'new-exp-cat-name':'new-inc-cat-name';
+      const colorSelectId = t==='expense'?'new-exp-cat-color':'new-inc-cat-color';
+      const n = document.getElementById(i).value.trim(); 
+      const colorTheme = document.getElementById(colorSelectId).value;
+      if(!n) return alert("กรุณาระบุชื่อหมวดหมู่"); 
+      
+      await db.collection('users').doc(currentUser.uid).collection('categories').add({ name:n, type:t, colorTheme:colorTheme, createdAt: firebase.firestore.FieldValue.serverTimestamp() }); 
+      document.getElementById(i).value=''; 
+      triggerSuccessToast();
+    }
+    async function updateCategoryDetails(id) { 
+      const newName = document.getElementById(`edit-cat-${id}`).value.trim();
+      const newColor = document.getElementById(`edit-cat-color-${id}`).value;
+      if (!newName) return alert("กรุณาระบุชื่อหมวดหมู่");
+      try {
+        await db.collection('users').doc(currentUser.uid).collection('categories').doc(id).update({ name: newName, colorTheme: newColor });
+        triggerSuccessToast();
+      } catch (err) { alert(err.message); }
+    }
     async function deleteCategory(id) { if(confirm('ลบ?')) await db.collection('users').doc(currentUser.uid).collection('categories').doc(id).delete(); }
     async function autoSaveSettings() { userSettings.currency = document.getElementById('setting-currency').value; updateCurrencyUI(); await db.collection('users').doc(currentUser.uid).collection('settings').doc('config').set({currency: userSettings.currency}); }
     function escapeHtml(text) { return text ? text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : ''; }

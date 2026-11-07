@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>จดตังค์ BETA</title>
   
+  <!-- PWA Meta Tags & Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1e293b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="จดตังค์">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -728,13 +736,14 @@
 
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyA48HmY24BkrtIZ0StsecGPlnubCt7W20w",
-      authDomain: "yuet-app-beta.firebaseapp.com",
-      projectId: "yuet-app-beta",
-      storageBucket: "yuet-app-beta.firebasestorage.app",
-      messagingSenderId: "694848274852",
-      appId: "1:694848274852:web:cc6410f8c3a14df2614131"
-    };
+  apiKey: "AIzaSyCuu9m390tra3oEca4PygcD1pO6-L7u7XE",
+  authDomain: "eard-604d1.firebaseapp.com",
+  projectId: "eard-604d1",
+  storageBucket: "eard-604d1.firebasestorage.app",
+  messagingSenderId: "114087782046",
+  appId: "1:114087782046:web:3c7c8dce10134cefba3d8f",
+  measurementId: "G-RBTCMEJRNE"
+};
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth(), db = firebase.firestore();
@@ -2387,6 +2396,17 @@
 
     async function toggleAccountPin(id, isPinned) { try { await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).update({ isPinned: isPinned }); } catch (err) { alert(err.message); } }
     function escapeHtml(text) { return text ? text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : ''; }
+  </script>
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => console.log('PWA Service Worker registered:', reg.scope))
+          .catch((err) => console.error('PWA Registration failed:', err));
+      });
+    }
   </script>
 </body>
 </html>

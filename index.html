@@ -138,14 +138,14 @@
               <button type="submit" id="btn-submit-tx-form" class="flex-1 bg-slate-700 hover:bg-slate-800 text-white font-bold py-2 rounded-xl text-xs shadow-xs transition">+ บันทึกรายการ</button>
             </div>
 
-            <!-- Subscription Reminders Banner Container -->
-            <div id="subscription-reminder-banner" class="hidden mt-2 bg-amber-50 border border-amber-200 p-2.5 rounded-xl space-y-1.5 shadow-2xs">
-              <div class="flex justify-between items-center text-xs font-bold text-amber-800">
+            <!-- Subscription Reminders Banner Container (Compact Red Theme) -->
+            <div id="subscription-reminder-banner" class="hidden mt-2 bg-[#FF0000] text-white p-2 rounded-xl shadow-xs space-y-1">
+              <div class="flex justify-between items-center text-[11px] font-bold pb-0.5 border-b border-white/20">
                 <span class="flex items-center space-x-1">
                   <span>🔔</span>
-                  <span>ถึงกำหนดชำระรายจ่ายประจำวันนี้</span>
+                  <span>รายจ่ายประจำถึงกำหนดชำระ</span>
                 </span>
-                <span id="sub-banner-count" class="text-[10px] bg-amber-200/80 px-1.5 py-0.5 rounded-full text-amber-900">1 รายการ</span>
+                <span id="sub-banner-count" class="text-[10px] bg-white/20 px-1.5 py-0.2 rounded-full font-semibold">1 รายการ</span>
               </div>
               <div id="subscription-reminder-items" class="space-y-1"></div>
             </div>
@@ -805,7 +805,6 @@
     let activeFilledSubId = null;
     let editingTxIdInModal = null, editSelectedAccountId = null, editSelectedCategoryId = null;
 
-    // ตั้งค่าเริ่มต้นของ State บัญชีและหมวดหมู่ทั้งหมดเป็น null (ไม่ Pre-select)
     let selectedAccountId = null, selectedCategoryId = null;  
     let selectedSettleAccountId = null, selectedSplitAccountId = null, selectedSplitCategoryId = null;
     let selectedInstAccountId = null, selectedInstCategoryId = null, selectedReimbAccountId = null, selectedReimbCategoryId = null, selectedTeamPayAccountId = null;
@@ -1174,15 +1173,12 @@
 
       countBadge.innerText = `${dueItems.length} รายการ`;
       itemsContainer.innerHTML = dueItems.map(s => `
-        <div class="flex items-center justify-between bg-white p-2 rounded-lg border border-amber-200/80 text-xs shadow-2xs">
-          <div onclick="prefillSubscriptionToExpenseForm('${s.id}')" class="flex-1 cursor-pointer hover:opacity-80 transition pr-2">
-            <div class="flex items-center justify-between">
-              <span class="font-bold text-slate-800">${escapeHtml(s.name)}</span>
-              <span class="font-black text-rose-600">-${s.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
-            </div>
-            <p class="text-[9px] text-slate-400">แตะเพื่อกรอกฟอร์ม Expense ทันที ➔</p>
+        <div class="flex items-center justify-between bg-white/10 hover:bg-white/20 p-1.5 rounded-lg text-xs transition">
+          <div onclick="prefillSubscriptionToExpenseForm('${s.id}')" class="flex-1 cursor-pointer flex items-center justify-between pr-2 min-w-0">
+            <span class="font-bold truncate text-[11px] text-white">${escapeHtml(s.name)}</span>
+            <span class="font-black text-xs text-white ml-2">-${s.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
           </div>
-          <button type="button" onclick="dismissSubscriptionReminder('${s.id}')" class="text-slate-300 hover:text-slate-500 font-bold px-1.5 py-0.5 text-xs rounded hover:bg-slate-100 transition" title="ข้ามเดือนนี้">✕</button>
+          <button type="button" onclick="dismissSubscriptionReminder('${s.id}', '${escapeHtml(s.name)}')" class="text-white/70 hover:text-white font-bold px-1.5 py-0.5 text-xs rounded hover:bg-white/20 transition flex-shrink-0" title="ข้ามการเตือนเดือนนี้">✕</button>
         </div>
       `).join('');
 
@@ -1207,14 +1203,22 @@
       triggerSuccessToast();
     }
 
-    async function dismissSubscriptionReminder(subId) {
+    async function dismissSubscriptionReminder(subId, subName) {
+      // ยืนยันก่อนซ่อนการแจ้งเตือน เพื่อป้องกันการเผลอกดโดยไม่ตั้งใจ
+      const confirmDismiss = confirm(`ต้องการข้ามการแจ้งเตือน "${subName}" สำหรับเดือนนี้ใช่หรือไม่?`);
+      if (!confirmDismiss) return;
+
       const now = new Date();
       const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
       try {
         await db.collection('users').doc(currentUser.uid).collection('subscriptions').doc(subId).update({
           lastDismissedMonth: currentMonthKey
         });
-      } catch (err) { console.error(err); }
+        triggerSuccessToast();
+      } catch (err) { 
+        console.error(err); 
+        alert("เกิดข้อผิดพลาดในการยกเลิกการแจ้งเตือน");
+      }
     }
 
     function openNewSubscriptionModal() {
@@ -1439,7 +1443,6 @@
       document.getElementById('split-team-share-lbl').innerText = Math.max(0,t-m).toLocaleString(undefined, {minimumFractionDigits: 2}); 
     }
 
-    // ฟังก์ชัน Pinned Selector กลางสำหรับ บัญชี (Accounts)
     function renderAccountPinnedSelector(selectedId, setGlobalVarFnName) {
       let pinned = accountsList.filter(i => i.isPinned);
       if (!pinned.length && accountsList.length) pinned = [accountsList[0]];
@@ -1466,7 +1469,6 @@
       return html;
     }
 
-    // ฟังก์ชัน Pinned Selector กลางสำหรับ หมวดหมู่ (Categories) ให้ทำงานเหมือน บัญชี 100%
     function renderCategoryPinnedSelector(selectedId, setGlobalVarFnName, type, rerenderFnName) {
       const typeCats = categoriesList.filter(c => c.type === type);
       let pinned = typeCats.filter(i => i.isPinned);

@@ -786,7 +786,7 @@
   </div>
 
   <script>
-    const firebaseConfig = {
+  const firebaseConfig = {
   apiKey: "AIzaSyA48HmY24BkrtIZ0StsecGPlnubCt7W20w",
   authDomain: "yuet-app-beta.firebaseapp.com",
   projectId: "yuet-app-beta",
@@ -1200,7 +1200,7 @@
 
       renderAllAccountButtons();
       renderCategoryButtons();
-      triggerSuccessToast();
+      // นำ triggerSuccessToast() ออกเรียบร้อยเพื่อไม่ให้เด้งซ้ำซ้อนตอนเปิดใส่ฟอร์ม
     }
 
     async function dismissSubscriptionReminder(subId, subName) {
@@ -1214,7 +1214,6 @@
         await db.collection('users').doc(currentUser.uid).collection('subscriptions').doc(subId).update({
           lastDismissedMonth: currentMonthKey
         });
-        triggerSuccessToast();
       } catch (err) { 
         console.error(err); 
         alert("เกิดข้อผิดพลาดในการยกเลิกการแจ้งเตือน");
@@ -1288,7 +1287,6 @@
             name: name, amount: amt, payDay: day, accountId: selectedSubAccountId, categoryId: selectedSubCategoryId, createdAt: firebase.firestore.FieldValue.serverTimestamp()
           });
         }
-        triggerSuccessToast();
         closeSubscriptionModal();
       } catch (err) { alert(err.message); }
     });
@@ -1301,7 +1299,6 @@
       if (confirm(`คุณแน่ใจหรือว่าต้องการลบรายการเตือน "${sub?.name}" ?`)) {
         try {
           await db.collection('users').doc(currentUser.uid).collection('subscriptions').doc(id).delete();
-          triggerSuccessToast();
           closeSubscriptionModal();
         } catch (err) { alert(err.message); }
       }
@@ -1330,7 +1327,6 @@
       presetNotesList.push(text);
       await db.collection('users').doc(currentUser.uid).collection('settings').doc('preset_notes').set({ notes: presetNotesList });
       input.value = '';
-      triggerSuccessToast();
     }
 
     async function deletePresetNote(idx) {
@@ -2067,7 +2063,6 @@
       try {
         await db.collection('users').doc(currentUser.uid).collection('transactions').doc(editingTxIdInModal).update(updatePayload);
 
-        triggerSuccessToast();
         closeEditTxModal();
         applyHistoryFilters();
       } catch (err) {
@@ -2574,7 +2569,6 @@
             name: name, colorTheme: color, initialBalance: initBal, isDefault: false, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp()
           });
         }
-        triggerSuccessToast();
         closeAccountModal();
       } catch (err) { alert(err.message); }
     });
@@ -2588,7 +2582,6 @@
       if (confirm(`คุณแน่ใจหรือว่าต้องการลบบัญชี "${acc?.name}" ?`)) {
         try {
           await db.collection('users').doc(currentUser.uid).collection('accounts').doc(id).delete();
-          triggerSuccessToast();
           closeAccountModal();
         } catch (err) { alert(err.message); }
       }
@@ -2641,7 +2634,6 @@
             name: name, type: type, colorTheme: color, isPinned: true, createdAt: firebase.firestore.FieldValue.serverTimestamp()
           });
         }
-        triggerSuccessToast();
         closeCategoryModal();
       } catch (err) { alert(err.message); }
     });
@@ -2654,7 +2646,6 @@
       if (confirm(`คุณแน่ใจหรือว่าต้องการลบหมวดหมู่ "${cat?.name}" ?`)) {
         try {
           await db.collection('users').doc(currentUser.uid).collection('categories').doc(id).delete();
-          triggerSuccessToast();
           closeCategoryModal();
         } catch (err) { alert(err.message); }
       }
